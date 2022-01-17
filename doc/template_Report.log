@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  17 JAN 2022 15:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  17 JAN 2022 15:51
 entering extended mode
 **./template_Report.tex
 (template_Report.tex
@@ -141,24 +141,31 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 130.
 \xmathstrut@box=\box49
 \xmathstrut@dim=\dimen165
 )
+(C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
+Package: multirow 2019/05/31 v2.5 Span multiple rows of a table
+\multirow@colwidth=\skip56
+\multirow@cntb=\count268
+\multirow@dima=\skip57
+\bigstrutjot=\dimen166
+)
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
-\lst@mode=\count268
+\lst@mode=\count269
 \lst@gtempboxa=\box50
 \lst@token=\toks22
-\lst@length=\count269
-\lst@currlwidth=\dimen166
-\lst@column=\count270
-\lst@pos=\count271
-\lst@lostspace=\dimen167
-\lst@width=\dimen168
-\lst@newlines=\count272
-\lst@lineno=\count273
-\lst@maxwidth=\dimen169
+\lst@length=\count270
+\lst@currlwidth=\dimen167
+\lst@column=\count271
+\lst@pos=\count272
+\lst@lostspace=\dimen168
+\lst@width=\dimen169
+\lst@newlines=\count273
+\lst@lineno=\count274
+\lst@maxwidth=\dimen170
 
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
-\c@lstnumber=\count274
-\lst@skipnumbers=\count275
+\c@lstnumber=\count275
+\lst@skipnumbers=\count276
 \lst@framebox=\box51
 )
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
@@ -194,8 +201,8 @@ Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/eso-pic\eso-pic.sty
 Package: eso-pic 2020/10/14 v3.0a eso-pic (RN)
-\ESO@tempdima=\dimen170
-\ESO@tempdimb=\dimen171
+\ESO@tempdima=\dimen171
+\ESO@tempdimb=\dimen172
 )
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
 Package: graphicx 2020/09/09 v1.2b Enhanced LaTeX Graphics (DPC,SPQR)
@@ -212,34 +219,34 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 105.
 )
-\Gin@req@height=\dimen172
-\Gin@req@width=\dimen173
+\Gin@req@height=\dimen173
+\Gin@req@width=\dimen174
 )
-\AM@pagewidth=\dimen174
-\AM@pageheight=\dimen175
+\AM@pagewidth=\dimen175
+\AM@pageheight=\dimen176
 
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/pdfpages\pppdftex.def
 File: pppdftex.def 2020/01/28 v0.5q Pdfpages driver for pdfTeX (AM)
 )
 \AM@pagebox=\box52
 \AM@global@opts=\toks23
-\AM@pagecnt=\count276
+\AM@pagecnt=\count277
 \AM@toc@title=\toks24
-\c@AM@survey=\count277
+\c@AM@survey=\count278
 \AM@templatesizebox=\box53
 ) (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
 Package: babel 2020/10/06 3.50 The Babel package
 
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.def
 File: babel.def 2020/10/06 3.50 Babel common definitions
-\babel@savecnt=\count278
-\U@D=\dimen176
+\babel@savecnt=\count279
+\U@D=\dimen177
 \l@babelnohyphens=\language79
 
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
 )
-\bbl@dirlevel=\count279
+\bbl@dirlevel=\count280
 
 *************************************
 * Local config file bblopts.cfg used
@@ -263,22 +270,22 @@ Package: caption 2020/09/12 v3.5b Customizing captions (AR)
 
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
 Package: caption3 2020/09/17 v2.1b caption3 kernel (AR)
-\captionmargin=\dimen177
-\captionmargin@=\dimen178
-\captionwidth=\dimen179
-\caption@tempdima=\dimen180
-\caption@indent=\dimen181
-\caption@parindent=\dimen182
-\caption@hangindent=\dimen183
+\captionmargin=\dimen178
+\captionmargin@=\dimen179
+\captionwidth=\dimen180
+\caption@tempdima=\dimen181
+\caption@indent=\dimen182
+\caption@parindent=\dimen183
+\caption@hangindent=\dimen184
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count280
-\c@continuedfloat=\count281
+\c@caption@flags=\count281
+\c@continuedfloat=\count282
 Package caption Info: listings package is loaded.
 )
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count282
+\c@float@type=\count283
 \float@exts=\toks25
 \float@box=\box54
 \@float@everytoks=\toks26
@@ -287,47 +294,47 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 (ulem.sty
 \UL@box=\box56
 \UL@hyphenbox=\box57
-\UL@skip=\skip56
+\UL@skip=\skip58
 \UL@hook=\toks27
-\UL@height=\dimen184
-\UL@pe=\count283
-\UL@pixel=\dimen185
+\UL@height=\dimen185
+\UL@pe=\count284
+\UL@pixel=\dimen186
 \ULC@box=\box58
 Package: ulem 2019/11/18
-\ULdepth=\dimen186
+\ULdepth=\dimen187
 ) (titlesec.sty
 Package: titlesec 2002/04/07 v2.5 Sectioning titles
 \ttl@box=\box59
-\beforetitleunit=\skip57
-\aftertitleunit=\skip58
-\ttl@plus=\dimen187
-\ttl@minus=\dimen188
-\titlewidth=\dimen189
-\titlewidthlast=\dimen190
-\titlewidthfirst=\dimen191
+\beforetitleunit=\skip59
+\aftertitleunit=\skip60
+\ttl@plus=\dimen188
+\ttl@minus=\dimen189
+\titlewidth=\dimen190
+\titlewidthlast=\dimen191
+\titlewidthfirst=\dimen192
 )
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
 tex.def
 File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
-\l__kernel_color_stack_int=\count284
+\l__kernel_color_stack_int=\count285
 \l__pdf_internal_box=\box60
 ) (template_Report.aux (chapters/introduction.aux))
 \openout1 = `template_Report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -363,21 +370,21 @@ LaTeX Font Info:    ... okay on input line 61.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@lstlisting=\count285
+\c@lstlisting=\count286
 
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
 ii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count286
-\scratchdimen=\dimen192
+\scratchcounter=\count287
+\scratchdimen=\dimen193
 \scratchbox=\box61
-\nofMPsegments=\count287
-\nofMParguments=\count288
+\nofMPsegments=\count288
+\nofMParguments=\count289
 \everyMPshowfont=\toks28
-\MPscratchCnt=\count289
-\MPscratchDim=\dimen193
-\MPnumerator=\count290
-\makeMPintoPDFobject=\count291
+\MPscratchCnt=\count290
+\MPscratchDim=\dimen194
+\MPnumerator=\count291
+\makeMPintoPDFobject=\count292
 \everyMPtoPDFconversion=\toks29
 )
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
@@ -406,8 +413,8 @@ d
 File: img/marchio_unipi_pant541-eps-converted-to.pdf Graphic file (type pdf)
 <use img/marchio_unipi_pant541-eps-converted-to.pdf>
 Package pdftex.def Info: img/marchio_unipi_pant541-eps-converted-to.pdf  used o
-n input line 67.
-(pdftex.def)             Requested size: 452.9679pt x 241.37358pt.
+n input line 62.
+(pdftex.def)             Requested size: 362.37569pt x 193.1007pt.
 [1
 
 {C:/Users/gxhan/AppData/Local/MiKTeX/pdftex/config/pdftex.map} <./img/marchio_u
@@ -423,13 +430,13 @@ nipi_pant541-eps-converted-to.pdf>] (template_Report.toc)
 
 ] (template_Report.aux (chapters/introduction.aux)) ) 
 Here is how much of TeX's memory you used:
- 7773 strings out of 480236
- 119681 string characters out of 2880557
- 436550 words of memory out of 3000000
- 24233 multiletter control sequences out of 15000+200000
+ 7819 strings out of 480236
+ 120408 string characters out of 2880557
+ 436950 words of memory out of 3000000
+ 24275 multiletter control sequences out of 15000+200000
  541823 words of font info for 52 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,10n,77p,397b,330s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 72i,10n,77p,398b,266s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\gxhan\AppData\L
 ocal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><C:/Users/gxhan/AppD
 ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/g
@@ -441,7 +448,7 @@ ic/amsfonts/cm/cmr12.pfb><C:/Users/gxhan/AppData/Local/Programs/MiKTeX/fonts/ty
 pe1/public/amsfonts/cm/cmr17.pfb><C:/Users/gxhan/AppData/Local/Programs/MiKTeX/
 fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/gxhan/AppData/Local/Programs/
 MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on template_Report.pdf (3 pages, 161228 bytes).
+Output written on template_Report.pdf (3 pages, 161385 bytes).
 PDF statistics:
  56 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

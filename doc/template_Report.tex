@@ -1,11 +1,10 @@
-%\documentclass[12pt]{article}
 
 \documentclass[12pt]{article}
 
 \usepackage[a4paper, margin=1in]{geometry}
 
 \usepackage{mathtools}
-
+\usepackage{multirow}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{mathtools}
@@ -23,7 +22,7 @@
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.95}
 \usepackage{titlesec, color}
-
+\usepackage{listings}
 \definecolor{gray75}{gray}{0.75}
 \newcommand{\hsp}{\hspace{10pt}}
 \titleformat{\section}[hang]{\Huge\bfseries}{\thesection\hsp\textcolor{gray75}{|}\hsp}{0pt}{\Huge\bfseries}
@@ -51,42 +50,37 @@
 
 \includeonly{
 	chapters/introduction,
-	chapters/modeling,
-	chapters/implementation,
-	chapters/verification,
-	chapters/simulation_experiments,
-	chapters/conclusions
 }
 
 \begin{document}
-
-
-\begin{titlepage}
-	\begin{center}
-		\begin{figure}
-			\includegraphics[width=\textwidth]{img/marchio_unipi_pant541-eps-converted-to.pdf}         
-		\end{figure}
-		{\Large
-			Computer Engineering\\
-			\vspace{5mm} %5mm vertical space
-			Distributed Systems and Middleware Technologies}\\
-		\vspace{30mm} %5mm vertical space
-		{\Huge\textbf{\textit{Slotted random-access wireless network}}}\\
-		\vspace{10mm} %5mm vertical space
-		{\Large Group Project Report}\\
-		\par\noindent\rule{\textwidth}{0.4pt}
-		\begin{flushright}
-			\textit{TEAM MEMBERS}:\\
-			Tommaso Burlon\\ 
-			Francesco Iemma\\ 
-			Olgerti Xhanej\\
+	
+	
+	\begin{titlepage}
+		\begin{center}
 			
-		\end{flushright}
-		\vfill
-		Academic Year: 2020/2021\\        
-	\end{center}
-\end{titlepage} 
-\tableofcontents
-
-\include{chapters/introduction}
+			\begin{center}
+				\includegraphics[width=0.8\textwidth]{img/marchio_unipi_pant541-eps-converted-to.pdf}         
+			\end{center}
+			{\Large
+				\vspace{15mm}
+				Computer Engineering\\
+				\vspace{5mm}
+				Distributed Systems and Middleware Technologies}\\
+			\vspace{30mm} 
+			{\Huge\textbf{\textit{Project Documentation}}}\\
+			\vspace{70mm} 
+			\par\noindent\rule{\textwidth}{0.4pt}
+			\begin{flushright}
+				\textit{TEAM MEMBERS}:\\
+				Tommaso Burlon\\
+				Francesco Iemma\\
+				Olgerti Xhanej\\
+			\end{flushright}
+			\vfill
+			Academic Year: 2021/2022\\        
+		\end{center}
+	\end{titlepage} 
+	\tableofcontents
+	
+	\include{chapters/introduction}
 \end{document}          
