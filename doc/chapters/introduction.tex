@@ -1,43 +1,55 @@
 \section{Project Specifications}
 
+\textbf{AuctionHandler} is a distributed web-app in which users can sell their goods by creating some Online Auctions. 
 
-\subsection{Problem Description}
-From the group project assignment:
-\vspace{0.4cm}
+\subsection{Use Cases}
 
-\textit{In a \textbf{slotted random-access network}, \textbf{N couples transmitter-receiver} share the same communication
-medium, which consists of \textbf{C separate channels}. Multiple attempts to use the same channel in the
-same slot by different transmissions will lead to collision, hence no receiver listening on that
-channel will be able to decode the message.
-Assume that each o\underline{}f the N transmitters generate packets according to an \textbf{exponential inter-arrival
-distribution}, and picks its channel at random on every new transmission. Before sending a packet, it
-keeps extracting a value from a \textbf{Bernoullian RV with success probability p} on every slot, until it
-achieves success. Then it transmits the packet and starts over. If a collision occurs, then the
-transmitter backs off for a random number of slots (see later), and then starts over the whole
-Bernoullian experiment.
-The number of back-off slots is extracted as $U(1, 2^{x+1})$, where x is the number of collisions
-experienced by the packet being transmitted.}
-\subsection{Objectives}
-The aim of the project report is the \textit{Assessment of the Effectiveness of the Slotted Random-Access Network Protocol} described in the latter paragraph.
-\subsection{Performance Indexes}
-In order to define a metric of performance of the objective, the following Performance Indexes are defined:
+An \textit{Unregistered User} can:
 \begin{itemize}
-	\item \textbf{Throughput}: let $Tp$ be the Throughput to be measured, $N_{p}$ the number of packets successfully sent to the corresponding receiver, $N_{t}$ the number of time-slot considered in the count of $N_{p}$, $T_{slot}$ the period (in seconds) of a time slot, the Throughput(per slot) can be measured as:
-	\begin{align*}
-	Tp(slot) = \frac{N_{p}}{N_{t}} \quad [packets/slot]
-	\end{align*}
-	During all the documentation the latter will be used because more meaningful w.r.t. the scenario that will be defined.
-	We can also convert this performance metric in a more standard form, dealing with packets per second:
-	\begin{align*}
-	Tp = \dfrac{Tp(slot)}{T_{slot}} \quad [packets/s]
-	\end{align*}
-	
-	
-	\item \textbf{Response Time}: defined as the time that occurs from the first appearance of one packet at the Transmitter up to the reception of the packet at the Receiver.
-	
-	%\item \textbf{Mean Number of Packets in the queues}: due to the fact that the this metric is time dependent, will be computed as:
-	%\begin{align*}
-	%E[N] = \frac{\sum_{i = 0}^{N}N_{i}*(t_{i+1} - t_{i})}{t_{N} - t_{0}} \quad 
-	%\end{align*}
-	%Where $N_{i}$ are the number of packets in the buffer on the interval $[t_{i}, t_{i+1})$.
+	\item Register to the service
+\end{itemize}
+\noindent
+A \textit{Unlogged User} can:
+\begin{itemize}
+	\item Login to the service
+\end{itemize}
+\noindent
+A \textit{Logged User} can:
+\begin{itemize}
+	\item View list of active Auctions
+	\item Create a new Auction
+	\item Join an Auction
+	\item Logout
+	\item After Joining an Auction:
+	\begin{itemize}
+		\item Do an offer to an Auction
+		\item View list of Auction participant
+		\item View past history of offers
+		\item View Remaining time of the Auction
+		\item Wait until the end of the Auction and then exit
+		\item View Auction Result
+	\end{itemize}
+\end{itemize}
+The \textit{System} must:
+\begin{itemize}
+	\item Remember registered users
+	\item Remember active auctions
+	\item Remember auction participants
+	\item Choose in a unique way the auction winner
+	\item Remember offers history and solve possible conflicts by leveraging time
+	\item Synchronize the remaining time for each auction
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/wireframeDSMT.drawio}
+	\caption{Mockup of the main interface}
+	\label{fig:wireframedsmt}
+\end{figure}
+
+\subsection{Design Ideas}
+We were thinking of implementing the system in the following way, following a 3-tier architecture:
+\begin{itemize}
+	\item \textbf{Presentation Tier}: User Interface via HTML/CSS, generated via Java Servlets and JSP
+	\item \textbf{Business Logic}: consists of data synchronization on nodes (information to synchronize regards the remaining time of an auction, joined users of an auction, auction history, list of available auctions) and auction winner election
+	\item \textbf{Data Access/Storage}: through Erlang by using Mnesia
 \end{itemize}
