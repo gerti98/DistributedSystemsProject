@@ -1,6 +1,6 @@
 \section{Project Specifications}
 
-\textbf{AuctionHandler} is a distributed web-app in which users can sell their goods by creating some Online Auctions. 
+\textbf{AuctionHandler} is a distributed web-app in which users can sell their goods by creating Online Auctions. Registered users have the possibility to join an ongoing auction in order to buy a good in case they beat the concurrence by setting an higher offer on a given limited time.
 
 \subsection{Use Cases}
 
@@ -16,40 +16,51 @@ A \textit{Unlogged User} can:
 \noindent
 A \textit{Logged User} can:
 \begin{itemize}
-	\item View list of active Auctions
+	\item View the list of ongoing Auctions
 	\item Create a new Auction
-	\item Join an Auction
+	\item Join an ongoing Auction
 	\item Logout
 	\item After Joining an Auction:
 	\begin{itemize}
-		\item Do an offer to an Auction
-		\item View list of Auction participant
-		\item View past history of offers
-		\item View Remaining time of the Auction
+		\item Make an offer
+		\item View list of participants
+		\item View past offer history
+		\item View the remaining time 
 		\item Wait until the end of the Auction and then exit
-		\item View Auction Result
+		\item View Auction result
 	\end{itemize}
 \end{itemize}
 The \textit{System} must:
 \begin{itemize}
 	\item Remember registered users
-	\item Remember active auctions
+	\item Remember ongoing auctions
 	\item Remember auction participants
 	\item Choose in a unique way the auction winner
-	\item Remember offers history and solve possible conflicts by leveraging time
-	\item Synchronize the remaining time for each auction
+	\item Remember offers history
+	\item Synchronize the remaining time, the auction participants, the offer history for an auction for each user
+	\item Synchronize the list of ongoing auctions for each user
+	
+	
 \end{itemize}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/wireframeDSMT.drawio}
-	\caption{Mockup of the main interface}
+	\caption{Mock-up of the main interface of the auction}
 	\label{fig:wireframedsmt}
 \end{figure}
 
-\subsection{Design Ideas}
-We were thinking of implementing the system in the following way, following a 3-tier architecture:
+\subsection{Synchronization and Communication Issues}
+On the application we have the following synchronization and communication issues:
 \begin{itemize}
-	\item \textbf{Presentation Tier}: User Interface via HTML/CSS, generated via Java Servlets and JSP
-	\item \textbf{Business Logic}: consists of data synchronization on nodes (information to synchronize regards the remaining time of an auction, joined users of an auction, auction history, list of available auctions) and auction winner election
-	\item \textbf{Data Access/Storage}: through Erlang by using Mnesia
+	\item Client nodes need to be synchronized with the same remaining time of the auction, the same offer history for a given auction, the same list of joined users on a given auction and the same list of available ongoing auctions.
+	\item In case a client makes a valid offer, the server will be in charge of  communicating to other clients nodes the information regarding the made offer. 
+	\item In case a client creates a new auction, the server will be in charge of communicating to other clients the information regarding the newly created auction.
+\end{itemize}
+
+
+\subsection{Design Ideas}
+We were thinking of implementing the system in the following way:
+\begin{itemize}
+	\item \textbf{Client Nodes}: User Interface via HTML/CSS, generated via Java Servlets and JSP. Each client node will have a dedicated Erlang node for communicating with the server
+	\item \textbf{Server}: Made entirely in Erlang. The responsibility of the server will be performing persistent data storage and handling the communication and synchronization between different client nodes
 \end{itemize}
