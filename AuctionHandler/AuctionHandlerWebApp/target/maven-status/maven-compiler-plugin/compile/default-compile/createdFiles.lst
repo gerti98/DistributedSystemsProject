@@ -1,0 +1,5 @@
+servlets\CreateAuctionServlet.class
+servlets\MainMenuServlet.class
+servlets\AuctionServlet.class
+servlets\LoginServlet.class
+servlets\RegistrationServlet.class
