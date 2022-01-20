@@ -4,8 +4,6 @@
 *.plt
 erl_crash.dump
 .concrete/DEV_MODE
-AuctionHandler/.idea/artifacts/AuctionHandlerWebApp_war.xml
-AuctionHandler/.idea
 
 # rebar 2.x
 .rebar
@@ -17,3 +15,21 @@ deps
 .rebar3
 _build/
 _checkouts/
+
+**/.idea
+**/target
+.idea/*
+AuctionHandler/.idea/artifacts/*
+AuctionHandler/.idea/*
+
+AuctionHandler/.idea/artifacts/AuctionHandlerWebApp_war.xml
+AuctionHandler/.idea/artifacts/AuctionHandlerWebApp_war_exploded.xml
+AuctionHandler/.idea/encodings.xml
+AuctionHandler/.idea/misc.xml
+AuctionHandler/AuctionHandlerWebApp/AuctionHandlerWebApp.iml
+AuctionHandler/AuctionHandlerWebApp/target/AuctionHandlerWebApp.war
+AuctionHandler/AuctionHandlerWebApp/target/AuctionHandlerWebApp/pages/auction.jsp
+AuctionHandler/AuctionHandlerWebApp/target/maven-archiver/pom.properties
+AuctionHandler/AuctionHandlerWebApp/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+AuctionHandler/AuctionHandlerWebApp/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+AuctionHandler/ErlangServer/ErlangServer.iml
