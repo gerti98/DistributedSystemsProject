@@ -10,7 +10,7 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, get_user_tmp/1]).
 
 -record(user, {name, password}).
 
@@ -47,7 +47,8 @@ add_user(Username, Password) ->
 get_user(Username_to_find) ->
   R = fun() ->
     Test = mnesia:read(user, Username_to_find, write),
-    io:format("R ret: ~p~n", [Test])
+    io:format("R ret: ~p~n", [Test]),
+    Test
       end,
   Test2 = mnesia:transaction(R),
   io:format("transaction ret: ~p~n", [Test2]).
