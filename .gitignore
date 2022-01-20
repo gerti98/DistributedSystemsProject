@@ -4,6 +4,8 @@
 *.plt
 erl_crash.dump
 .concrete/DEV_MODE
+AuctionHandler/.idea/artifacts/AuctionHandlerWebApp_war.xml
+AuctionHandler/.idea
 
 # rebar 2.x
 .rebar
