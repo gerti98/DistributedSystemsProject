@@ -10,8 +10,7 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, get_user_tmp/1]).
-
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1]).
 -record(user, {name, password}).
 
 %% @doc This function creates a mnesia server. It must be called once at
@@ -19,7 +18,7 @@
 create_mnesia_db() ->
   mnesia:create_schema([node()]),
   application:start(mnesia),
-  %% io:format("Test debug ~n"),
+   io:format("Test debug ~n"),
   mnesia:create_table(user, [
     {attributes, record_info(fields, user)}, {disc_copies, [node()]}]).
 
@@ -46,9 +45,10 @@ add_user(Username, Password) ->
 
 get_user(Username_to_find) ->
   R = fun() ->
-    Test = mnesia:read(user, Username_to_find, write),
-    io:format("R ret: ~p~n", [Test]),
-    Test
+    io:format("Searching for ~s~n", [Username_to_find]),
+    User = #user{name='$1', password = '$2', _ = '_'},
+    Guard = {'==', '$1', Username_to_find},
+    mnesia:select(user, [{User, [Guard], [[:'$1', '$2']]}])
       end,
   Test2 = mnesia:transaction(R),
   io:format("transaction ret: ~p~n", [Test2]).
