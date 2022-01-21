@@ -48,7 +48,7 @@ get_user(Username_to_find) ->
     io:format("Searching for ~s~n", [Username_to_find]),
     User = #user{name='$1', password = '$2', _ = '_'},
     Guard = {'==', '$1', Username_to_find},
-    mnesia:select(user, [{User, [Guard], [[:'$1', '$2']]}])
+    mnesia:select(user, [{User, [Guard], [['$1', '$2']]}])
       end,
   Test2 = mnesia:transaction(R),
   io:format("transaction ret: ~p~n", [Test2]).

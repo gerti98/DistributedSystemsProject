@@ -26,9 +26,9 @@
 
 <%--    <button type="submit"> Complete Auction Creation</button>--%>
 <%--</form>--%>
+<%--<a href="<%=request.getContextPath()%>/MainMenuServlet">Back</a>--%>
+<%--<a href="<%=request.getContextPath()%>/AuctionServlet">Complete Auction Creation</a>--%>
 
-<a href="<%=request.getContextPath()%>/MainMenuServlet">Back</a>
-<a href="<%=request.getContextPath()%>/AuctionServlet">Complete Auction Creation</a>
 <div class="container">
     <h1>Auction Handler - Create Auction</h1>
     <div class="card">

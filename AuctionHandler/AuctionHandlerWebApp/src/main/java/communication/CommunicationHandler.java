@@ -19,7 +19,7 @@ public class CommunicationHandler {
         otpMbox.send(serverPID, serverNode, request);
         System.out.println("Sent request " + operation + " for user " + user.getUsername() + " at server " + serverPID);
 
-        OtpErlangObject message = otpMbox.receive();
+        OtpErlangObject message = otpMbox.receive(5000);
 
         if(message instanceof OtpErlangTuple){
             OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);
