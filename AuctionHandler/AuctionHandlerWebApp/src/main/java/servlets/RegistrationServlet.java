@@ -35,7 +35,7 @@ public class RegistrationServlet extends HttpServlet {
         CommunicationHandler communicationHandler = new CommunicationHandler();
         boolean isSignUpOkay = false;
         try {
-            isSignUpOkay = communicationHandler.performUserSignUp(new User(username, password));
+            isSignUpOkay = communicationHandler.performUserSignUp(request.getSession(), new User(username, password));
         } catch (OtpErlangDecodeException e) {
             e.printStackTrace();
         } catch (OtpErlangExit e) {

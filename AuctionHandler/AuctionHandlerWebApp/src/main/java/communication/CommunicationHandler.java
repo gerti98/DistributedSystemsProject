@@ -3,6 +3,7 @@ package communication;
 import com.ericsson.otp.erlang.*;
 import dto.User;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
@@ -30,20 +31,20 @@ public class CommunicationHandler {
         return status.toString().equals("ok");
     }*/
 
-    public boolean performUserSignUp(User user) throws OtpErlangDecodeException, OtpErlangExit {
+    public boolean performUserSignUp(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform User SignUp");
-        return send(new OtpErlangAtom("register_user"), user);
+        return send(s, new OtpErlangAtom("register_user"), user);
     }
 
-    public boolean performUserLogIn(User user) throws OtpErlangDecodeException, OtpErlangExit {
+    public boolean performUserLogIn(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform User SignIn");
-        return send(new OtpErlangAtom("login"), user);
+        return send(s, new OtpErlangAtom("login"), user);
     }
 
-    public boolean send(OtpErlangObject... values) throws OtpErlangDecodeException, OtpErlangExit{
+    public boolean send(HttpSession session, OtpErlangObject... values) throws OtpErlangDecodeException, OtpErlangExit{
 
         OtpErlangAtom status = new OtpErlangAtom("");
-        OtpMbox otpMbox = OtpMboxSingleton.getInstance();
+        OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
         System.out.println("Created mbox with name: " + otpMbox.getName());
 
         OtpErlangObject[] arr = new OtpErlangObject[values.length + 1];

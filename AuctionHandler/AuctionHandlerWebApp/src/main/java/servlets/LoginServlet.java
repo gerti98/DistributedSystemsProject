@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
         CommunicationHandler communicationHandler = new CommunicationHandler();
         boolean isLoginOkay = false;
         try {
-            isLoginOkay = communicationHandler.performUserLogIn(new User(username, password));
+            isLoginOkay = communicationHandler.performUserLogIn(request.getSession(), new User(username, password));
         } catch (OtpErlangDecodeException e) {
             e.printStackTrace();
         } catch (OtpErlangExit e) {
