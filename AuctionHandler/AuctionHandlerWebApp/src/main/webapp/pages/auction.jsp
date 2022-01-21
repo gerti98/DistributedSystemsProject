@@ -47,7 +47,7 @@
             Joined Users
           </h5>
           <ul class="list-group overflow-auto" style="height: 15rem;">
-            <li class="list-group-item active">User 1</li>
+            <li class="list-group-item active"><%=request.getSession().getAttribute("username")%></li>
             <li class="list-group-item">User 2</li>
             <li class="list-group-item">User 3</li>
             <li class="list-group-item">User 4</li>

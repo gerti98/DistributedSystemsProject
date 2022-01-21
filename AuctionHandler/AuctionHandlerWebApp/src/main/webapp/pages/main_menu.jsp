@@ -20,6 +20,7 @@
 <div class="container">
     <div class="d-flex d-flex justify-content-between p-3">
         <a href="<%=request.getContextPath()%>/LoginServlet" class="btn btn-danger">Logout</a>
+        <h4> Username: <%=request.getSession().getAttribute("username")%></h4>
         <a href="<%=request.getContextPath()%>/CreateAuctionServlet" class="btn btn-primary">CreateAuction</a>
     </div>
     <div class="card">

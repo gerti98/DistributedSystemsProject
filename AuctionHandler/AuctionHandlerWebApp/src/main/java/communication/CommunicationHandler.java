@@ -10,6 +10,7 @@ import java.io.IOException;
 public class CommunicationHandler {
     private static final String serverNode = "server@localhost";
     private static final String serverPID = "main_server_endpoint";
+    private static final int receiveTimeoutMS = 5000;
 
     /*public boolean performSendReply(String operation, User user) throws OtpErlangDecodeException, OtpErlangExit {
         OtpErlangAtom status = new OtpErlangAtom("");
@@ -57,7 +58,7 @@ public class CommunicationHandler {
 
         System.out.println("Sent request " + request + " at server " + serverPID);
 
-        OtpErlangObject message = otpMbox.receive(5000);
+        OtpErlangObject message = otpMbox.receive(receiveTimeoutMS);
 
         if(message instanceof OtpErlangTuple){
             OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);

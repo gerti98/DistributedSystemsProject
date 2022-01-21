@@ -44,11 +44,11 @@
             <form action="<%=request.getContextPath()%>/AuctionServlet" method="post">
                 <div class="mb-3">
                     <label for="goodname" class="form-label">Good Name</label>
-                    <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname">
+                    <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname" required>
                 </div>
                 <div class="mb-3">
                     <label for="startValue" class="form-label">Start Value</label>
-                    <input type="number" class="form-control" name="startValue" placeholder="Enter starting value" id="startValue">
+                    <input type="number" class="form-control" name="startValue" placeholder="Enter starting value" id="startValue" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Create Auction</button>
             </form>

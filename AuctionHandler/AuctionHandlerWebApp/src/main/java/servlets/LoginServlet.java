@@ -18,6 +18,9 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("doGet Login");
+
+        //Remove logged username session attribute (i.e. cause the Logout button was pressed)
+        request.getSession().removeAttribute("username");
         String targetJSP = "/index.jsp";
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
         requestDispatcher.forward(request, response);
@@ -44,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 
 
         if (isLoginOkay) {
-            // TODO: remember session
+            request.getSession().setAttribute("username", username);
             System.out.println("Sign up succeded");
             targetJSP = "/pages/main_menu.jsp";
         } else {

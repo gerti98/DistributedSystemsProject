@@ -1,0 +1,3 @@
+1) If needed recompile erlang sources by running the make.sh script (in Windows >sh make.sh should work)
+2) Run run.sh script
+3) On the opened erlang cli run: > main_server:start_main_server().
