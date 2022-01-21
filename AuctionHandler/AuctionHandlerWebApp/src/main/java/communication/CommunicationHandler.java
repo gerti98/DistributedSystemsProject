@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class CommunicationHandler {
     private static final String serverNode = "server@localhost";
-    private static final String serverPID = "main_server";
+    private static final String serverPID = "main_server_endpoint";
 
     /*public boolean performSendReply(String operation, User user) throws OtpErlangDecodeException, OtpErlangExit {
         OtpErlangAtom status = new OtpErlangAtom("");
@@ -33,7 +33,7 @@ public class CommunicationHandler {
 
     public boolean performUserSignUp(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform User SignUp");
-        return send(s, new OtpErlangAtom("register_user"), user);
+        return send(s, new OtpErlangAtom("register"), user);
     }
 
     public boolean performUserLogIn(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
