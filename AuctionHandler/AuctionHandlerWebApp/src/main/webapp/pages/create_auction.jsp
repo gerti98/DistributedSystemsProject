@@ -15,6 +15,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 <body>
+
+
 <%--<h2>Auction Handler - Create Auction</h2>--%>
 <%--<form method="post">--%>
 <%--    <div>Good Name</div>--%>
@@ -30,37 +32,25 @@
 <%--<a href="<%=request.getContextPath()%>/AuctionServlet">Complete Auction Creation</a>--%>
 
 <div class="container">
-    <h1>Auction Handler - Create Auction</h1>
+    <div class="d-flex p-3">
+        <a href="<%=request.getContextPath()%>/MainMenuServlet" class="btn btn-danger">Back</a>
+    </div>
     <div class="card">
+
+        <h3 class="d-flex justify-content-center p-3">
+            Create Auction
+        </h3>
         <div class="card-body">
             <form action="<%=request.getContextPath()%>/AuctionServlet" method="post">
-
-                <div class="form-group row">
-                    <label for="goodName" class="col-sm-2 col-form-label">Good Name</label>
-                    <div class="col-sm-7">
-                        <input type="text" class="form-control" name="goodName"
-                               placeholder="Enter Good name">
-                    </div>
+                <div class="mb-3">
+                    <label for="goodname" class="form-label">Good Name</label>
+                    <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname">
                 </div>
-
-                <div class="form-group row">
-                    <label for="value" class="col-sm-2 col-form-label">Starting Value</label>
-                    <div class="col-sm-7">
-                        <input type="text" class="form-control" name="value"
-                               placeholder="Enter Starting Value">
-                    </div>
+                <div class="mb-3">
+                    <label for="startValue" class="form-label">Start Value</label>
+                    <input type="number" class="form-control" name="startValue" placeholder="Enter starting value" id="startValue">
                 </div>
-
-                <div class=" form-group row">
-                    <label for="imageURL" class="col-sm-2 col-form-label">Image URL</label>
-                    <div class="col-sm-7">
-                        <input type="text" class="form-control" name="username"
-                               placeholder="Enter image URL">
-                    </div>
-                </div>
-
-
-                <button type="submit" class="btn btn-primary">Complete Create Auction</button>
+                <button type="submit" class="btn btn-primary">Create Auction</button>
             </form>
         </div>
     </div>
