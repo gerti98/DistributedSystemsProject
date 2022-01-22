@@ -8,14 +8,16 @@ import com.ericsson.otp.erlang.OtpErlangString;
 public class Auction extends OtpErlangMap{
     String goodName;
     int startingValue;
+    String username;
 
-    public Auction(String goodName, int startingValue) {
+    public Auction(String goodName, int startingValue, String username) {
         super(
-                new OtpErlangObject[]{new OtpErlangString("goodName"), new OtpErlangString("startingValue")},
-                new OtpErlangObject[]{new OtpErlangString(goodName), new OtpErlangInt(startingValue)}
+                new OtpErlangObject[]{new OtpErlangString("goodName"), new OtpErlangString("startingValue"), new OtpErlangString("username")},
+                new OtpErlangObject[]{new OtpErlangString(goodName), new OtpErlangInt(startingValue), new OtpErlangString(username)}
         );
         this.goodName = goodName;
         this.startingValue = startingValue;
+        this.username = username;
     }
 
     public String getGoodName() {
@@ -24,5 +26,9 @@ public class Auction extends OtpErlangMap{
 
     public int getStartingValue() {
         return startingValue;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

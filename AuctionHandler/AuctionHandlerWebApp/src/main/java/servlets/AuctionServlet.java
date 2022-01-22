@@ -30,15 +30,15 @@ public class AuctionServlet extends HttpServlet {
         String targetJSP;
         String goodname = request.getParameter("goodname");
         int startValue = Integer.parseInt(request.getParameter("startValue"));
-
+        String username = (String) request.getSession().getAttribute("username");
 
         System.out.println("DoPost Auction Creation");
-        System.out.println("goodname: " + goodname + "\nstartValue: " + startValue);
+        System.out.println("goodname: " + goodname + "\nstartValue: " + startValue + "\nusername: " + username);
 
         CommunicationHandler communicationHandler = new CommunicationHandler();
         boolean isAuctionCreationOkay = false;
         try {
-            isAuctionCreationOkay = communicationHandler.performAuctionCreation(request.getSession(), new Auction(goodname, startValue));
+            isAuctionCreationOkay = communicationHandler.performAuctionCreation(request.getSession(), new Auction(goodname, startValue, username));
         } catch (OtpErlangDecodeException e) {
             e.printStackTrace();
         } catch (OtpErlangExit e) {
