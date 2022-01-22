@@ -21,6 +21,7 @@ public class LoginServlet extends HttpServlet {
 
         //Remove logged username session attribute (i.e. cause the Logout button was pressed)
         request.getSession().removeAttribute("username");
+        request.getSession().removeAttribute("loginStatus");
         String targetJSP = "/index.jsp";
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
         requestDispatcher.forward(request, response);
@@ -45,10 +46,12 @@ public class LoginServlet extends HttpServlet {
 
         if (isLoginOkay) {
             request.getSession().setAttribute("username", username);
+            request.getSession().removeAttribute("loginStatus");
             System.out.println("Sign up succeded");
             response.sendRedirect(request.getContextPath() + "/MainMenuServlet");
         } else {
             System.out.println("Sign in failed");
+            request.getSession().setAttribute("loginStatus", "error");
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/index.jsp");
             requestDispatcher.forward(request, response);
         }

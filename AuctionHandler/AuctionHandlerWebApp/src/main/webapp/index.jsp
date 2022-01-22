@@ -28,12 +28,22 @@
             <form action="<%=request.getContextPath()%>/LoginServlet" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="username" placeholder="Enter username" aria-describedby="username" required>
+                    <input type="text" class="form-control" name="username" placeholder="Enter username" aria-describedby="username" id="username" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Enter password" id="exampleInputPassword1" required>
+                    <input type="password" class="form-control" name="password" placeholder="Enter password" id="password" required>
                 </div>
+                <%
+                    String loginStatus = (String) request.getSession().getAttribute("loginStatus");
+                    if(loginStatus != null && loginStatus.equals("error")) {
+                %>
+                    <div class="alert alert-danger" role="alert">
+                        There was an unexpected error, please retry later.
+                    </div>
+                <%
+                    }
+                %>
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
             <div>Not Registered? Sign up <a href="<%=request.getContextPath()%>/RegistrationServlet">here</a></div>

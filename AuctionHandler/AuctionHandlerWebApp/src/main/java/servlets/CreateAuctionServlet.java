@@ -18,6 +18,7 @@ public class CreateAuctionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String targetJSP = "/pages/create_auction.jsp";
+        request.getSession().removeAttribute("auctionCreationStatus");
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
         requestDispatcher.forward(request, response);
     }
@@ -46,6 +47,7 @@ public class CreateAuctionServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/AuctionServlet");
         } else {
             System.out.println("Auction creation failed");
+            request.getSession().setAttribute("auctionCreationStatus", "error");
             RequestDispatcher requestDispatcher = request.getRequestDispatcher( "/pages/create_auction.jsp");
             requestDispatcher.forward(request, response);
         }

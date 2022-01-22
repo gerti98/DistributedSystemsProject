@@ -44,6 +44,16 @@
                     <label for="confirmPassword" class="form-label">Confirm Password</label>
                     <input type="password" class="form-control" name="confirmPassword" placeholder="Enter password" id="confirmPassword">
                 </div>
+                <%
+                    String registrationStatus = (String) request.getSession().getAttribute("registrationStatus");
+                    if(registrationStatus != null && registrationStatus.equals("error")) {
+                %>
+                <div class="alert alert-danger" role="alert">
+                    There was an unexpected error, please retry later.
+                </div>
+                <%
+                    }
+                %>
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
             <div>Already Registered? Sign in <a href="<%=request.getContextPath()%>/LoginServlet">here</a></div>

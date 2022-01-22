@@ -46,10 +46,23 @@
                     <label for="goodname" class="form-label">Good Name</label>
                     <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname" id="goodname" required>
                 </div>
+<%--                <div class="mb-3">--%>
+<%--                    <label for="startValue" class="form-label">Start Value</label>--%>
+<%--                    <input type="number" class="form-control" name="startValue" placeholder="Enter starting value" id="startValue" required>--%>
+<%--                </div>--%>
                 <div class="mb-3">
                     <label for="startValue" class="form-label">Start Value</label>
-                    <input type="number" class="form-control" name="startValue" placeholder="Enter starting value" id="startValue" required>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">€</span>
+                        </div>
+                        <input type="number" class="form-control" name="startValue" placeholder="Enter starting value" id="startValue" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="mb-3">
                     <label for="imageURL" class="form-label">Image URL</label>
                     <input type="text" class="form-control" name="imageURL" placeholder="Enter URL of symbolic image" aria-describedby="imageURL" id="imageURL" required>

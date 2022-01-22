@@ -39,11 +39,13 @@
                         %>
                             <div class="card w-25">
                                 <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
-                                <div class="card-body">
-                                    <h5 class="card-title"><%=auction.getGoodName()%></h5>
-                                    <div>From: <%=auction.getStartingValue()%>€</div>
-                                    <div>Created By: <%=auction.getUsername()%></div>
-                                    <a href="<%=request.getContextPath()%>/AuctionServlet" class="btn btn-primary">Enter</a>
+                                <div class="card-body d-flex flex-column justify-content-between p-3">
+                                    <div>
+                                        <h5 class="card-title"><%=auction.getGoodName()%></h5>
+                                        <div>From: <%=auction.getStartingValue()%>€</div>
+                                        <div>Created By: <%=auction.getUsername()%></div>
+                                    </div>
+                                    <a href="<%=request.getContextPath()%>/AuctionServlet" class="btn btn-primary m-3">Enter</a>
                                 </div>
                             </div>
                         <%

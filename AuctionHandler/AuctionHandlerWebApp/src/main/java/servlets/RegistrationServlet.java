@@ -19,6 +19,8 @@ public class RegistrationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("doGet");
         String targetJSP = "/pages/registration.jsp";
+
+        request.getSession().removeAttribute("registrationStatus");
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
         requestDispatcher.forward(request, response);
     }
@@ -44,6 +46,7 @@ public class RegistrationServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
         } else {
             System.out.println("Sign in failed");
+            request.getSession().setAttribute("registrationStatus", "error");
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/registration.jsp");
             requestDispatcher.forward(request, response);
         }
