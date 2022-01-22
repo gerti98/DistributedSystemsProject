@@ -10,10 +10,10 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/4, get_auction/1]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/5, get_active_auctions/0, get_auction/1]).
 
 -record(user, {name, password}).
--record(auction, {name, startingValue, creator, pid}).
+-record(auction, {name, startingValue, imageURL, creator, pid}).
 
 %% @doc This function creates a mnesia server. It must be called once at
 %% the beginning of the application life cycle.
@@ -55,17 +55,26 @@ get_user(Username_to_find) ->
       end,
   mnesia:transaction(R).
 
-add_auction(ObjectName, InitialValue, Creator, Pid) ->
-  io:format(" Adding Auction ~p ~p ~p ~p ~n", [ObjectName, InitialValue, Creator, Pid]),
-  F = fun() -> mnesia:write(#auction{name=ObjectName, startingValue = InitialValue, creator = Creator, pid = Pid}) end,
+add_auction(ObjectName, InitialValue, ImageURL, Creator, Pid) ->
+  io:format(" Adding Auction ~p ~p ~p ~p ~p ~n", [ObjectName, InitialValue, ImageURL, Creator, Pid]),
+  F = fun() -> mnesia:write(#auction{name=ObjectName, startingValue = InitialValue, imageURL = ImageURL, creator = Creator, pid = Pid}) end,
+  mnesia:transaction(F).
+
+
+get_active_auctions() ->
+  io:format("Getting Active Auctions List~n"),
+  F = fun() ->
+    Auction = #auction{name='$1', startingValue='$2', imageURL = '$3', creator='$4', pid='$5', _ = '_'},
+    mnesia:select(auction, [{Auction, [], [['$1', '$2', '$3', '$4', '$5']]}])
+      end,
   mnesia:transaction(F).
 
 get_auction(Object_name_to_find) ->
   %%io:format(" Dummy Search for ~p~n", [Object_name_to_find]),
   R = fun() ->
     io:format("Searching for ~s~n", [Object_name_to_find]),
-    Auction = #auction{name='$1', startingValue = '$2', creator = '$3', pid = '$4', _ = '_'},
+    Auction = #auction{name='$1', startingValue='$2', imageURL = '$3', creator='$4', pid='$5', _ = '_'},
     Guard = {'==', '$1', Object_name_to_find},
-    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4']]}])
+    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5']]}])
       end,
   mnesia:transaction(R).

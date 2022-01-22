@@ -5,13 +5,15 @@ import dto.Auction;
 import dto.User;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CommunicationHandler {
     private static final String serverNode = "server@localhost";
     private static final String serverPID = "main_server_endpoint";
     private static final int receiveTimeoutMS = 5000;
+    private static final int receiveFetchMS = 100;
 
     /*public boolean performSendReply(String operation, User user) throws OtpErlangDecodeException, OtpErlangExit {
         OtpErlangAtom status = new OtpErlangAtom("");
@@ -35,21 +37,30 @@ public class CommunicationHandler {
 
     public boolean performUserSignUp(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform User SignUp");
-        return send(s, new OtpErlangAtom("register"), user);
+        send(s, new OtpErlangAtom("register"), user);
+        return receiveRequestResult(s);
+
     }
 
     public boolean performUserLogIn(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform User SignIn");
-        return send(s, new OtpErlangAtom("login"), user);
+        send(s, new OtpErlangAtom("login"), user);
+        return receiveRequestResult(s);
     }
 
     public boolean performAuctionCreation(HttpSession s, Auction auction) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform Auction creation");
-        return send(s, new OtpErlangAtom("create_auction"), auction);
+        send(s, new OtpErlangAtom("create_auction"), auction);
+        return receiveRequestResult(s);
     }
-    public boolean send(HttpSession session, OtpErlangObject... values) throws OtpErlangDecodeException, OtpErlangExit{
 
-        OtpErlangAtom status = new OtpErlangAtom("");
+    public List<Auction> fetchActiveAuctions(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
+        System.out.println("Trying to fetch Active Auctions");
+        send(s, new OtpErlangAtom("get_active_auctions"));
+        return receiveFetchAuctionResult(s);
+    }
+
+    public void send(HttpSession session, OtpErlangObject... values){
         OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
         System.out.println("Created mbox with name: " + otpMbox.getName());
 
@@ -60,17 +71,46 @@ public class CommunicationHandler {
 
         OtpErlangTuple request = new OtpErlangTuple(arr);
         otpMbox.send(serverPID, serverNode, request);
-
         System.out.println("Sent request " + request + " at server " + serverPID);
 
-        OtpErlangObject message = otpMbox.receive(receiveTimeoutMS);
+    }
 
+    public boolean receiveRequestResult(HttpSession session) throws OtpErlangDecodeException, OtpErlangExit {
+        OtpErlangAtom status = new OtpErlangAtom("");
+        OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
+        OtpErlangObject message = otpMbox.receive(receiveTimeoutMS);
         if(message instanceof OtpErlangTuple){
             OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);
-            status = (OtpErlangAtom) ((OtpErlangTuple) message).elementAt(1);
-            System.out.println("Received message content: {" + serverPID.toString() + ", " + status.toString() + "}");
+            OtpErlangTuple resulTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(1);
+            status = (OtpErlangAtom) (resulTuple).elementAt(0);
         }
-
         return status.toString().equals("ok");
+    }
+
+
+    private List<Auction> receiveFetchAuctionResult(HttpSession session) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
+        List<Auction> auctionList = new ArrayList<>();
+        OtpErlangAtom status = new OtpErlangAtom("");
+        OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
+        OtpErlangObject message = otpMbox.receive(receiveFetchMS);
+        if(message instanceof OtpErlangTuple){
+            OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);
+            OtpErlangTuple resulTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(1);
+            status = (OtpErlangAtom) (resulTuple).elementAt(0);
+            OtpErlangList resultList = (OtpErlangList) (resulTuple).elementAt(1);
+
+            for(OtpErlangObject result : resultList){
+                OtpErlangList list = (OtpErlangList) result;
+                String goodname = ((OtpErlangString) list.elementAt(0)).stringValue();
+                long value = ((OtpErlangLong) list.elementAt(1)).longValue();
+                String imageURL =  ((OtpErlangString) list.elementAt(2)).stringValue();
+                String username = ((OtpErlangString) list.elementAt(3)).stringValue();
+                OtpErlangPid pid = ((OtpErlangPid) list.elementAt(4));
+
+                System.out.println("fetched auction (goodname: "+ goodname + ", startingValue:" + value + ", imageURL:" + imageURL + ", username:" + username + ", pid: " + pid.toString() + ")");
+                auctionList.add(new Auction(goodname, value, imageURL, username, pid));
+            }
+        }
+        return auctionList;
     }
 }

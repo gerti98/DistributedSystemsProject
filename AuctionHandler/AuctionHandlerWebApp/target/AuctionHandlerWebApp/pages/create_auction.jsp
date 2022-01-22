@@ -41,16 +41,20 @@
             Create Auction
         </h3>
         <div class="card-body">
-            <form action="<%=request.getContextPath()%>/AuctionServlet" method="post">
+            <form action="<%=request.getContextPath()%>/CreateAuctionServlet" method="post">
                 <div class="mb-3">
                     <label for="goodname" class="form-label">Good Name</label>
-                    <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname" required>
+                    <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname" id="goodname" required>
                 </div>
                 <div class="mb-3">
                     <label for="startValue" class="form-label">Start Value</label>
                     <input type="number" class="form-control" name="startValue" placeholder="Enter starting value" id="startValue" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Create Auction</button>
+                <div class="mb-3">
+                    <label for="imageURL" class="form-label">Image URL</label>
+                    <input type="text" class="form-control" name="imageURL" placeholder="Enter URL of symbolic image" aria-describedby="imageURL" id="imageURL" required>
+                </div>
+                <button type="submit" class="btn btn-primary m-3">Create Auction</button>
             </form>
         </div>
     </div>

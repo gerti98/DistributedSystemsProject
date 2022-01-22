@@ -19,7 +19,7 @@
 %% - registering and create a new auction
 %% - ecc.... (TODO)
 %% API
--export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/3, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2]).
+-export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/4, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2]).
 -export([init/1, handle_call/3, handle_cast/2]). %% Necessary otherwise nothing work
 
 % API functions
@@ -33,11 +33,11 @@ start_main_server() ->
   Return.
 
 %% ---- IMPORTANT ---
-%% Expected reply for correct operation (login, registration) from server: {self(), ok}
-%% Expected reply for any error on operation from server: {self(), false}
+%% Expected reply for correct operation (login, registration) from server: {self(), {ok}}
+%% Expected reply for any error on operation from server: {self(), {false}}
 %% I.E.
 %% The client will send a message like this: {#Pid<client@localhost.1.0>,login,#{"username" => "Pippo","password" => "Pippo"}}
-%% The server will reply with {self(), ok} if User "Pippo" exists and the related pwd is "Pippo", false otherwise
+%% The server will reply with {self(), {ok}} if User "Pippo" exists and the related pwd is "Pippo", false otherwise
 endpoint_loop() ->
   receive
     {ClientPid, register, MessageMap} ->
@@ -49,9 +49,11 @@ endpoint_loop() ->
       Result = login_user(maps:get("username", MessageMap), maps:get("password", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, create_auction, MessageMap} ->
-      Result = create_new_auction(maps:get("goodName", MessageMap), maps:get("startingValue", MessageMap),maps:get("username", MessageMap)),
+      io:format("Received a create auction message~n"),
+      Result = create_new_auction(maps:get("goodName", MessageMap), maps:get("startingValue", MessageMap), maps:get("imageURL", MessageMap), maps:get("username", MessageMap)),
       ClientPid ! {self(), Result};
-    {ClientPid, get_active_auctions, MessageMap} ->
+    {ClientPid, get_active_auctions} ->
+      io:format("Received a get active auctions message~n"),
       Result = get_active_auction_list(),
       ClientPid ! {self(), Result};
     _ -> io:format("Received any message~n")
@@ -67,8 +69,8 @@ get_user_by_username(Username) ->
 
 register_user(Username, Pw) ->
   case gen_server:call(main_server, {register, Username, Pw}) of
-    {atomic, ok} -> ok;
-    _ -> false
+    {atomic, ok} -> {ok};
+    _ -> {false}
   end.
 
 login_user(Username, Pw) ->
@@ -76,18 +78,25 @@ login_user(Username, Pw) ->
     {atomic, [UserTuple | _]} ->
       %% The second field of UserTuple is the Password
       case lists:nth(2, UserTuple) == Pw of
-        true -> ok;
-        false -> false
+        true -> {ok};
+        false -> {false}
       end;
-    _ -> false
+    _ -> {false}
   end.
 
 
 get_active_auction_list() ->
-  gen_server:call(main_server, auction_list).
+  case gen_server:call(main_server, auction_list) of
+    {atomic, AuctionList} ->
+      {ok, AuctionList};
+    _ -> {false}
+  end.
 
-create_new_auction(ObjName, InitValue, Creator) ->
-  gen_server:call(main_server, {new_auction, ObjName, InitValue, Creator}).
+create_new_auction(ObjName, InitValue, ImageURL, Creator) ->
+  case gen_server:call(main_server, {new_auction, ObjName, InitValue, ImageURL, Creator}) of
+    {{atomic, ok}, PidAuctionHandler} -> {ok, PidAuctionHandler};
+    _ -> {false}
+  end.
 
 reset() ->
   gen_server:cast(main_server, reset).
@@ -102,10 +111,12 @@ init([]) ->
 handle_call(user_list, _From, ServerState) ->
   {reply, {todo, da, user_list_call}, ServerState};
 handle_call(auction_list, _From, ServerState) ->
-  {reply, ServerState, ServerState};
-handle_call({new_auction, ObjName, InitValue, Creator}, _From, ServerState) ->
+  Ret = mnesia_db:get_active_auctions(),
+  io:format("Result: ~p~n", [Ret]),
+  {reply, Ret, ServerState};
+handle_call({new_auction, ObjName, InitValue, ImageURL, Creator}, _From, ServerState) ->
   PidHandler = spawn( fun() -> auction_handler:auction_loop() end),
-  Ret = mnesia_db:add_auction(ObjName, InitValue, Creator, PidHandler),
+  Ret = mnesia_db:add_auction(ObjName, InitValue, ImageURL, Creator, PidHandler),
   io:format(" Return of add_auction: ~p~n", [Ret]),
   io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
   PidHandler ! {self(), debug},

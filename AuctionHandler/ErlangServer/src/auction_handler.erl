@@ -14,7 +14,7 @@
 
 auction_loop() ->
   receive
-    {From, debug} ->
+    {_, debug} ->
       io:format(" dummy auction handler is running ~n"),
       auction_loop();
     _ ->

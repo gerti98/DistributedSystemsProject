@@ -25,7 +25,6 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String targetJSP;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -36,20 +35,17 @@ public class RegistrationServlet extends HttpServlet {
         boolean isSignUpOkay = false;
         try {
             isSignUpOkay = communicationHandler.performUserSignUp(request.getSession(), new User(username, password));
-        } catch (OtpErlangDecodeException e) {
-            e.printStackTrace();
-        } catch (OtpErlangExit e) {
+        } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }
 
         if (isSignUpOkay){
-            System.out.println("Sign up succeeded");
-            targetJSP = "/index.jsp";
+            System.out.println("Sign up succeded");
+            response.sendRedirect(request.getContextPath() + "/LoginServlet");
+        } else {
+            System.out.println("Sign in failed");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/registration.jsp");
+            requestDispatcher.forward(request, response);
         }
-        else
-            targetJSP = "/pages/registration.jsp";
-
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
-        requestDispatcher.forward(request, response);
     }
 }

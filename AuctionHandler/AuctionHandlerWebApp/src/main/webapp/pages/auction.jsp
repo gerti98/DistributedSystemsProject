@@ -29,6 +29,8 @@
 
       <div class="d-flex flex-column justify-content-around" style="width: 30%;">
         <img class="card-img-top" src="<%=request.getContextPath()%>/resources/ferrari.png" alt="Ferrari image">
+<%--        <img class="card-img-top" src="<%=request.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">--%>
+
         <h5 class="d-flex justify-content-center">
           <div>Remaining Time: <b>00:00:20</b></div>
 

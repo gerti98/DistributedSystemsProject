@@ -39,23 +39,19 @@ public class LoginServlet extends HttpServlet {
         boolean isLoginOkay = false;
         try {
             isLoginOkay = communicationHandler.performUserLogIn(request.getSession(), new User(username, password));
-        } catch (OtpErlangDecodeException e) {
-            e.printStackTrace();
-        } catch (OtpErlangExit e) {
+        } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }
-
 
         if (isLoginOkay) {
             request.getSession().setAttribute("username", username);
             System.out.println("Sign up succeded");
-            targetJSP = "/pages/main_menu.jsp";
+            response.sendRedirect(request.getContextPath() + "/MainMenuServlet");
         } else {
             System.out.println("Sign in failed");
-            targetJSP = "/index.jsp";
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/index.jsp");
+            requestDispatcher.forward(request, response);
         }
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
-        requestDispatcher.forward(request, response);
     }
 }

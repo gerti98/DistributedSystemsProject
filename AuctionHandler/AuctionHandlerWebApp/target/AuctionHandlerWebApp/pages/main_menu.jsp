@@ -1,4 +1,6 @@
-<%--
+<%@ page import="dto.Auction" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.io.OutputStream" %><%--
   Created by IntelliJ IDEA.
   User: gxhan
   Date: 19/01/2022
@@ -15,44 +17,41 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 <body>
-
-
-<div class="container">
-    <div class="d-flex d-flex justify-content-between p-3">
-        <a href="<%=request.getContextPath()%>/LoginServlet" class="btn btn-danger">Logout</a>
-        <h4> Username: <%=request.getSession().getAttribute("username")%></h4>
-        <a href="<%=request.getContextPath()%>/CreateAuctionServlet" class="btn btn-primary">CreateAuction</a>
-    </div>
-    <div class="card">
-        <h3 class="d-flex justify-content-center p-3">
-            Available Auctions
-        </h3>
-        <div class="d-flex justify-content-around p-4">
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="<%=request.getContextPath()%>/resources/ferrari.jpg" alt="Ferrari image">
-                <div class="card-body">
-                    <h5 class="card-title">Ferrari</h5>
-                    <a href="<%=request.getContextPath()%>/AuctionServlet" class="btn btn-primary">Enter</a>
-                </div>
+    <div class="container">
+        <div class="d-flex d-flex justify-content-between p-3">
+            <a href="<%=request.getContextPath()%>/LoginServlet" class="btn btn-danger">Logout</a>
+            <h4> Username: <%=request.getSession().getAttribute("username")%></h4>
+            <a href="<%=request.getContextPath()%>/CreateAuctionServlet" class="btn btn-primary">CreateAuction</a>
+        </div>
+        <div class="card">
+            <h3 class="d-flex justify-content-center p-3">
+                Available Auctions
+            </h3>
+            <div class="p-4 d-flex flex-wrap">
+                    <%
+                        List<Auction> auctionList = (List<Auction>) request.getAttribute("auctionList");
+                        if(auctionList == null || auctionList.size() == 0){
+                    %>
+                        <h5 class="d-flex justify-content-center p-3">Nothing to Show<h5>
+                    <%
+                        } else {
+                            for(Auction auction : auctionList){
+                        %>
+                            <div class="card w-25">
+                                <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%=auction.getGoodName()%></h5>
+                                    <div>From: <%=auction.getStartingValue()%>€</div>
+                                    <div>Created By: <%=auction.getUsername()%></div>
+                                    <a href="<%=request.getContextPath()%>/AuctionServlet" class="btn btn-primary">Enter</a>
+                                </div>
+                            </div>
+                        <%
+                            }
+                        }
+                    %>
             </div>
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="<%=request.getContextPath()%>/resources/ferrari.jpg" alt="Ferrari image">
-                <div class="card-body">
-                    <h5 class="card-title">Ferrari</h5>
-                    <a href="<%=request.getContextPath()%>/AuctionServlet" class="btn btn-primary">Enter</a>
-                </div>
-            </div>
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="<%=request.getContextPath()%>/resources/ferrari.jpg" alt="Ferrari image">
-                <div class="card-body">
-                    <h5 class="card-title">Ferrari</h5>
-                    <a href="<%=request.getContextPath()%>/AuctionServlet" class="btn btn-primary">Enter</a>
-                </div>
-            </div>
-
         </div>
     </div>
-</div>
-
 </body>
 </html>

@@ -1,5 +1,10 @@
 package servlets;
 
+import com.ericsson.otp.erlang.OtpErlangDecodeException;
+import com.ericsson.otp.erlang.OtpErlangExit;
+import communication.CommunicationHandler;
+import dto.Auction;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,8 +24,30 @@ public class CreateAuctionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("doPost");
-        String bid = request.getParameter("bid");
-        System.out.println("bid: " + bid);
+        String goodname = request.getParameter("goodname");
+        int startValue = Integer.parseInt(request.getParameter("startValue"));
+        String username = (String) request.getSession().getAttribute("username");
+        String imageURL = request.getParameter("imageURL");
+
+        System.out.println("DoPost Auction Creation");
+        System.out.println("goodname: " + goodname + "\nstartValue: " + startValue + "\nusername: " + username);
+
+        CommunicationHandler communicationHandler = new CommunicationHandler();
+        boolean isAuctionCreationOkay = false;
+        try {
+            isAuctionCreationOkay = communicationHandler.performAuctionCreation(request.getSession(), new Auction(goodname, startValue, imageURL, username));
+        } catch (OtpErlangDecodeException | OtpErlangExit e) {
+            e.printStackTrace();
+        }
+
+        if (isAuctionCreationOkay) {
+            //TODO change session
+            System.out.println("Auction creation succeded");
+            response.sendRedirect(request.getContextPath() + "/AuctionServlet");
+        } else {
+            System.out.println("Auction creation failed");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher( "/pages/create_auction.jsp");
+            requestDispatcher.forward(request, response);
+        }
     }
 }
