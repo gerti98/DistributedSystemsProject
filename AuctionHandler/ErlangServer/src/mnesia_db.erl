@@ -10,7 +10,7 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/4]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/4, get_auction/1]).
 
 -record(user, {name, password}).
 -record(auction, {name, startingValue, creator, pid}).
@@ -61,4 +61,11 @@ add_auction(ObjectName, InitialValue, Creator, Pid) ->
   mnesia:transaction(F).
 
 get_auction(Object_name_to_find) ->
-  io:format(" Dummy Search for ~p~n", [Object_name_to_find]).
+  %%io:format(" Dummy Search for ~p~n", [Object_name_to_find]),
+  R = fun() ->
+    io:format("Searching for ~s~n", [Object_name_to_find]),
+    Auction = #auction{name='$1', startingValue = '$2', creator = '$3', pid = '$4', _ = '_'},
+    Guard = {'==', '$1', Object_name_to_find},
+    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4']]}])
+      end,
+  mnesia:transaction(R).
