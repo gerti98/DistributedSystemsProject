@@ -11,6 +11,7 @@
 
 -behavior(gen_server).
 -import(mnesia_db, [create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1]).
+-import(auction_handler, [auction_loop/0]).
 
 %% This server must be able to responds to client requests for:
 %% - the list of online users
@@ -18,8 +19,8 @@
 %% - registering and create a new auction
 %% - ecc.... (TODO)
 %% API
--export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/0, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2]).
--export([init/1, handle_call/3]). %% Necessary otherwise nothing work
+-export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/3, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2]).
+-export([init/1, handle_call/3, handle_cast/2]). %% Necessary otherwise nothing work
 
 % API functions
 
@@ -48,7 +49,8 @@ endpoint_loop() ->
       Result = login_user(maps:get("username", MessageMap), maps:get("password", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, create_auction, MessageMap} ->
-      ClientPid ! {self(), ok};
+      Result = create_new_auction(maps:get("objname", MessageMap), maps:get("initvalue", MessageMap),maps:get("creator", MessageMap)),
+      ClientPid ! {self(), Result};
     {ClientPid, get_active_auctions, MessageMap} ->
       ClientPid ! {self(), ok, []};
     _ -> io:format("Received any message~n")
@@ -83,8 +85,8 @@ login_user(Username, Pw) ->
 get_active_auction_list() ->
   gen_server:call(main_server, auction_list).
 
-create_new_auction() ->
-  gen_server:call(main_server, new_auction).
+create_new_auction(ObjName, InitValue, Creator) ->
+  gen_server:call(main_server, {new_auction, ObjName, InitValue, Creator}).
 
 reset() ->
   gen_server:cast(main_server, reset).
@@ -100,8 +102,12 @@ handle_call(user_list, _From, {0, 0}) ->
   {reply, {todo, da, user_list_call}, {0,0}};
 handle_call(auction_list, _From, {0, 0}) ->
   {reply, {todo, da, auction_list_call}, {0,0}};
-handle_call(new_auction, _From, {0, 0}) ->
-  {reply, {todo, da, new_auction_call}, {0,0}};
+handle_call({new_auction, ObjName, InitValue, Creator}, _From, {0, 0}) ->
+  PidHandler = spawn( fun() -> auction_handler:auction_loop() end),
+  Ret = mnesia_db:add_auction(ObjName, InitValue, Creator, PidHandler),
+  io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
+  PidHandler ! {self(), debug},
+  {reply, {Ret, PidHandler}, {0,0}};
 handle_call({get_user, Username}, _From, {0,0}) ->
   Ret = mnesia_db:get_user(Username),
   {reply, Ret, {0,0}};
@@ -109,11 +115,6 @@ handle_call({register, Username, Pw}, _From, {0,0}) ->
   Ret = mnesia_db:add_user(Username, Pw),
   {reply, Ret, {0,0}}.
 
-%% Template Functions (from examples):
-%% handle_call({gimme,N}, _From, {Total, Times}) ->
-%%  NewTotal = Total+N,
-%%  NewTimes = Times+1,
-%%  {reply, NewTotal/NewTimes, {NewTotal, NewTimes}}; % general format: {reply, ReplyPayload, NewState}
-%%
-%% handle_cast(reset, _State) ->
-%%  {noreply, {0,0}}.           % general format: {noreply, NewState}
+handle_cast(reset, _State) ->
+  {noreply, {0,0}}.           % general format: {noreply, NewState}
+

@@ -10,7 +10,7 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/4]).
 -record(user, {name, password}).
 
 %% @doc This function creates a mnesia server. It must be called once at
@@ -35,7 +35,7 @@ start_mnesia() ->
   application:start(mnesia).
 
 %% @doc This function a running instance of the mnesia server (the
-%% information are mainteined on the disk).
+%% information are maintained on the disk).
 stop_mnesia_db() ->
   application:stop(mnesia).
 
@@ -51,3 +51,6 @@ get_user(Username_to_find) ->
     mnesia:select(user, [{User, [Guard], [['$1', '$2']]}])
       end,
   mnesia:transaction(R).
+
+add_auction(ObjectName, InitialValue, Creator, Pid) ->
+  io:format(" DUMMY ADD - Auction added ~p ~p ~p ~p ~n", [ObjectName, InitialValue, Creator, Pid]).
