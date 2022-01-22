@@ -52,7 +52,8 @@ endpoint_loop() ->
       Result = create_new_auction(maps:get("goodName", MessageMap), maps:get("startingValue", MessageMap),maps:get("username", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, get_active_auctions, MessageMap} ->
-      ClientPid ! {self(), ok, []};
+      Result = get_active_auction_list(),
+      ClientPid ! {self(), Result};
     _ -> io:format("Received any message~n")
   end,
   endpoint_loop().
@@ -93,29 +94,31 @@ reset() ->
 
 
 % gen_server CALLBACK FUNCTIONS
-%% For now the state is {0,0} but it can be anything TODO
+%% The server state maintain the list of active auctions
 init([]) ->
   mnesia_db:start_mnesia(),
-  {ok, {0,0}}.   % general format: {ok, InitialState}
+  {ok, []}.   % general format: {ok, InitialState}
 
-handle_call(user_list, _From, {0, 0}) ->
-  {reply, {todo, da, user_list_call}, {0,0}};
-handle_call(auction_list, _From, {0, 0}) ->
-  {reply, {todo, da, auction_list_call}, {0,0}};
-handle_call({new_auction, ObjName, InitValue, Creator}, _From, {0, 0}) ->
+handle_call(user_list, _From, ServerState) ->
+  {reply, {todo, da, user_list_call}, ServerState};
+handle_call(auction_list, _From, ServerState) ->
+  {reply, ServerState, ServerState};
+handle_call({new_auction, ObjName, InitValue, Creator}, _From, ServerState) ->
   PidHandler = spawn( fun() -> auction_handler:auction_loop() end),
   Ret = mnesia_db:add_auction(ObjName, InitValue, Creator, PidHandler),
   io:format(" Return of add_auction: ~p~n", [Ret]),
   io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
   PidHandler ! {self(), debug},
-  {reply, {Ret, PidHandler}, {0,0}};
-handle_call({get_user, Username}, _From, {0,0}) ->
+  NewState = ServerState ++ [{ObjName, InitValue, Creator, PidHandler}],
+  io:format(" New state is: ~p~n", [NewState]),
+  {reply, {Ret, PidHandler}, NewState};
+handle_call({get_user, Username}, _From, ServerState) ->
   Ret = mnesia_db:get_user(Username),
-  {reply, Ret, {0,0}};
-handle_call({register, Username, Pw}, _From, {0,0}) ->
+  {reply, Ret, ServerState};
+handle_call({register, Username, Pw}, _From, ServerState) ->
   Ret = mnesia_db:add_user(Username, Pw),
-  {reply, Ret, {0,0}}.
+  {reply, Ret, ServerState}.
 
-handle_cast(reset, _State) ->
-  {noreply, {0,0}}.           % general format: {noreply, NewState}
+handle_cast(reset, ServerState) ->
+  {noreply, ServerState}.           % general format: {noreply, NewState}
 
