@@ -49,7 +49,7 @@ endpoint_loop() ->
       Result = login_user(maps:get("username", MessageMap), maps:get("password", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, create_auction, MessageMap} ->
-      Result = create_new_auction(maps:get("objname", MessageMap), maps:get("initvalue", MessageMap),maps:get("creator", MessageMap)),
+      Result = create_new_auction(maps:get("goodName", MessageMap), maps:get("startingValue", MessageMap),maps:get("username", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, get_active_auctions, MessageMap} ->
       ClientPid ! {self(), ok, []};
@@ -105,6 +105,7 @@ handle_call(auction_list, _From, {0, 0}) ->
 handle_call({new_auction, ObjName, InitValue, Creator}, _From, {0, 0}) ->
   PidHandler = spawn( fun() -> auction_handler:auction_loop() end),
   Ret = mnesia_db:add_auction(ObjName, InitValue, Creator, PidHandler),
+  io:format(" Return of add_auction: ~p~n", [Ret]),
   io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
   PidHandler ! {self(), debug},
   {reply, {Ret, PidHandler}, {0,0}};
