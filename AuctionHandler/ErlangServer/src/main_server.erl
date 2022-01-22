@@ -47,6 +47,10 @@ endpoint_loop() ->
       io:format("Received a login message~n"),
       Result = login_user(maps:get("username", MessageMap), maps:get("password", MessageMap)),
       ClientPid ! {self(), Result};
+    {ClientPid, create_auction, MessageMap} ->
+      ClientPid ! {self(), ok};
+    {ClientPid, get_active_auctions, MessageMap} ->
+      ClientPid ! {self(), ok, []};
     _ -> io:format("Received any message~n")
   end,
   endpoint_loop().
@@ -67,6 +71,7 @@ register_user(Username, Pw) ->
 login_user(Username, Pw) ->
   case gen_server:call(main_server, {get_user, Username}) of
     {atomic, [UserTuple | _]} ->
+      %% The second field of UserTuple is the Password
       case lists:nth(2, UserTuple) == Pw of
         true -> ok;
         false -> false

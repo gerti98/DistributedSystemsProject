@@ -1,6 +1,7 @@
 package communication;
 
 import com.ericsson.otp.erlang.*;
+import dto.Auction;
 import dto.User;
 
 import javax.servlet.http.HttpSession;
@@ -42,6 +43,10 @@ public class CommunicationHandler {
         return send(s, new OtpErlangAtom("login"), user);
     }
 
+    public boolean performAuctionCreation(HttpSession s, Auction auction) throws OtpErlangDecodeException, OtpErlangExit {
+        System.out.println("Trying to perform Auction creation");
+        return send(s, new OtpErlangAtom("create_auction"), auction);
+    }
     public boolean send(HttpSession session, OtpErlangObject... values) throws OtpErlangDecodeException, OtpErlangExit{
 
         OtpErlangAtom status = new OtpErlangAtom("");
