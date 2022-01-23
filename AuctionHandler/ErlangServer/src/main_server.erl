@@ -108,8 +108,8 @@ init([]) ->
   mnesia_db:start_mnesia(),
   {ok, []}.   % general format: {ok, InitialState}
 
-handle_call(user_list, _From, ServerState) ->
-  {reply, {todo, da, user_list_call}, ServerState};
+handle_call(user_list, _From, _ServerState) ->
+  {reply, {todo, da, user_list_call}, []};
 handle_call(auction_list, _From, ServerState) ->
   Ret = mnesia_db:get_active_auctions(),
   io:format("Result: ~p~n", [Ret]),
@@ -123,12 +123,12 @@ handle_call({new_auction, ObjName, InitValue, ImageURL, Creator}, _From, ServerS
   NewState = ServerState ++ [{ObjName, InitValue, Creator, PidHandler}],
   io:format(" New state is: ~p~n", [NewState]),
   {reply, {Ret, PidHandler}, NewState};
-handle_call({get_user, Username}, _From, ServerState) ->
+handle_call({get_user, Username}, _From, _ServerState) ->
   Ret = mnesia_db:get_user(Username),
-  {reply, Ret, ServerState};
-handle_call({register, Username, Pw}, _From, ServerState) ->
+  {reply, Ret, []};
+handle_call({register, Username, Pw}, _From, _ServerState) ->
   Ret = mnesia_db:add_user(Username, Pw),
-  {reply, Ret, ServerState}.
+  {reply, Ret, []}.
 
 handle_cast(reset, ServerState) ->
   {noreply, ServerState}.           % general format: {noreply, NewState}
