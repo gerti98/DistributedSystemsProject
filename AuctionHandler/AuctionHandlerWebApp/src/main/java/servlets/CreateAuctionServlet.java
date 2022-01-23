@@ -29,6 +29,7 @@ public class CreateAuctionServlet extends HttpServlet {
         int startValue = Integer.parseInt(request.getParameter("startValue"));
         String username = (String) request.getSession().getAttribute("username");
         String imageURL = request.getParameter("imageURL");
+        Auction auction = new Auction(goodname, startValue, imageURL, username);
 
         System.out.println("DoPost Auction Creation");
         System.out.println("goodname: " + goodname + "\nstartValue: " + startValue + "\nusername: " + username);
@@ -36,14 +37,14 @@ public class CreateAuctionServlet extends HttpServlet {
         CommunicationHandler communicationHandler = new CommunicationHandler();
         boolean isAuctionCreationOkay = false;
         try {
-            isAuctionCreationOkay = communicationHandler.performAuctionCreation(request.getSession(), new Auction(goodname, startValue, imageURL, username));
+            isAuctionCreationOkay = communicationHandler.performAuctionCreation(request.getSession(), auction);
         } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }
 
         if (isAuctionCreationOkay) {
-            //TODO change session
             System.out.println("Auction creation succeded");
+            request.getSession().setAttribute("currentAuction", auction);
             response.sendRedirect(request.getContextPath() + "/AuctionServlet");
         } else {
             System.out.println("Auction creation failed");

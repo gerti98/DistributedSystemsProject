@@ -34,7 +34,7 @@
                   oninput='confirmPassword.setCustomValidity(confirmPassword.value != password.value ? "Passwords do not match." : "")'>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="username" placeholder="Enter username" aria-describedby="username" required>
+                    <input type="text" class="form-control" name="username" placeholder="Enter username" aria-describedby="username" id="username" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>

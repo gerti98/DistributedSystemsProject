@@ -1,4 +1,4 @@
-<%--
+<%@ page import="dto.Auction" %><%--
   Created by IntelliJ IDEA.
   User: gxhan
   Date: 19/01/2022
@@ -20,16 +20,18 @@
   <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
 </div>
-
+  <%
+    Auction auction = (Auction) request.getSession().getAttribute("currentAuction");
+  %>
   <div class="container card my-4">
     <h1 class="d-flex justify-content-center m-3">
-      Auction
+      Auction by: <%=auction.getUsername()%>
     </h1>
     <div class="d-flex justify-content-between p-3">
 
       <div class="d-flex flex-column justify-content-around" style="width: 30%;">
-        <img class="card-img-top" src="<%=request.getContextPath()%>/resources/ferrari.png" alt="Ferrari image">
-<%--        <img class="card-img-top" src="<%=request.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">--%>
+        <h3><%=auction.getGoodName()%></h3>
+        <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
 
         <h5 class="d-flex justify-content-center">
           <div>Remaining Time: <b>00:00:20</b></div>
