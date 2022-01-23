@@ -35,16 +35,14 @@ public class MainMenuServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        String targetJSP = "/pages/main_menu.jsp";
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher( "/pages/main_menu.jsp");
         requestDispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("doPost MainMenu");
-        String targetJSP = "/pages/main_menu.jsp";
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/main_menu.jsp");
         requestDispatcher.forward(request, response);
     }
 }

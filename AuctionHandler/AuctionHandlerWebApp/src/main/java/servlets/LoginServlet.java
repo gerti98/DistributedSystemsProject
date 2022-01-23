@@ -29,17 +29,14 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String targetJSP;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
         System.out.println("DoPost Login");
         System.out.println("username: " + username + "\npassword: " + password);
 
-        CommunicationHandler communicationHandler = new CommunicationHandler();
         boolean isLoginOkay = false;
         try {
-            isLoginOkay = communicationHandler.performUserLogIn(request.getSession(), new User(username, password));
+            isLoginOkay = new CommunicationHandler().performUserLogIn(request.getSession(), new User(username, password));
         } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }

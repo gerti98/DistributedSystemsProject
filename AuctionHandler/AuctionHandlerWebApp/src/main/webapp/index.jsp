@@ -9,18 +9,6 @@
 </head>
 <body>
 
-<%--<h2>Auction Handler - Login Page</h2>--%>
-<%--<form action="<%=request.getContextPath()%>/LoginServlet" method="post">--%>
-<%--    <div>Username</div>--%>
-<%--    <input type="text" name="username">--%>
-<%--    <br>--%>
-<%--    <div>Password</div>--%>
-<%--    <input type="password" name="password">--%>
-<%--    <br>--%>
-<%--    <button type="submit">LOGIN</button>--%>
-<%--</form>--%>
-
-
 <div class="container">
     <h1 class="d-flex justify-content-center my-5">Auction Handler - Login Page</h1>
     <div class="card">

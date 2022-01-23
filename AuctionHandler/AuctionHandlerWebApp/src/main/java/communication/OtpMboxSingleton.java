@@ -7,17 +7,14 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class OtpMboxSingleton {
-    //create an object of SingleObject
-    private static final String node = "client@localhost";
-    private String mailbox;
     private static final String cookie = "abcde";
 
     private OtpMbox otpMbox = null;
 
     private OtpMboxSingleton(String id) throws IOException{
-        mailbox = id;
-        OtpNode otpNode = new OtpNode(node, cookie);
-        otpMbox =  otpNode.createMbox(mailbox);
+        OtpNode otpNode = new OtpNode(id + "@localhost", cookie);
+        otpMbox =  otpNode.createMbox(id);
+        System.out.println("OtpMBOX name: " + otpMbox.getName() + ", otpMBOX pid" + otpMbox.self().toString());
     }
 
     public static OtpMbox getInstance(HttpSession session) {

@@ -34,10 +34,9 @@ public class CreateAuctionServlet extends HttpServlet {
         System.out.println("DoPost Auction Creation");
         System.out.println("goodname: " + goodname + "\nstartValue: " + startValue + "\nusername: " + username);
 
-        CommunicationHandler communicationHandler = new CommunicationHandler();
         boolean isAuctionCreationOkay = false;
         try {
-            isAuctionCreationOkay = communicationHandler.performAuctionCreation(request.getSession(), auction);
+            isAuctionCreationOkay = new CommunicationHandler().performAuctionCreation(request.getSession(), auction);
         } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }

@@ -14,17 +14,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
-<%--<h2>Auction Handler - Register Page</h2>--%>
-<%--<form action="<%=request.getContextPath()%>/RegistrationServlet" method="post">--%>
-<%--    <div>Username</div>--%>
-<%--    <input type="text" name="username">--%>
-<%--    <br>--%>
-<%--    <div>Password</div>--%>
-<%--    <input type="password" name="password">--%>
-<%--    <br>--%>
-<%--    <button type="submit">REGISTER</button>--%>
-<%--</form>--%>
-
 
 <div class="container">
     <h1 class="d-flex justify-content-center my-5">Auction Handler - Register Page</h1>

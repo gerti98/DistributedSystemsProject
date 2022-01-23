@@ -33,10 +33,9 @@ public class RegistrationServlet extends HttpServlet {
         System.out.println("DoPost Registration");
         System.out.println("username: " + username + "\npassword: " + password);
 
-        CommunicationHandler communicationHandler = new CommunicationHandler();
         boolean isSignUpOkay = false;
         try {
-            isSignUpOkay = communicationHandler.performUserSignUp(request.getSession(), new User(username, password));
+            isSignUpOkay = new CommunicationHandler().performUserSignUp(request.getSession(), new User(username, password));
         } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }
