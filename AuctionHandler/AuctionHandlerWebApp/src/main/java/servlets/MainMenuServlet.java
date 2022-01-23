@@ -2,10 +2,10 @@ package servlets;
 
 import com.ericsson.otp.erlang.OtpErlangDecodeException;
 import com.ericsson.otp.erlang.OtpErlangExit;
+import com.ericsson.otp.erlang.OtpErlangPid;
 import com.ericsson.otp.erlang.OtpErlangRangeException;
 import communication.CommunicationHandler;
 import dto.Auction;
-import dto.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 @WebServlet(name = "MainMenuServlet", value = "/MainMenuServlet")
@@ -31,6 +29,7 @@ public class MainMenuServlet extends HttpServlet {
         try {
             List<Auction> auctionList = new CommunicationHandler().fetchActiveAuctions(request.getSession());
             request.setAttribute("auctionList", auctionList);
+            request.getSession().setAttribute("auctionList", auctionList);
         } catch (OtpErlangExit | OtpErlangRangeException | OtpErlangDecodeException e) {
             e.printStackTrace();
         }
@@ -42,7 +41,13 @@ public class MainMenuServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("doPost MainMenu");
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/pages/main_menu.jsp");
-        requestDispatcher.forward(request, response);
+        int index = Integer.parseInt(request.getParameter("id"));
+        System.out.println("Id: " + index);
+        List<Auction> auctionList = (List<Auction>) request.getSession().getAttribute("auctionList");
+        Auction selectedAuction = auctionList.get(index);
+        System.out.println("auction: goodname: " + selectedAuction.getGoodName() + ", startingvalue: " + selectedAuction.getStartingValue() + ", username: " + selectedAuction.getUsername() + ", imageURL: " + selectedAuction.getImageURL() + ", pidauctionhandler: " + selectedAuction.getPid());
+
+        request.getSession().setAttribute("currentAuction", selectedAuction);
+        response.sendRedirect(request.getContextPath() + "/AuctionServlet");
     }
 }

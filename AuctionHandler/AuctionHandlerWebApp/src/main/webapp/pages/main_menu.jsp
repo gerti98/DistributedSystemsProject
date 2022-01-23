@@ -35,19 +35,21 @@
                         <h5 class="d-flex justify-content-center p-3">Nothing to Show<h5>
                     <%
                         } else {
-                            for(Auction auction : auctionList){
+                            for(int i=0; i<auctionList.size(); i++){
+                                Auction auction = auctionList.get(i);
                         %>
-                            <div class="card w-25">
+                            <form class="card w-25" action="<%=request.getContextPath()%>/MainMenuServlet" method="post">
                                 <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
                                 <div class="card-body d-flex flex-column justify-content-between p-3">
                                     <div>
+                                        <input type="hidden" name="id" value="<%=i%>">
                                         <h5 class="card-title"><%=auction.getGoodName()%></h5>
                                         <div>From: <%=auction.getStartingValue()%>€</div>
                                         <div>Created By: <%=auction.getUsername()%></div>
                                     </div>
-                                    <a href="<%=request.getContextPath()%>/AuctionServlet" class="btn btn-primary m-3">Enter</a>
+                                    <button type="submit" class="btn btn-primary m-3">Enter</button>
                                 </div>
-                            </div>
+                            </form>
                         <%
                             }
                         }
