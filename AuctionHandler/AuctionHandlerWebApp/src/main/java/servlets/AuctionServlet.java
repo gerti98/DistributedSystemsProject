@@ -17,9 +17,12 @@ import java.util.GregorianCalendar;
 
 @WebServlet(name = "AuctionServlet", value = "/AuctionServlet")
 public class AuctionServlet extends HttpServlet {
+    public static final int AUCTION_REFRESH_TIME = 10;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //response.setIntHeader("Refresh", 1);
+        response.setIntHeader("Refresh", AUCTION_REFRESH_TIME);
+        //Communication with auction handler erlang process
         String targetJSP = "/pages/auction.jsp";
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
         requestDispatcher.forward(request, response);

@@ -34,7 +34,7 @@
         <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
 
         <h5 class="d-flex justify-content-center">
-          <div>Remaining Time: <b>00:00:20</b></div>
+          <div>Remaining Time: <b id="time">01:00:00</b></div>
 
 
         </h5>
@@ -79,6 +79,33 @@
     </div>
 
   </div>
+
+<script>
+function startTimer(duration, display) {
+  var timer = duration, hours, minutes, seconds;
+  setInterval(function () {
+    hours = parseInt(timer / 3600, 10);
+    minutes = parseInt((timer / 60) % 60, 10);
+    seconds = parseInt(timer % 60, 10);
+
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    display.textContent = hours + ":" + minutes + ":" + seconds;
+
+    if (--timer < 0)
+      timer = duration;
+  }, 1000);
+}
+
+window.onload = function () {
+  var duration = (60 * 60) - 1,
+  display = document.querySelector('#time');
+  startTimer(duration, display);
+};
+
+</script>
 
 </body>
 </html>
