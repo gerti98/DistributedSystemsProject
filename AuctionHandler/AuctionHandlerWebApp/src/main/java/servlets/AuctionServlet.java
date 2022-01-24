@@ -22,7 +22,14 @@ public class AuctionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setIntHeader("Refresh", AUCTION_REFRESH_TIME);
+
         //Communication with auction handler erlang process
+        try {
+            new CommunicationHandler().pingAuctionHandler(request.getSession());
+        } catch (OtpErlangDecodeException | OtpErlangExit e) {
+            e.printStackTrace();
+        }
+
         String targetJSP = "/pages/auction.jsp";
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
         requestDispatcher.forward(request, response);
