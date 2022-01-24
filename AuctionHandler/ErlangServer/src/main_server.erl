@@ -115,7 +115,7 @@ handle_call(auction_list, _From, ServerState) ->
   io:format("Result: ~p~n", [Ret]),
   {reply, Ret, ServerState};
 handle_call({new_auction, ObjName, InitValue, ImageURL, Creator}, _From, ServerState) ->
-  PidHandler = spawn( fun() -> auction_handler:auction_loop() end),
+  PidHandler = spawn( fun() -> auction_handler:init_auction_handler(InitValue) end),
   Ret = mnesia_db:add_auction(ObjName, InitValue, ImageURL, Creator, PidHandler),
   io:format(" Return of add_auction: ~p~n", [Ret]),
   io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
