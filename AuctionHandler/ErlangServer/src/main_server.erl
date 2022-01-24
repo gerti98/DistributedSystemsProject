@@ -122,9 +122,9 @@ handle_call({new_auction, ObjName, InitValue, ImageURL, Creator}, _From, ServerS
   PidHandler ! {self(), debug},
 
   %% test
-  PidHandler ! {self(), new_offer, {"alfa","alfa1"}},
-  PidHandler ! {self(), new_offer, {"bravo","bravo1"}},
-  PidHandler ! {self(), new_offer, {"charlie","charlie1"}},
+  PidHandler ! {self(), new_offer, {"alfa",5}},
+  PidHandler ! {self(), new_offer, {"bravo",10}},
+  PidHandler ! {self(), new_offer, {"charlie",10}},
   PidHandler ! {self(), get_offers},
 
 

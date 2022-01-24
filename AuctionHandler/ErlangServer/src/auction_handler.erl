@@ -67,8 +67,27 @@ auction_loop({AuctionUsers, RemainingTime}) ->
 
 
 winner() ->
-  io:format(" DUMMY: The winner is ?? ~n").
+  io:format(" Deciding the winner ~n"),
+  {_State, FinalOffersAmount} = get_offers_amount(),
+  {_State, FinalOffersUsers} = get_offers_users(),
+  io:format(" Final Offers Amount ~p~n", [FinalOffersAmount]),
+  io:format(" Final Offers Users ~p~n", [FinalOffersUsers]),
+  Max = lists:max(FinalOffersAmount),
+  MaxIndex = find_index_of_max(Max, FinalOffersAmount),
+  io:format(" The Winner is in position ~p~n",[MaxIndex]),
+  Winner = lists:nth(MaxIndex+1, FinalOffersUsers),
+  io:format(" Among the users ~p the winner is ~p~n", [FinalOffersUsers, Winner]).
 
+find_index_of_max(Max, FinalOffersAmount) ->
+  find_index_of_max(Max, FinalOffersAmount, 0).
+find_index_of_max(Max, [H|T], Counter) ->
+  if
+    H == Max -> Counter;
+    true -> find_index_of_max(Max, T, Counter+1)
+  end;
+find_index_of_max(Max, [], _Counter) ->
+  Error = -1,
+  Error.
 
 %% SUPPORT DB
 create_offers_db() ->
@@ -98,3 +117,21 @@ get_offers() ->
     mnesia:select(offers, [{User, [], [['$1', '$2']]}])
       end,
   mnesia:transaction(R).
+
+get_offers_amount() ->
+  R = fun() ->
+    io:format("Retrieving offers amount ~n"),
+    User = #offers{user = '$1', offer_amount = '$2', _ = '_'},
+    mnesia:select(offers, [{User, [], ['$2']}])
+      end,
+  mnesia:transaction(R).
+
+get_offers_users() ->
+  R = fun() ->
+    io:format("Retrieving offers users ~n"),
+    User = #offers{user = '$1', offer_amount = '$2', _ = '_'},
+    mnesia:select(offers, [{User, [], ['$1']}])
+      end,
+  mnesia:transaction(R).
+
+
