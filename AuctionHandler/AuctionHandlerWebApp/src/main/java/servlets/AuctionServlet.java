@@ -3,6 +3,7 @@ package servlets;
 import com.ericsson.otp.erlang.*;
 import communication.CommunicationHandler;
 import dto.Auction;
+import dto.AuctionState;
 import dto.User;
 
 import javax.servlet.RequestDispatcher;
@@ -22,12 +23,17 @@ public class AuctionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setIntHeader("Refresh", AUCTION_REFRESH_TIME);
-
+        AuctionState auctionState = null;
         //Communication with auction handler erlang process
         try {
-            new CommunicationHandler().pingAuctionHandler(request.getSession());
-        } catch (OtpErlangDecodeException | OtpErlangExit e) {
+            auctionState = new CommunicationHandler().getTimeAuctionHandler(request.getSession());
+        } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
             e.printStackTrace();
+        }
+
+        if (auctionState != null) {
+            System.out.println("Auction state (remaining time: " + auctionState.getRemainingTime() + ")");
+            request.getSession().setAttribute("currentAuctionState", auctionState);
         }
 
         String targetJSP = "/pages/auction.jsp";

@@ -47,6 +47,7 @@ public class MainMenuServlet extends HttpServlet {
         Auction selectedAuction = auctionList.get(index);
         System.out.println("auction: goodname: " + selectedAuction.getGoodName() + ", startingvalue: " + selectedAuction.getStartingValue() + ", username: " + selectedAuction.getUsername() + ", imageURL: " + selectedAuction.getImageURL() + ", pidauctionhandler: " + selectedAuction.getPid());
 
+        //TODO: add new_user message
         request.getSession().setAttribute("currentAuction", selectedAuction);
         response.sendRedirect(request.getContextPath() + "/AuctionServlet");
     }

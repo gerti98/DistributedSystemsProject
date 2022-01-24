@@ -48,6 +48,12 @@ auction_loop({AuctionUsers, RemainingTime}) ->
     {Client, users_online_req} ->
       Client ! {self(), AuctionUsers},
       auction_loop({AuctionUsers, RemainingTime});
+    {Client, get_auction_state} ->
+      io:format(" Requested auction state ~n"),
+      {atomic, Offers} = get_offers(),
+      ToSend = {ok, RemainingTime, AuctionUsers, Offers},
+      io:format(" Sending state: ~p~n", [ToSend]),
+      Client ! {self(), ToSend};
     {_, debug} ->
       io:format(" dummy auction handler is running ~n"),
       auction_loop({AuctionUsers, RemainingTime});
@@ -62,6 +68,7 @@ auction_loop({AuctionUsers, RemainingTime}) ->
       end,
       auction_loop({AuctionUsers, NewTime});
     _ ->
+      io:format(" Unrecognized message arrived, skipping... ~n"),
       auction_loop({AuctionUsers, RemainingTime})
   end.
 

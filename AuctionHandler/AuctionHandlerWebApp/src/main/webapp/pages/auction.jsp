@@ -1,4 +1,5 @@
-<%@ page import="dto.Auction" %><%--
+<%@ page import="dto.Auction" %>
+<%@ page import="dto.AuctionState" %><%--
   Created by IntelliJ IDEA.
   User: gxhan
   Date: 19/01/2022
@@ -22,6 +23,7 @@
 </div>
   <%
     Auction auction = (Auction) request.getSession().getAttribute("currentAuction");
+    AuctionState auctionState = (AuctionState) request.getSession().getAttribute("currentAuctionState");
   %>
   <div class="container card my-4">
     <h1 class="d-flex justify-content-center m-3">
@@ -34,7 +36,8 @@
         <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
 
         <h5 class="d-flex justify-content-center">
-          <div>Remaining Time: <b id="time">01:00:00</b></div>
+          <div id="remainingTime" style="display: none;"><%=auctionState.getRemainingTime()%></div>
+          <div>Remaining Time: <b id="time_formatted"></b></div>
 
 
         </h5>
@@ -52,12 +55,6 @@
           </h5>
           <ul class="list-group overflow-auto" style="height: 15rem;">
             <li class="list-group-item active"><%=request.getSession().getAttribute("username")%></li>
-            <li class="list-group-item">User 2</li>
-            <li class="list-group-item">User 3</li>
-            <li class="list-group-item">User 4</li>
-            <li class="list-group-item">User 2</li>
-            <li class="list-group-item">User 3</li>
-            <li class="list-group-item">User 4</li>
           </ul>
         </div>
         <div  class="my-3">
@@ -66,13 +63,6 @@
           </h5>
           <ul class="list-group overflow-auto" style="height: 15rem;">
             <li class="list-group-item">[18:24:23] User 1 bid 100€</li>
-            <li class="list-group-item">[18:24:23] User 1 bid 150€</li>
-            <li class="list-group-item">[18:24:23] User 1 bid 200€</li>
-            <li class="list-group-item">[18:24:23] User 1 bid 250€</li>
-            <li class="list-group-item">[18:24:23] User 1 bid 100€</li>
-            <li class="list-group-item">[18:24:23] User 1 bid 150€</li>
-            <li class="list-group-item">[18:24:23] User 1 bid 200€</li>
-            <li class="list-group-item">[18:24:23] User 1 bid 250€</li>
           </ul>
         </div>
       </div>
@@ -82,6 +72,9 @@
 
 <script>
   function startTimer(duration, display) {
+    if (duration < 0)
+      duration = 0;
+
     var timer = duration, hours, minutes, seconds;
     setInterval(function () {
       hours = parseInt(timer / 3600, 10);
@@ -93,16 +86,14 @@
       seconds = seconds < 10 ? "0" + seconds : seconds;
 
       display.textContent = hours + ":" + minutes + ":" + seconds;
-
-      if (--timer < 0)
-        timer = duration;
     }, 1000);
   }
 
   window.onload = function () {
-    var duration = (60 * 60) - 1,
-    display = document.querySelector('#time');
-    startTimer(duration, display);
+    var duration =  document.querySelector('#remainingTime').textContent;
+    console.log(duration, typeof duration);
+    display = document.querySelector('#time_formatted');
+    startTimer(parseInt(duration)-1, display);
   };
 
 </script>

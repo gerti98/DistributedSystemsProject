@@ -2,6 +2,7 @@ package servlets;
 
 import com.ericsson.otp.erlang.OtpErlangDecodeException;
 import com.ericsson.otp.erlang.OtpErlangExit;
+import com.ericsson.otp.erlang.OtpErlangPid;
 import communication.CommunicationHandler;
 import dto.Auction;
 
@@ -34,16 +35,17 @@ public class CreateAuctionServlet extends HttpServlet {
         System.out.println("DoPost Auction Creation");
         System.out.println("goodname: " + goodname + "\nstartValue: " + startValue + "\nusername: " + username);
 
-        boolean isAuctionCreationOkay = false;
+        OtpErlangPid pid = null;
         try {
-            isAuctionCreationOkay = new CommunicationHandler().performAuctionCreation(request.getSession(), auction);
+            pid = new CommunicationHandler().performAuctionCreation(request.getSession(), auction);
         } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }
 
-        if (isAuctionCreationOkay) {
+        if (pid != null) {
             System.out.println("Auction creation succeded");
-            request.getSession().setAttribute("currentAuction", auction);
+            Auction updatedAuction = new Auction(goodname, startValue, imageURL, username, pid);
+            request.getSession().setAttribute("currentAuction", updatedAuction);
             response.sendRedirect(request.getContextPath() + "/AuctionServlet");
         } else {
             System.out.println("Auction creation failed");
