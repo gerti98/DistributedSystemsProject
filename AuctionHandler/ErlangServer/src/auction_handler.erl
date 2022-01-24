@@ -11,20 +11,35 @@
 
 %% API
 -export([init_auction_handler/1]).
+-record(offers, {user, offer_amount}).
 
 init_auction_handler(AuctionDuration) ->
+  create_offers_db(),
+  start_mnesia_offer_db(),
   erlang:send_after(1000, self(), {clock}),
   auction_loop({[],AuctionDuration}).
 
 
 auction_loop({AuctionUsers, RemainingTime}) ->
   receive
-    {_, new_user, NewUsername} ->
+    {Client, new_offer, {User, Amount}} ->
+      Res = add_offer(User,Amount),
+      io:format("Offer Added - result: ~p~n", [Res]),
+      Client ! {self(), Res},
+      auction_loop({AuctionUsers, RemainingTime});
+    {Client, get_offers} ->
+      Result = get_offers(),
+      io:format("DEBUG: Get offers return: ~p~n",[Result]),
+      Client ! {self(), Result},
+      auction_loop({AuctionUsers, RemainingTime});
+    {Client, new_user, NewUsername} ->
       NewAuctionListUsers = AuctionUsers ++ [NewUsername],
+      Client ! {self(), NewAuctionListUsers},
       io:format(" User added to auction user list - New list: ~p~n",[NewAuctionListUsers]),
       auction_loop({NewAuctionListUsers, RemainingTime});
-    {_, del_user, DisconnectedUser} ->
+    {Client, del_user, DisconnectedUser} ->
       NewList = lists:delete(DisconnectedUser, AuctionUsers),
+      Client ! {self(), NewList},
       io:format(" User deleted from auction user list - New list: ~p~n",[NewList]),
       auction_loop({NewList, RemainingTime});
     {Client, time_req} ->
@@ -52,4 +67,71 @@ auction_loop({AuctionUsers, RemainingTime}) ->
 
 
 winner() ->
-  io:format(" DUMMY: The winner is ?? ~n").
+  io:format(" Deciding the winner ~n"),
+  {_State, FinalOffersAmount} = get_offers_amount(),
+  {_State, FinalOffersUsers} = get_offers_users(),
+  io:format(" Final Offers Amount ~p~n", [FinalOffersAmount]),
+  io:format(" Final Offers Users ~p~n", [FinalOffersUsers]),
+  Max = lists:max(FinalOffersAmount),
+  MaxIndex = find_index_of_max(Max, FinalOffersAmount),
+  io:format(" The Winner is in position ~p~n",[MaxIndex]),
+  Winner = lists:nth(MaxIndex+1, FinalOffersUsers),
+  io:format(" Among the users ~p the winner is ~p~n", [FinalOffersUsers, Winner]).
+
+find_index_of_max(Max, FinalOffersAmount) ->
+  find_index_of_max(Max, FinalOffersAmount, 0).
+find_index_of_max(Max, [H|T], Counter) ->
+  if
+    H == Max -> Counter;
+    true -> find_index_of_max(Max, T, Counter+1)
+  end;
+find_index_of_max(Max, [], _Counter) ->
+  Error = -1,
+  Error.
+
+%% SUPPORT DB
+create_offers_db() ->
+  mnesia:create_schema([node()]),
+  application:start(mnesia),
+  io:format("Test debug: Offer DB started ~n"),
+  mnesia:create_table(offers, [
+    {attributes, record_info(fields, offers)}, {disc_copies, [node()]}]).
+
+%% @doc This function start an already existing mnesia server
+start_mnesia_offer_db() ->
+  application:start(mnesia).
+
+%% @doc This function a running instance of the mnesia server (the
+%% information are maintained on the disk).
+stop_mnesia_offer_db() ->
+  application:stop(mnesia).
+
+add_offer(Username, Amount) ->
+  F = fun() -> mnesia:write(#offers{user = Username, offer_amount = Amount}) end,
+  mnesia:transaction(F).
+
+get_offers() ->
+  R = fun() ->
+    io:format("Retrieving offers ~n"),
+    User = #offers{user = '$1', offer_amount = '$2', _ = '_'},
+    mnesia:select(offers, [{User, [], [['$1', '$2']]}])
+      end,
+  mnesia:transaction(R).
+
+get_offers_amount() ->
+  R = fun() ->
+    io:format("Retrieving offers amount ~n"),
+    User = #offers{user = '$1', offer_amount = '$2', _ = '_'},
+    mnesia:select(offers, [{User, [], ['$2']}])
+      end,
+  mnesia:transaction(R).
+
+get_offers_users() ->
+  R = fun() ->
+    io:format("Retrieving offers users ~n"),
+    User = #offers{user = '$1', offer_amount = '$2', _ = '_'},
+    mnesia:select(offers, [{User, [], ['$1']}])
+      end,
+  mnesia:transaction(R).
+
+
