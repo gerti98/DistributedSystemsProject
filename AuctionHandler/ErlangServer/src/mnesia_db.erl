@@ -20,7 +20,7 @@
 create_mnesia_db() ->
   mnesia:create_schema([node()]),
   application:start(mnesia),
-   io:format("Test debug ~n"),
+   io:format("Test debug: Main server started ~n"),
   mnesia:create_table(user, [
     {attributes, record_info(fields, user)}, {disc_copies, [node()]}]),
   mnesia:create_table(auction, [
@@ -70,7 +70,6 @@ get_active_auctions() ->
   mnesia:transaction(F).
 
 get_auction(Object_name_to_find) ->
-  %%io:format(" Dummy Search for ~p~n", [Object_name_to_find]),
   R = fun() ->
     io:format("Searching for ~s~n", [Object_name_to_find]),
     Auction = #auction{name='$1', startingValue='$2', imageURL = '$3', creator='$4', pid='$5', _ = '_'},

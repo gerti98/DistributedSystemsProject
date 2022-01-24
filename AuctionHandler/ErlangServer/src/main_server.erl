@@ -120,6 +120,14 @@ handle_call({new_auction, ObjName, InitValue, ImageURL, Creator}, _From, ServerS
   io:format(" Return of add_auction: ~p~n", [Ret]),
   io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
   PidHandler ! {self(), debug},
+
+  %% test
+  PidHandler ! {self(), new_offer, {"alfa","alfa1"}},
+  PidHandler ! {self(), new_offer, {"bravo","bravo1"}},
+  PidHandler ! {self(), new_offer, {"charlie","charlie1"}},
+  PidHandler ! {self(), get_offers},
+
+
   NewState = ServerState ++ [{ObjName, InitValue, Creator, PidHandler}],
   io:format(" New state is: ~p~n", [NewState]),
   {reply, {Ret, PidHandler}, NewState};
