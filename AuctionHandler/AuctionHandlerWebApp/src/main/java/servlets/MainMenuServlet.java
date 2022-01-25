@@ -41,14 +41,26 @@ public class MainMenuServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("doPost MainMenu");
+        boolean isJoiningOkay = false;
         int index = Integer.parseInt(request.getParameter("id"));
         System.out.println("Id: " + index);
         List<Auction> auctionList = (List<Auction>) request.getSession().getAttribute("auctionList");
         Auction selectedAuction = auctionList.get(index);
+        request.getSession().setAttribute("currentAuction", selectedAuction);
         System.out.println("auction: goodname: " + selectedAuction.getGoodName() + ", startingvalue: " + selectedAuction.getStartingValue() + ", username: " + selectedAuction.getUsername() + ", imageURL: " + selectedAuction.getImageURL() + ", pidauctionhandler: " + selectedAuction.getPid());
 
-        //TODO: add new_user message
-        request.getSession().setAttribute("currentAuction", selectedAuction);
-        response.sendRedirect(request.getContextPath() + "/AuctionServlet");
+        try {
+            isJoiningOkay = new CommunicationHandler().performAuctionJoin(request.getSession());
+        } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
+            e.printStackTrace();
+        }
+
+        if(isJoiningOkay){
+            response.sendRedirect(request.getContextPath() + "/AuctionServlet");
+        } else {
+            request.getSession().removeAttribute("currentAuction");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher( "/pages/main_menu.jsp");
+            requestDispatcher.forward(request, response);
+        }
     }
 }

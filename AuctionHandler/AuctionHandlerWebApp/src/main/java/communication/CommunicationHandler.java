@@ -3,6 +3,7 @@ package communication;
 import com.ericsson.otp.erlang.*;
 import dto.Auction;
 import dto.AuctionState;
+import dto.Bid;
 import dto.User;
 
 import javax.servlet.http.HttpSession;
@@ -34,10 +35,23 @@ public class CommunicationHandler {
         return receiveAuctionPid(s);
     }
 
-    public AuctionState getTimeAuctionHandler(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
+    public AuctionState getAuctionState(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to perform Auction creation");
         Auction auction = (Auction) s.getAttribute("currentAuction");
         sendToPid(s, auction.getPid(), new OtpErlangAtom("get_auction_state"));
+        return receiveAuctionState(s);
+    }
+
+    public boolean performAuctionJoin(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
+        System.out.println("Trying to perform Auction creation");
+        Auction auction = (Auction) s.getAttribute("currentAuction");
+        sendToPid(s, auction.getPid(), new OtpErlangAtom("new_user"), new User((String) s.getAttribute("username")));
+        return receiveRequestResult(s);
+    }
+    public AuctionState publishBid(HttpSession s, Bid bid) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
+        System.out.println("Trying to perform Auction creation");
+        Auction auction = (Auction) s.getAttribute("currentAuction");
+        sendToPid(s, auction.getPid(), new OtpErlangAtom("new_offer"), bid);
         return receiveAuctionState(s);
     }
 
@@ -161,6 +175,7 @@ public class CommunicationHandler {
 
         return new AuctionState(remainingTime, userList, offers);
     }
+
 
 
 }

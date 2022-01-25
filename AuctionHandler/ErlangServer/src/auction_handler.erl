@@ -22,39 +22,46 @@ init_auction_handler(AuctionDuration) ->
 
 auction_loop({AuctionUsers, RemainingTime}) ->
   receive
-    {Client, new_offer, {User, Amount}} ->
-      Res = add_offer(User,Amount),
-      io:format("Offer Added - result: ~p~n", [Res]),
-      Client ! {self(), Res},
+    {Client, new_offer,  MessageMap} ->
+      io:format(" New Bid: ~p~n", [MessageMap]),
+      Res = add_offer(maps:get("username", MessageMap), maps:get("bid", MessageMap)),
+      io:format(" Offer Added - result: ~p~n", [Res]),
+      {atomic, Offers} = get_offers(),
+      ToSend = {ok, RemainingTime, AuctionUsers, Offers},
+      io:format(" Sending state: ~p~n", [ToSend]),
+      Client ! {self(), ToSend},
       auction_loop({AuctionUsers, RemainingTime});
-    {Client, get_offers} ->
-      Result = get_offers(),
-      io:format("DEBUG: Get offers return: ~p~n",[Result]),
-      Client ! {self(), Result},
-      auction_loop({AuctionUsers, RemainingTime});
-    {Client, new_user, NewUsername} ->
+%%    {Client, get_offers} ->
+%%      Result = get_offers(),
+%%      io:format("DEBUG: Get offers return: ~p~n",[Result]),
+%%      Client ! {self(), Result},
+%%      auction_loop({AuctionUsers, RemainingTime});
+    {Client, new_user, MessageMap} ->
+      NewUsername = maps:get("username", MessageMap),
       NewAuctionListUsers = AuctionUsers ++ [NewUsername],
-      Client ! {self(), NewAuctionListUsers},
+      Client ! {self(), {ok}},
       io:format(" User added to auction user list - New list: ~p~n",[NewAuctionListUsers]),
       auction_loop({NewAuctionListUsers, RemainingTime});
-    {Client, del_user, DisconnectedUser} ->
+    {Client, del_user, MessageMap} ->
+      DisconnectedUser = maps:get("username", MessageMap),
       NewList = lists:delete(DisconnectedUser, AuctionUsers),
-      Client ! {self(), NewList},
+      Client ! {self(), {ok}},
       io:format(" User deleted from auction user list - New list: ~p~n",[NewList]),
       auction_loop({NewList, RemainingTime});
-    {Client, time_req} ->
-      Client ! {self(), RemainingTime},
-      auction_loop({AuctionUsers, RemainingTime});
-    {Client, users_online_req} ->
-      Client ! {self(), AuctionUsers},
-      auction_loop({AuctionUsers, RemainingTime});
+%%    {Client, time_req} ->
+%%      Client ! {self(), RemainingTime},
+%%      auction_loop({AuctionUsers, RemainingTime});
+%%    {Client, users_online_req} ->
+%%      Client ! {self(), AuctionUsers},
+%%      auction_loop({AuctionUsers, RemainingTime});
     {Client, get_auction_state} ->
       io:format(" Requested auction state ~n"),
       {atomic, Offers} = get_offers(),
       ToSend = {ok, RemainingTime, AuctionUsers, Offers},
       io:format(" Sending state: ~p~n", [ToSend]),
-      Client ! {self(), ToSend};
-    {_, debug} ->
+      Client ! {self(), ToSend},
+      auction_loop({AuctionUsers, RemainingTime});
+  {_, debug} ->
       io:format(" dummy auction handler is running ~n"),
       auction_loop({AuctionUsers, RemainingTime});
     {clock} ->
@@ -71,7 +78,6 @@ auction_loop({AuctionUsers, RemainingTime}) ->
       io:format(" Unrecognized message arrived, skipping... ~n"),
       auction_loop({AuctionUsers, RemainingTime})
   end.
-
 
 winner() ->
   io:format(" Deciding the winner ~n"),

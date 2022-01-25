@@ -115,20 +115,20 @@ handle_call(auction_list, _From, ServerState) ->
   io:format("Result: ~p~n", [Ret]),
   {reply, Ret, ServerState};
 handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _From, ServerState) ->
-  PidHandler = spawn( fun() -> auction_handler:init_auction_handler(InitValue) end),
+  PidHandler = spawn( fun() -> auction_handler:init_auction_handler(Duration) end),
   Ret = mnesia_db:add_auction(ObjName, Duration, InitValue, ImageURL, Creator, PidHandler),
   io:format(" Return of add_auction: ~p~n", [Ret]),
   io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
   PidHandler ! {self(), debug},
 
-  %% test
-  PidHandler ! {self(), new_offer, {"alfa",5}},
-  PidHandler ! {self(), new_offer, {"bravo",10}},
-  PidHandler ! {self(), new_offer, {"charlie",10}},
-  PidHandler ! {self(), get_offers},
+%%  %% test
+%%  PidHandler ! {self(), new_offer, {"alfa",5}},
+%%  PidHandler ! {self(), new_offer, {"bravo",10}},
+%%  PidHandler ! {self(), new_offer, {"charlie",10}},
+%%  PidHandler ! {self(), get_offers},
 
 
-  NewState = ServerState ++ [{ObjName, InitValue, Creator, PidHandler}],
+  NewState = ServerState ++ [{ObjName, Duration, InitValue, Creator, PidHandler}],
   io:format(" New state is: ~p~n", [NewState]),
   {reply, {Ret, PidHandler}, NewState};
 handle_call({get_user, Username}, _From, _ServerState) ->

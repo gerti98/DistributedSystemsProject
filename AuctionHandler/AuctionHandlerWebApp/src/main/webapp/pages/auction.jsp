@@ -33,19 +33,32 @@
     <div class="d-flex justify-content-between p-3">
 
       <div class="d-flex flex-column justify-content-around" style="width: 30%;">
-        <h3><%=auction.getGoodName()%></h3>
+        <div class="d-flex justify-content-center">
+          <h3><%=auction.getGoodName()%></h3>
+        </div>
         <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
 
         <h5 class="d-flex justify-content-center">
-          <div id="totalTime"> Duration: <%=auction.getDuration()%></div>
+          <div id="totalTime" style="display: none;"> <%=auction.getDuration()%></div>
           <div id="remainingTime" style="display: none;"><%=auctionState.getRemainingTime()%></div>
-          <div>Remaining Time: <b id="time_formatted"></b></div>
+          <div>Remaining Time: <b id="time_formatted"><%=auctionState.getFormattedTime()%></b></div>
 
 
         </h5>
-        <form action="<%=request.getContextPath()%>/AuctionServlet" method="post">
+        <form action="<%=request.getContextPath()%>/AuctionServlet" method="post"
+              oninput='bid.setCustomValidity(parseInt(bid.value) < parseInt(minimum_bid.value) ? "Minimum offer must be " + minimum_bid.value + "€" : "")'>
           <div class="d-flex justify-content-between mb-3">
-            <input type="text" class="form-control" name="bid" placeholder="Enter your bid" aria-describedby="bid">
+
+            <input type="number" name="minimum_bid" value="<%=auction.getStartingValue()%>" hidden>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">€</span>
+              </div>
+              <input type="number" class="form-control" name="bid" placeholder="Enter your bid" aria-describedby="bid">
+              <div class="input-group-append">
+                <span class="input-group-text">.00</span>
+              </div>
+            </div>
             <button type="submit" class="btn btn-primary mx-2 px-4"> BID </button>
           </div>
         </form>
@@ -101,6 +114,8 @@
       seconds = seconds < 10 ? "0" + seconds : seconds;
 
       display.textContent = hours + ":" + minutes + ":" + seconds;
+      if(--timer < 0)
+        timer=0;
     }, 1000);
   }
 

@@ -17,6 +17,13 @@ public class User extends OtpErlangMap {
         this.password = password;
     }
 
+    public User(String username) {
+        super(
+                new OtpErlangObject[]{new OtpErlangString("username")},
+                new OtpErlangObject[]{new OtpErlangString(username)}
+        );
+        this.username = username;
+    }
     public String getUsername() {
         return username;
     }

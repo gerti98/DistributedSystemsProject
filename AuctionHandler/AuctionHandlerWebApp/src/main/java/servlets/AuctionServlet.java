@@ -4,6 +4,7 @@ import com.ericsson.otp.erlang.*;
 import communication.CommunicationHandler;
 import dto.Auction;
 import dto.AuctionState;
+import dto.Bid;
 import dto.User;
 
 import javax.servlet.RequestDispatcher;
@@ -26,7 +27,7 @@ public class AuctionServlet extends HttpServlet {
         AuctionState auctionState = null;
         //Communication with auction handler erlang process
         try {
-            auctionState = new CommunicationHandler().getTimeAuctionHandler(request.getSession());
+            auctionState = new CommunicationHandler().getAuctionState(request.getSession());
         } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
             e.printStackTrace();
         }
@@ -44,5 +45,22 @@ public class AuctionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("DoPost Auction");
+        AuctionState auctionState = null;
+        long bid = Long.parseLong(request.getParameter("bid"));
+
+        try {
+            auctionState = new CommunicationHandler().publishBid(request.getSession(), new Bid((String) request.getSession().getAttribute("username"), bid));
+        } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
+            e.printStackTrace();
+        }
+
+        if (auctionState != null) {
+            System.out.println("Auction state (remaining time: " + auctionState.getRemainingTime() + ")");
+            request.getSession().setAttribute("currentAuctionState", auctionState);
+        }
+
+        String targetJSP = "/pages/auction.jsp";
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher(targetJSP);
+        requestDispatcher.forward(request, response);
     }
 }
