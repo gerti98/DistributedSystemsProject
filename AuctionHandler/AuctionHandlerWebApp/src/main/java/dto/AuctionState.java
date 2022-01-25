@@ -17,4 +17,13 @@ public class AuctionState {
     public long getRemainingTime() {
         return remainingTime;
     }
+
+
+    public List<String> getParticipants() {
+        return participants;
+    }
+
+    public List<List<String>> getOffers() {
+        return offers;
+    }
 }

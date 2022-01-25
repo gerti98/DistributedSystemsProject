@@ -4,15 +4,16 @@ import com.ericsson.otp.erlang.*;
 
 public class Auction extends OtpErlangMap{
     String goodName;
+    long duration;
     long startingValue;
     String username;
     String imageURL;
     OtpErlangPid pid;
 
-    public Auction(String goodName, long startingValue, String imageURL, String username) {
+    public Auction(String goodName, long duration, long startingValue, String imageURL, String username) {
         super(
-                new OtpErlangObject[]{new OtpErlangString("goodName"), new OtpErlangString("startingValue"), new OtpErlangString("imageURL"), new OtpErlangString("username")},
-                new OtpErlangObject[]{new OtpErlangString(goodName), new OtpErlangLong(startingValue), new OtpErlangString(imageURL), new OtpErlangString(username)}
+                new OtpErlangObject[]{new OtpErlangString("goodName"), new OtpErlangString("duration"), new OtpErlangString("startingValue"), new OtpErlangString("imageURL"), new OtpErlangString("username")},
+                new OtpErlangObject[]{new OtpErlangString(goodName), new OtpErlangLong(duration), new OtpErlangLong(startingValue), new OtpErlangString(imageURL), new OtpErlangString(username)}
         );
         this.goodName = goodName;
         this.startingValue = startingValue;
@@ -20,8 +21,8 @@ public class Auction extends OtpErlangMap{
         this.username = username;
     }
 
-    public Auction(String goodName, long startingValue, String imageURL, String username, OtpErlangPid pid) {
-        this(goodName, startingValue, imageURL, username);
+    public Auction(String goodName, long duration, long startingValue, String imageURL, String username, OtpErlangPid pid) {
+        this(goodName, duration, startingValue, imageURL, username);
         this.pid = pid;
     }
 
@@ -39,7 +40,6 @@ public class Auction extends OtpErlangMap{
         return username;
     }
 
-
     public String getImageURL() {
         return imageURL;
     }
@@ -47,5 +47,10 @@ public class Auction extends OtpErlangMap{
     public OtpErlangPid getPid() {
         return pid;
     }
+
+    public long getDuration() {
+        return duration;
+    }
+
 
 }

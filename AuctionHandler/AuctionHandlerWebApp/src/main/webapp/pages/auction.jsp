@@ -1,5 +1,6 @@
 <%@ page import="dto.Auction" %>
-<%@ page import="dto.AuctionState" %><%--
+<%@ page import="dto.AuctionState" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: gxhan
   Date: 19/01/2022
@@ -16,15 +17,15 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 <body>
-
+<%
+  Auction auction = (Auction) request.getSession().getAttribute("currentAuction");
+  AuctionState auctionState = (AuctionState) request.getSession().getAttribute("currentAuctionState");
+%>
 <div class="progress">
   <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
 </div>
-  <%
-    Auction auction = (Auction) request.getSession().getAttribute("currentAuction");
-    AuctionState auctionState = (AuctionState) request.getSession().getAttribute("currentAuctionState");
-  %>
+
   <div class="container card my-4">
     <h1 class="d-flex justify-content-center m-3">
       Auction by: <%=auction.getUsername()%>
@@ -36,6 +37,7 @@
         <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
 
         <h5 class="d-flex justify-content-center">
+          <div id="totalTime"> Duration: <%=auction.getDuration()%></div>
           <div id="remainingTime" style="display: none;"><%=auctionState.getRemainingTime()%></div>
           <div>Remaining Time: <b id="time_formatted"></b></div>
 
@@ -55,6 +57,13 @@
           </h5>
           <ul class="list-group overflow-auto" style="height: 15rem;">
             <li class="list-group-item active"><%=request.getSession().getAttribute("username")%></li>
+            <%
+              for(String participant: auctionState.getParticipants()){
+            %>
+            <li class="list-group-item"> <%=participant%></li>
+            <%
+              }
+            %>
           </ul>
         </div>
         <div  class="my-3">
@@ -62,7 +71,13 @@
             Auction History
           </h5>
           <ul class="list-group overflow-auto" style="height: 15rem;">
-            <li class="list-group-item">[18:24:23] User 1 bid 100€</li>
+            <%
+              for(List<String> offer: auctionState.getOffers()){
+            %>
+              <li class="list-group-item"> <%=offer.get(0)%> bid <%=offer.get(1)%>€</li>
+            <%
+              }
+            %>
           </ul>
         </div>
       </div>

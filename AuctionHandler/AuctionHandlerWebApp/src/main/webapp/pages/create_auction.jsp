@@ -32,6 +32,15 @@
                     <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname" id="goodname" required>
                 </div>
                 <div class="mb-3">
+                    <label for="duration" class="form-label">Auction Duration</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" name="duration" placeholder="Enter the Auction duration in seconds" id="duration" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text">s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
                     <label for="startValue" class="form-label">Start Value</label>
                     <div class="input-group">
                         <div class="input-group-prepend">

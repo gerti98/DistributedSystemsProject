@@ -10,10 +10,10 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/5, get_active_auctions/0, get_auction/1]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/6, get_active_auctions/0, get_auction/1]).
 
 -record(user, {name, password}).
--record(auction, {name, startingValue, imageURL, creator, pid}).
+-record(auction, {name, duration, startingValue, imageURL, creator, pid}).
 
 %% @doc This function creates a mnesia server. It must be called once at
 %% the beginning of the application life cycle.
@@ -55,25 +55,25 @@ get_user(Username_to_find) ->
       end,
   mnesia:transaction(R).
 
-add_auction(ObjectName, InitialValue, ImageURL, Creator, Pid) ->
-  io:format(" Adding Auction ~p ~p ~p ~p ~p ~n", [ObjectName, InitialValue, ImageURL, Creator, Pid]),
-  F = fun() -> mnesia:write(#auction{name=ObjectName, startingValue = InitialValue, imageURL = ImageURL, creator = Creator, pid = Pid}) end,
+add_auction(ObjectName, Duration, InitialValue, ImageURL, Creator, Pid) ->
+  io:format(" Adding Auction ~p ~p ~p ~p ~p ~p ~n", [ObjectName, Duration, InitialValue, ImageURL, Creator, Pid]),
+  F = fun() -> mnesia:write(#auction{name=ObjectName, duration=Duration, startingValue = InitialValue, imageURL = ImageURL, creator = Creator, pid = Pid}) end,
   mnesia:transaction(F).
 
 
 get_active_auctions() ->
   io:format("Getting Active Auctions List~n"),
   F = fun() ->
-    Auction = #auction{name='$1', startingValue='$2', imageURL = '$3', creator='$4', pid='$5', _ = '_'},
-    mnesia:select(auction, [{Auction, [], [['$1', '$2', '$3', '$4', '$5']]}])
+    Auction = #auction{name='$1', duration='$2', startingValue='$3', imageURL = '$4', creator='$5', pid='$6', _ = '_'},
+    mnesia:select(auction, [{Auction, [], [['$1', '$2', '$3', '$4', '$5', '$6']]}])
       end,
   mnesia:transaction(F).
 
 get_auction(Object_name_to_find) ->
   R = fun() ->
     io:format("Searching for ~s~n", [Object_name_to_find]),
-    Auction = #auction{name='$1', startingValue='$2', imageURL = '$3', creator='$4', pid='$5', _ = '_'},
+    Auction = #auction{name='$1', duration='$2', startingValue='$3', imageURL = '$4', creator='$5', pid='$6', _ = '_'},
     Guard = {'==', '$1', Object_name_to_find},
-    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5']]}])
+    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5', '$6']]}])
       end,
   mnesia:transaction(R).

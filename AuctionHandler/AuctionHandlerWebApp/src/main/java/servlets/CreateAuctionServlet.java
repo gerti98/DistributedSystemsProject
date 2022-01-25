@@ -27,10 +27,11 @@ public class CreateAuctionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String goodname = request.getParameter("goodname");
-        int startValue = Integer.parseInt(request.getParameter("startValue"));
+        long duration = Long.parseLong(request.getParameter("duration"));
+        long startValue = Long.parseLong(request.getParameter("startValue"));
         String username = (String) request.getSession().getAttribute("username");
         String imageURL = request.getParameter("imageURL");
-        Auction auction = new Auction(goodname, startValue, imageURL, username);
+        Auction auction = new Auction(goodname, duration, startValue, imageURL, username);
 
         System.out.println("DoPost Auction Creation");
         System.out.println("goodname: " + goodname + "\nstartValue: " + startValue + "\nusername: " + username);
@@ -44,7 +45,7 @@ public class CreateAuctionServlet extends HttpServlet {
 
         if (pid != null) {
             System.out.println("Auction creation succeded");
-            Auction updatedAuction = new Auction(goodname, startValue, imageURL, username, pid);
+            Auction updatedAuction = new Auction(goodname, duration, startValue, imageURL, username, pid);
             request.getSession().setAttribute("currentAuction", updatedAuction);
             response.sendRedirect(request.getContextPath() + "/AuctionServlet");
         } else {

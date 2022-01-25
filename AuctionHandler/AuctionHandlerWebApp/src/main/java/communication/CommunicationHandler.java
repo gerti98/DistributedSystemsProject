@@ -114,13 +114,13 @@ public class CommunicationHandler {
             for(OtpErlangObject result : resultList){
                 OtpErlangList list = (OtpErlangList) result;
                 String goodname = ((OtpErlangString) list.elementAt(0)).stringValue();
-                long value = ((OtpErlangLong) list.elementAt(1)).longValue();
-                String imageURL =  ((OtpErlangString) list.elementAt(2)).stringValue();
-                String username = ((OtpErlangString) list.elementAt(3)).stringValue();
-                OtpErlangPid pid = ((OtpErlangPid) list.elementAt(4));
-
-                System.out.println("fetched auction (goodname: "+ goodname + ", startingValue:" + value + ", imageURL:" + imageURL + ", username:" + username + ", pid: " + pid.toString() + ")");
-                auctionList.add(new Auction(goodname, value, imageURL, username, pid));
+                long duration = ((OtpErlangLong) list.elementAt(1)).longValue();
+                long value = ((OtpErlangLong) list.elementAt(2)).longValue();
+                String imageURL =  ((OtpErlangString) list.elementAt(3)).stringValue();
+                String username = ((OtpErlangString) list.elementAt(4)).stringValue();
+                OtpErlangPid pid = ((OtpErlangPid) list.elementAt(5));
+                System.out.println("fetched auction (goodname: "+ goodname + ", duration: " + duration + ",startingValue:" + value + ", imageURL:" + imageURL + ", username:" + username + ", pid: " + pid.toString() + ")");
+                auctionList.add(new Auction(goodname, duration, value, imageURL, username, pid));
             }
         }
         return auctionList;
