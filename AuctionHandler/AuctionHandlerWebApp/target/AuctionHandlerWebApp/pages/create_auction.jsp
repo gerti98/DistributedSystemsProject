@@ -26,7 +26,7 @@
             Create Auction
         </h3>
         <div class="card-body">
-            <form action="<%=request.getContextPath()%>/CreateAuctionServlet" method="post">
+            <form action="<%=request.getContextPath()%>/CreateAuctionServlet" method="post" id="create_auction_form">
                 <div class="mb-3">
                     <label for="goodname" class="form-label">Good Name</label>
                     <input type="text" class="form-control" name="goodname" placeholder="Enter Good Name" aria-describedby="goodname" id="goodname" required>
@@ -62,5 +62,33 @@
         </div>
     </div>
 </div>
+
+<%--<script>--%>
+<%--    function submitForm(ctx, username){--%>
+<%--        //Validation to be done somehow--%>
+<%--        if(document.getElementById("create_auction_form").checkValidity()){--%>
+<%--            console.log("Validity not failed")--%>
+<%--            console.log("Context: " + ctx)--%>
+<%--            let host = document.location.host;--%>
+<%--            const url = "ws://" + host + ctx + "/main_menu_endpoint/" + username;--%>
+<%--            console.log(url)--%>
+<%--            ws = new WebSocket(url);--%>
+
+
+<%--            ws.onopen = () => {--%>
+<%--                console.log("WebSocket ready");--%>
+<%--                let content = {--%>
+<%--                    "goodName": document.getElementById("goodname").value,--%>
+<%--                    "startingValue": parseInt(document.getElementById("startValue").value),--%>
+<%--                    "duration": parseInt(document.getElementById("duration").value),--%>
+<%--                    "username": username,--%>
+<%--                    "imageURL": document.getElementById("imageURL").value,--%>
+<%--                }--%>
+<%--                console.log("Content to be sent: " + JSON.stringify(content));--%>
+<%--                ws.send(JSON.stringify(content));--%>
+<%--            };--%>
+<%--        }--%>
+<%--    }--%>
+<%--</script>--%>
 </body>
 </html>

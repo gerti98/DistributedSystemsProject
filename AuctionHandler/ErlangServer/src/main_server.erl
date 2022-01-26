@@ -51,7 +51,10 @@ endpoint_loop() ->
     {ClientPid, create_auction, MessageMap} ->
       io:format("Received a create auction message~n"),
       Result = create_new_auction(maps:get("goodName", MessageMap), maps:get("duration", MessageMap),  maps:get("startingValue", MessageMap), maps:get("imageURL", MessageMap), maps:get("username", MessageMap)),
-      ClientPid ! {self(), Result};
+      ClientPid ! {self(), Result},
+      %%Additional part
+      AuctionListResult = get_active_auction_list(),
+      {mbox, listener@localhost} ! {self(), auction_list, AuctionListResult};
     {ClientPid, get_active_auctions} ->
       io:format("Received a get active auctions message~n"),
       Result = get_active_auction_list(),

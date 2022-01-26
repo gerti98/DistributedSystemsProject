@@ -19,39 +19,39 @@ public class CommunicationHandler {
 
     public boolean performUserSignUp(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform User SignUp");
-        send(s, serverRegisteredPID, new OtpErlangAtom("register"), user);
+        send(s, serverRegisteredPID, new OtpErlangAtom("register"), user.encodeInErlangMap());
         return receiveRequestResult(s);
     }
 
     public boolean performUserLogIn(HttpSession s, User user) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform User SignIn");
-        send(s, serverRegisteredPID, new OtpErlangAtom("login"), user);
+        send(s, serverRegisteredPID, new OtpErlangAtom("login"), user.encodeInErlangMap());
         return receiveRequestResult(s);
     }
 
     public OtpErlangPid performAuctionCreation(HttpSession s, Auction auction) throws OtpErlangDecodeException, OtpErlangExit {
         System.out.println("Trying to perform Auction creation");
-        send(s, serverRegisteredPID, new OtpErlangAtom("create_auction"), auction);
+        send(s, serverRegisteredPID, new OtpErlangAtom("create_auction"), auction.encodeInErlangMap());
         return receiveAuctionPid(s);
     }
 
     public AuctionState getAuctionState(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to perform Auction creation");
-        Auction auction = (Auction) s.getAttribute("currentAuction");
-        sendToPid(s, auction.getPid(), new OtpErlangAtom("get_auction_state"));
+        OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");
+        sendToPid(s, pid, new OtpErlangAtom("get_auction_state"));
         return receiveAuctionState(s);
     }
 
     public boolean performAuctionJoin(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to perform Auction creation");
-        Auction auction = (Auction) s.getAttribute("currentAuction");
-        sendToPid(s, auction.getPid(), new OtpErlangAtom("new_user"), new User((String) s.getAttribute("username")));
+        OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");
+        sendToPid(s, pid, new OtpErlangAtom("new_user"), new User((String) s.getAttribute("username")).encodeInErlangMap());
         return receiveRequestResult(s);
     }
     public AuctionState publishBid(HttpSession s, Bid bid) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to perform Auction creation");
-        Auction auction = (Auction) s.getAttribute("currentAuction");
-        sendToPid(s, auction.getPid(), new OtpErlangAtom("new_offer"), bid);
+        OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");
+        sendToPid(s, pid, new OtpErlangAtom("new_offer"), bid.encodeInErlangMap());
         return receiveAuctionState(s);
     }
 
@@ -126,15 +126,9 @@ public class CommunicationHandler {
             OtpErlangList resultList = (OtpErlangList) (resulTuple).elementAt(1);
 
             for(OtpErlangObject result : resultList){
-                OtpErlangList list = (OtpErlangList) result;
-                String goodname = ((OtpErlangString) list.elementAt(0)).stringValue();
-                long duration = ((OtpErlangLong) list.elementAt(1)).longValue();
-                long value = ((OtpErlangLong) list.elementAt(2)).longValue();
-                String imageURL =  ((OtpErlangString) list.elementAt(3)).stringValue();
-                String username = ((OtpErlangString) list.elementAt(4)).stringValue();
-                OtpErlangPid pid = ((OtpErlangPid) list.elementAt(5));
-                System.out.println("fetched auction (goodname: "+ goodname + ", duration: " + duration + ",startingValue:" + value + ", imageURL:" + imageURL + ", username:" + username + ", pid: " + pid.toString() + ")");
-                auctionList.add(new Auction(goodname, duration, value, imageURL, username, pid));
+                Auction auction = Auction.decodeFromErlangList((OtpErlangList) result);
+                System.out.println("Fetched: " + auction);
+                auctionList.add(auction);
             }
         }
         return auctionList;
@@ -175,7 +169,4 @@ public class CommunicationHandler {
 
         return new AuctionState(remainingTime, userList, offers);
     }
-
-
-
 }

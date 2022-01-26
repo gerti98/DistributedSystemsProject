@@ -15,24 +15,25 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/websocket.js"></script>
 </head>
-<body>
+<body onload="connect('<%=request.getContextPath()%>', '<%=request.getSession().getAttribute("username")%>');">
     <div class="container">
         <div class="d-flex d-flex justify-content-between p-3">
             <a href="<%=request.getContextPath()%>/LoginServlet" class="btn btn-danger">Logout</a>
-            <h4> Username: <%=request.getSession().getAttribute("username")%></h4>
+            <h4 id="username"> Username: <%=request.getSession().getAttribute("username")%></h4>
             <a href="<%=request.getContextPath()%>/CreateAuctionServlet" class="btn btn-primary">CreateAuction</a>
         </div>
         <div class="card">
             <h3 class="d-flex justify-content-center p-3">
                 Available Auctions
             </h3>
-            <div class="p-4 d-flex flex-wrap">
+            <div class="p-4 d-flex flex-wrap" id="parent_auction_list">
                     <%
                         List<Auction> auctionList = (List<Auction>) request.getAttribute("auctionList");
                         if(auctionList == null || auctionList.size() == 0){
                     %>
-                        <h5 class="d-flex justify-content-center p-3">Nothing to Show<h5>
+                        <h5 class="d-flex justify-content-center p-3" id="noauction">Nothing to Show<h5>
                     <%
                         } else {
                             for(int i=0; i<auctionList.size(); i++){

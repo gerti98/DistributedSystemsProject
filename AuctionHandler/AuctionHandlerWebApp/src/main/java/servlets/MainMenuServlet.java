@@ -24,7 +24,7 @@ public class MainMenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("DoGet MainMenuServlet");
-        response.setIntHeader("Refresh", MAIN_MENU_REFRESH_TIME);
+//        response.setIntHeader("Refresh", MAIN_MENU_REFRESH_TIME);
 
         try {
             List<Auction> auctionList = new CommunicationHandler().fetchActiveAuctions(request.getSession());
@@ -47,7 +47,8 @@ public class MainMenuServlet extends HttpServlet {
         List<Auction> auctionList = (List<Auction>) request.getSession().getAttribute("auctionList");
         Auction selectedAuction = auctionList.get(index);
         request.getSession().setAttribute("currentAuction", selectedAuction);
-        System.out.println("auction: goodname: " + selectedAuction.getGoodName() + ", startingvalue: " + selectedAuction.getStartingValue() + ", username: " + selectedAuction.getUsername() + ", imageURL: " + selectedAuction.getImageURL() + ", pidauctionhandler: " + selectedAuction.getPid());
+
+        System.out.println("auction: goodname: " + selectedAuction.getGoodName() + ", startingvalue: " + selectedAuction.getStartingValue() + ", username: " + selectedAuction.getUsername() + ", imageURL: " + selectedAuction.getImageURL() + ")");
 
         try {
             isJoiningOkay = new CommunicationHandler().performAuctionJoin(request.getSession());

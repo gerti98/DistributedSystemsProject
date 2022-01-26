@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AuctionHandlerWebApp" target="1.7" />
+      <module name="AuctionHandlerWebApp" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>
