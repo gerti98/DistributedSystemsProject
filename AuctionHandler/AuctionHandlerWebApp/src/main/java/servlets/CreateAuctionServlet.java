@@ -47,6 +47,7 @@ public class CreateAuctionServlet extends HttpServlet {
             System.out.println("Auction creation succeded");
             Auction updatedAuction = new Auction(goodname, duration, startValue, imageURL, username);
             request.getSession().setAttribute("currentAuction", updatedAuction);
+            request.getSession().setAttribute("currentAuctionPid", pid);
             response.sendRedirect(request.getContextPath() + "/AuctionServlet");
         } else {
             System.out.println("Auction creation failed");

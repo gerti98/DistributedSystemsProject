@@ -1,4 +1,4 @@
-package modelupdatelistener;
+package java_listener;
 
 import com.ericsson.otp.erlang.*;
 import com.google.gson.Gson;
@@ -22,12 +22,14 @@ public class MessageTask implements Runnable{
     {
 
         if(message instanceof OtpErlangTuple){
-            OtpErlangTuple resulTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(2);
-            OtpErlangAtom destination_atom = (OtpErlangAtom) (resulTuple).elementAt(0);
+            //{self(), destinationAtom, {ResultTuple}}
+            OtpErlangTuple resultTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(2);
+            OtpErlangAtom destination_atom = (OtpErlangAtom) ((OtpErlangTuple) message).elementAt(1);
 
             //TODO: add branching for auction state
-            if(destination_atom.toString().equals("auction_list")){
-                OtpErlangList resultList = (OtpErlangList) (resulTuple).elementAt(1);
+            if(destination_atom.atomValue().equals("auction_list")){
+                System.out.println("Refresh of list");
+                OtpErlangList resultList = (OtpErlangList) (resultTuple).elementAt(1);
                 refreshMainMenu(resultList);
             } else {
 
@@ -35,7 +37,6 @@ public class MessageTask implements Runnable{
 
         }
     }
-
 
     private void refreshMainMenu(OtpErlangList resultList){
         //TODO: maybe we can cache websocket connections
