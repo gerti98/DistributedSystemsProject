@@ -29,7 +29,12 @@ function connect(ctx, username) {
     <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
     <div class="card-body d-flex flex-column justify-content-between p-3">
         <div>
-            <input type="hidden" name="id" value="<%=i%>">
+            <input type="hidden" name="goodname" value="<%=auction.getGoodName()%>">
+            <input type="hidden" name="duration" value="<%=auction.getDuration()%>">
+            <input type="hidden" name="startingValue" value="<%=auction.getStartingValue()%>">
+            <input type="hidden" name="imageURL" value="<%=auction.getImageURL()%>">
+            <input type="hidden" name="username" value="<%=auction.getUsername()%>">
+
             <h5 class="card-title"><%=auction.getGoodName()%></h5>
             <div>From: <%=auction.getStartingValue()%>€</div>
             <div>Created By: <%=auction.getUsername()%></div>
@@ -71,6 +76,34 @@ function createCard(ctx, message){
 
     const mid_div = document.createElement("div");
 
+    const goodname = document.createElement("input");
+    goodname.setAttribute("type", "hidden");
+    goodname.setAttribute("name", "goodname");
+    goodname.value = message.goodName;
+
+    const duration = document.createElement("input");
+    duration.value = message.duration;
+    duration.setAttribute("type", "hidden");
+    duration.setAttribute("name", "duration");
+
+
+    const startingValue = document.createElement("input");
+    startingValue.value = message.startingValue;
+    startingValue.setAttribute("type", "hidden");
+    startingValue.setAttribute("name", "startingValue");
+
+
+    const username = document.createElement("input");
+    username.value = message.username;
+    username.setAttribute("type", "hidden");
+    username.setAttribute("name", "username");
+
+
+    const imageURL = document.createElement("input");
+    imageURL.value = message.imageURL;
+    imageURL.setAttribute("type", "hidden");
+    imageURL.setAttribute("name", "imageURL");
+
     const title = document.createElement("h5");
     title.classList.add("card-title");
     title.innerHTML = message.goodName
@@ -85,7 +118,7 @@ function createCard(ctx, message){
     button.classList.add("btn", "btn-primary", "m-3")
     button.innerHTML = "Enter"
 
-    mid_div.append(title, from_div, created_by_div)
+    mid_div.append(goodname, duration, startingValue, username, imageURL, title, from_div, created_by_div)
     main_div.append(mid_div, button)
     form.append(image, main_div)
     return form

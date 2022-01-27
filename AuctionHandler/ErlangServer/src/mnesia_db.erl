@@ -10,7 +10,7 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/6, get_active_auctions/0, get_auction/1]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/6, get_active_auctions/0, get_auction/1, get_auction_pid/1]).
 
 -record(user, {name, password}).
 -record(auction, {name, duration, startingValue, imageURL, creator, pid}).
@@ -75,5 +75,14 @@ get_auction(Object_name_to_find) ->
     Auction = #auction{name='$1', duration='$2', startingValue='$3', imageURL = '$4', creator='$5', pid='$6', _ = '_'},
     Guard = {'==', '$1', Object_name_to_find},
     mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5', '$6']]}])
+      end,
+  mnesia:transaction(R).
+
+get_auction_pid(Object_name_to_find) ->
+  R = fun() ->
+    io:format("Searching for ~s~n", [Object_name_to_find]),
+    Auction = #auction{name='$1', duration='$2', startingValue='$3', imageURL = '$4', creator='$5', pid='$6', _ = '_'},
+    Guard = {'==', '$1', Object_name_to_find},
+    mnesia:select(auction, [{Auction, [Guard], ['$6']}])
       end,
   mnesia:transaction(R).

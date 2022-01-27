@@ -3,6 +3,7 @@ package java_listener;
 import com.ericsson.otp.erlang.*;
 import com.google.gson.Gson;
 import dto.Auction;
+import dto.AuctionState;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,8 +32,9 @@ public class MessageTask implements Runnable{
                 System.out.println("Refresh of list");
                 OtpErlangList resultList = (OtpErlangList) (resultTuple).elementAt(1);
                 refreshMainMenu(resultList);
-            } else {
-
+            } else if(destination_atom.atomValue().equals("update_auction_state")){
+                System.out.println("Refresh Auction");
+                refreshAuctionPage(resultTuple);
             }
 
         }
@@ -53,5 +55,21 @@ public class MessageTask implements Runnable{
             auctionList.add(auction);
         }
         websocketClientEndpoint.sendMessage(new Gson().toJson(auctionList));
+    }
+
+    private void refreshAuctionPage(OtpErlangTuple resultTuple){
+        WebsocketClientEndpoint websocketClientEndpoint = null;
+        AuctionState auctionState = AuctionState.decodeFromErlangTuple(resultTuple);
+        System.out.println("AuctionState to be sent: " + auctionState);
+        try {
+            websocketClientEndpoint = new WebsocketClientEndpoint(new URI("ws://" + base_uri + "/auction_state/"+auctionState.getAuctionName()+"/listener"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        String json = new Gson().toJson(auctionState);
+        System.out.println("Auction state in json : " + json);
+        AuctionState auctionState1 = new Gson().fromJson(json, AuctionState.class);
+        System.out.println("Returned auction state obj: " + auctionState1);
+        websocketClientEndpoint.sendMessage(json);
     }
 }

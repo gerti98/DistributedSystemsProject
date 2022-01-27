@@ -24,7 +24,6 @@ public class MainMenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("DoGet MainMenuServlet");
-//        response.setIntHeader("Refresh", MAIN_MENU_REFRESH_TIME);
 
         try {
             List<Auction> auctionList = new CommunicationHandler().fetchActiveAuctions(request.getSession());
@@ -41,27 +40,45 @@ public class MainMenuServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("doPost MainMenu");
-        boolean isJoiningOkay = false;
-        int index = Integer.parseInt(request.getParameter("id"));
-        System.out.println("Id: " + index);
-        List<Auction> auctionList = (List<Auction>) request.getSession().getAttribute("auctionList");
-        Auction selectedAuction = auctionList.get(index);
-        request.getSession().setAttribute("currentAuction", selectedAuction);
+        boolean isJoiningOkay = true;
+        OtpErlangPid pid = null;
 
-        System.out.println("auction: goodname: " + selectedAuction.getGoodName() + ", startingvalue: " + selectedAuction.getStartingValue() + ", username: " + selectedAuction.getUsername() + ", imageURL: " + selectedAuction.getImageURL() + ")");
+        CommunicationHandler communicationHandler = new CommunicationHandler();
+        String goodname = request.getParameter("goodname");
+        long duration = Long.parseLong(request.getParameter("duration"));
+        long startValue = Long.parseLong(request.getParameter("startingValue"));
+        String username = (String) request.getSession().getAttribute("username");
+        String imageURL = request.getParameter("imageURL");
+        Auction selectedAuction = new Auction(goodname, duration, startValue, imageURL, username);
 
         try {
-            isJoiningOkay = new CommunicationHandler().performAuctionJoin(request.getSession());
-        } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
+            pid = communicationHandler.getAuctionPid(request.getSession(), selectedAuction);
+        } catch (OtpErlangDecodeException | OtpErlangExit e) {
             e.printStackTrace();
         }
 
-        if(isJoiningOkay){
-            response.sendRedirect(request.getContextPath() + "/AuctionServlet");
-        } else {
-            request.getSession().removeAttribute("currentAuction");
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher( "/pages/main_menu.jsp");
-            requestDispatcher.forward(request, response);
+        if(pid != null){
+            System.out.println("Auction pid got: " + pid.toString());
+            request.getSession().setAttribute("currentAuction", selectedAuction);
+            request.getSession().setAttribute("currentAuctionPid", pid);
+            System.out.println("auction: goodname: " + selectedAuction.getGoodName() + ", startingvalue: " + selectedAuction.getStartingValue() + ", username: " + selectedAuction.getUsername() + ", imageURL: " + selectedAuction.getImageURL() + ")");
+
+            try {
+                isJoiningOkay = new CommunicationHandler().performAuctionJoin(request.getSession());
+            } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
+                e.printStackTrace();
+            }
+
+            if(isJoiningOkay){
+                System.out.println("Joining is going on");
+                response.sendRedirect(request.getContextPath() + "/AuctionServlet");
+            } else {
+                request.getSession().removeAttribute("currentAuction");
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher( "/pages/main_menu.jsp");
+                requestDispatcher.forward(request, response);
+            }
         }
+
+
     }
 }

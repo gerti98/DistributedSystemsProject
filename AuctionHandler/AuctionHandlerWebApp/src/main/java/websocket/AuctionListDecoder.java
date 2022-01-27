@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageDecoder implements Decoder.Text<List<Auction>> {
+public class AuctionListDecoder implements Decoder.Text<List<Auction>> {
     Type listType = new TypeToken<ArrayList<Auction>>(){}.getType();
 
     private static Gson gson = new Gson();

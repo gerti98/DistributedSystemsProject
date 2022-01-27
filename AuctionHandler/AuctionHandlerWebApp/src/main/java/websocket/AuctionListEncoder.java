@@ -8,7 +8,7 @@ import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 import java.util.List;
 
-public class MessageEncoder implements Encoder.Text<List<Auction>> {
+public class AuctionListEncoder implements Encoder.Text<List<Auction>> {
 
     private static Gson gson = new Gson();
 

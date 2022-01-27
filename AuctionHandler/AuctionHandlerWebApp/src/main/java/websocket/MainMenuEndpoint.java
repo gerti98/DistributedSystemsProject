@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/main_menu_endpoint/{username}", decoders = MessageDecoder.class, encoders = MessageEncoder.class)
+@ServerEndpoint(value = "/main_menu_endpoint/{username}", decoders = AuctionListDecoder.class, encoders = AuctionListEncoder.class)
 public class MainMenuEndpoint {
     private Session session;
     private static final Set<MainMenuEndpoint> auctionEndpoints = new CopyOnWriteArraySet<MainMenuEndpoint>();
@@ -23,7 +23,7 @@ public class MainMenuEndpoint {
         auctionEndpoints.add(this);
         users.put(session.getId(), username);
 
-        System.out.println("Current users joined");
+        System.out.println("[MAIN MENU ENDPOINT] Current users joined");
         for(String user: users.values())
             System.out.println(user);
     }
@@ -38,6 +38,7 @@ public class MainMenuEndpoint {
     @OnClose
     public void onClose(Session session) throws IOException, EncodeException {
         auctionEndpoints.remove(this);
+        users.remove(session.getId());
     }
 
     @OnError

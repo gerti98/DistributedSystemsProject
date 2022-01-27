@@ -23,9 +23,8 @@ public class AuctionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setIntHeader("Refresh", AUCTION_REFRESH_TIME);
         AuctionState auctionState = null;
-        //Communication with auction handler erlang process
+
         try {
             auctionState = new CommunicationHandler().getAuctionState(request.getSession());
         } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {

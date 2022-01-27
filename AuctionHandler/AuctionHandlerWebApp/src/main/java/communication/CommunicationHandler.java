@@ -43,11 +43,13 @@ public class CommunicationHandler {
     }
 
     public boolean performAuctionJoin(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
-        System.out.println("Trying to perform Auction creation");
+        System.out.println("Trying to perform Auction joining");
         OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");
-        sendToPid(s, pid, new OtpErlangAtom("new_user"), new User((String) s.getAttribute("username")).encodeInErlangMap());
+        User user = new User((String) s.getAttribute("username"), "pippo");
+        sendToPid(s, pid, new OtpErlangAtom("new_user"), user.encodeInErlangMap());
         return receiveRequestResult(s);
     }
+
     public AuctionState publishBid(HttpSession s, Bid bid) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to perform Auction creation");
         OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");
@@ -61,15 +63,18 @@ public class CommunicationHandler {
         return receiveFetchAuctionResult(s);
     }
 
+    public OtpErlangPid getAuctionPid(HttpSession session, Auction selectedAuction) throws OtpErlangDecodeException, OtpErlangExit {
+        System.out.println("Trying to get auction pid");
+        send(session, serverRegisteredPID, new OtpErlangAtom("get_auction_pid"), selectedAuction.encodeInErlangMap());
+        return receiveAuctionPid(session);
+    }
+
     public void send(HttpSession session, String serverRegisteredPID, OtpErlangObject... values){
         OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
         System.out.println("Created mbox with name: " + otpMbox.getName());
-
         OtpErlangObject[] arr = new OtpErlangObject[values.length + 1];
-
         arr[0] = otpMbox.self();
         System.arraycopy(values, 0, arr, 1, values.length);
-
         OtpErlangTuple request = new OtpErlangTuple(arr);
         otpMbox.send(serverRegisteredPID, serverNode, request);
         System.out.println("Sent request " + request + " at server " + serverRegisteredPID);
@@ -84,12 +89,21 @@ public class CommunicationHandler {
         OtpErlangTuple request = new OtpErlangTuple(arr);
         otpMbox.send(auctionHandlerPID, request);
         System.out.println("Sent request " + request + " at server " + auctionHandlerPID.toString());
-        System.out.println("AuctionHandler PID info: (id: " + auctionHandlerPID.id() + ", node: " + auctionHandlerPID.node() + ", serial: " + auctionHandlerPID.serial() + "creation: " + auctionHandlerPID.creation());
+    }
+
+    public void sendToPidTest(HttpSession session, OtpErlangPid auctionHandlerPID, OtpErlangAtom atom, OtpErlangMap username) {
+        OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
+        System.out.println("Created mbox with name: " + otpMbox.getName());
+        OtpErlangObject[] arr = new OtpErlangObject[]{otpMbox.self(), atom, username};
+        OtpErlangTuple request = new OtpErlangTuple(arr);
+        otpMbox.send(auctionHandlerPID, request);
+        System.out.println("Sent request " + request + " at server " + auctionHandlerPID.toString());
     }
 
     public boolean receiveRequestResult(HttpSession session) throws OtpErlangDecodeException, OtpErlangExit {
         OtpErlangAtom status = new OtpErlangAtom("");
         OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
+        System.out.println("Receiving request result... ");
         OtpErlangObject message = otpMbox.receive(receiveTimeoutMS);
         if(message instanceof OtpErlangTuple){
             OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);
@@ -107,7 +121,8 @@ public class CommunicationHandler {
             OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);
             OtpErlangTuple resulTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(1);
             status = (OtpErlangAtom) (resulTuple).elementAt(0);
-            OtpErlangPid pid = (OtpErlangPid) (resulTuple).elementAt(1);
+            OtpErlangList list = (OtpErlangList) (resulTuple).elementAt(1);
+            OtpErlangPid pid = (OtpErlangPid) (list).elementAt(0);
             return pid;
         }
         return null;
@@ -138,35 +153,16 @@ public class CommunicationHandler {
     private AuctionState receiveAuctionState(HttpSession session) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         OtpMbox otpMbox = OtpMboxSingleton.getInstance(session);
         OtpErlangObject message = otpMbox.receive(receiveFetchMS);
-        long remainingTime = 0;
-        List<String> userList = new ArrayList<>();
-        List<List<String>> offers = new ArrayList<>();
+        AuctionState auctionState = null;
 
         if(message instanceof OtpErlangTuple) {
             OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);
-            OtpErlangTuple resulTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(1);
-            remainingTime = ((OtpErlangLong) (resulTuple).elementAt(1)).longValue();
-            OtpErlangList userListOtp = (OtpErlangList) ((resulTuple).elementAt(2));
-            for (OtpErlangObject userOtp: userListOtp){
-                String username = ((OtpErlangString) userOtp).stringValue();
-                System.out.println("Fetched from state user: " + username);
-                if (!username.equals(session.getAttribute("username")))
-                    userList.add(username);
-            }
-
-            OtpErlangList offersListOtp = (OtpErlangList) ((resulTuple).elementAt(3));
-            for(OtpErlangObject offerOtp: offersListOtp){
-                OtpErlangList tempListOtp = (OtpErlangList) offerOtp;
-                List<String> tempList = new ArrayList<>();
-                String username = ((OtpErlangString) tempListOtp.elementAt(0)).stringValue();
-                long amount = ((OtpErlangLong) tempListOtp.elementAt(1)).longValue();
-                tempList.add(username);
-                tempList.add(Long.toString(amount));
-                System.out.println("Fetched from offers (username: " + username + ", amount: " + amount + ")");
-                offers.add(tempList);
-            }
+            OtpErlangTuple resultTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(1);
+            auctionState = AuctionState.decodeFromErlangTuple(resultTuple);
         }
 
-        return new AuctionState(remainingTime, userList, offers);
+        return auctionState;
     }
+
+
 }

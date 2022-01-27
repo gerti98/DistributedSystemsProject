@@ -19,7 +19,7 @@
 %% - registering and create a new auction
 %% - ecc.... (TODO)
 %% API
--export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2]).
+-export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2, handle_call/3]).
 -export([init/1, handle_call/3, handle_cast/2]). %% Necessary otherwise nothing work
 
 % API functions
@@ -55,6 +55,10 @@ endpoint_loop() ->
       %%Additional part
       AuctionListResult = get_active_auction_list(),
       {mbox, listener@localhost} ! {self(), auction_list, AuctionListResult};
+    {ClientPid, get_auction_pid, MessageMap} ->
+      io:format("Received a get auction pid~n"),
+      Result = get_auction_pid(maps:get("goodName", MessageMap)),
+      ClientPid ! {self(), Result};
     {ClientPid, get_active_auctions} ->
       io:format("Received a get active auctions message~n"),
       Result = get_active_auction_list(),
@@ -97,7 +101,13 @@ get_active_auction_list() ->
 
 create_new_auction(ObjName, Duration, InitValue, ImageURL, Creator) ->
   case gen_server:call(main_server, {new_auction, ObjName, Duration, InitValue, ImageURL, Creator}) of
-    {{atomic, ok}, PidAuctionHandler} -> {ok, PidAuctionHandler};
+    {{atomic, ok}, PidAuctionHandler} -> {ok, [PidAuctionHandler]};
+    _ -> {false}
+  end.
+
+get_auction_pid(ObjName) ->
+  case gen_server:call(main_server, {get_auction_pid, ObjName}) of
+    {atomic, PidAuctionInList} -> {ok, PidAuctionInList};
     _ -> {false}
   end.
 
@@ -118,7 +128,7 @@ handle_call(auction_list, _From, ServerState) ->
   io:format("Result: ~p~n", [Ret]),
   {reply, Ret, ServerState};
 handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _From, ServerState) ->
-  PidHandler = spawn( fun() -> auction_handler:init_auction_handler(Duration) end),
+  PidHandler = spawn( fun() -> auction_handler:init_auction_handler(ObjName, Duration) end),
   Ret = mnesia_db:add_auction(ObjName, Duration, InitValue, ImageURL, Creator, PidHandler),
   io:format(" Return of add_auction: ~p~n", [Ret]),
   io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
@@ -134,6 +144,12 @@ handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _Fro
   NewState = ServerState ++ [{ObjName, Duration, InitValue, Creator, PidHandler}],
   io:format(" New state is: ~p~n", [NewState]),
   {reply, {Ret, PidHandler}, NewState};
+
+
+handle_call({get_auction_pid, ObjName}, _From, ServerState) ->
+  Ret = mnesia_db:get_auction_pid(ObjName),
+  io:format(" Return of get_auction_pid: ~p~n", [Ret]),
+  {reply, Ret, []};
 handle_call({get_user, Username}, _From, _ServerState) ->
   Ret = mnesia_db:get_user(Username),
   {reply, Ret, []};
@@ -143,4 +159,3 @@ handle_call({register, Username, Pw}, _From, _ServerState) ->
 
 handle_cast(reset, ServerState) ->
   {noreply, ServerState}.           % general format: {noreply, NewState}
-
