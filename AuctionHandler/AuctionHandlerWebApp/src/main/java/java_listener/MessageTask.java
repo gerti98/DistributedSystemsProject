@@ -1,10 +1,13 @@
 package java_listener;
 
 import com.ericsson.otp.erlang.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import dto.Auction;
 import dto.AuctionState;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -31,16 +34,24 @@ public class MessageTask implements Runnable{
             if(destination_atom.atomValue().equals("auction_list")){
                 System.out.println("Refresh of list");
                 OtpErlangList resultList = (OtpErlangList) (resultTuple).elementAt(1);
-                refreshMainMenu(resultList);
+                try {
+                    refreshMainMenu(resultList);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if(destination_atom.atomValue().equals("update_auction_state")){
                 System.out.println("Refresh Auction");
-                refreshAuctionPage(resultTuple);
+                try {
+                    refreshAuctionPage(resultTuple);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
     }
 
-    private void refreshMainMenu(OtpErlangList resultList){
+    private void refreshMainMenu(OtpErlangList resultList) throws IOException {
         //TODO: maybe we can cache websocket connections
         WebsocketClientEndpoint websocketClientEndpoint = null;
         List<Auction> auctionList = new ArrayList<>();
@@ -55,9 +66,10 @@ public class MessageTask implements Runnable{
             auctionList.add(auction);
         }
         websocketClientEndpoint.sendMessage(new Gson().toJson(auctionList));
+        websocketClientEndpoint.userSession.close();
     }
 
-    private void refreshAuctionPage(OtpErlangTuple resultTuple){
+    private void refreshAuctionPage(OtpErlangTuple resultTuple) throws IOException {
         WebsocketClientEndpoint websocketClientEndpoint = null;
         AuctionState auctionState = AuctionState.decodeFromErlangTuple(resultTuple);
         System.out.println("AuctionState to be sent: " + auctionState);
@@ -66,10 +78,9 @@ public class MessageTask implements Runnable{
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        String json = new Gson().toJson(auctionState);
-        System.out.println("Auction state in json : " + json);
-        AuctionState auctionState1 = new Gson().fromJson(json, AuctionState.class);
-        System.out.println("Returned auction state obj: " + auctionState1);
-        websocketClientEndpoint.sendMessage(json);
+        String jsonString = new ObjectMapper().writeValueAsString(auctionState);
+        System.out.println("Auction state in json : " + jsonString);
+        websocketClientEndpoint.sendMessage(jsonString);
+        websocketClientEndpoint.userSession.close();
     }
 }

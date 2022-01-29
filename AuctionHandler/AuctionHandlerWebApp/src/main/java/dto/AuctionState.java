@@ -1,18 +1,31 @@
 package dto;
 
 import com.ericsson.otp.erlang.*;
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuctionState {
     private String auctionName;
     private long remainingTime;
-    private List<String> participants;
-    private List<Bid> offers;
+
+//    @JsonSerialize(using = ParticipantSerializer.class)
+//    @JsonDeserialize(using = ParticipantDeserializer.class)
+    private ArrayList<User> participants;
+    private ArrayList<Bid> offers;
 
 
-    public AuctionState(String auctionName, long remainingTime, List<String> participants, List<Bid> offers) {
+    public AuctionState(String auctionName, long remainingTime, ArrayList<User> participants, ArrayList<Bid> offers) {
         this.auctionName = auctionName;
         this.remainingTime = remainingTime;
         this.offers = offers;
@@ -35,7 +48,7 @@ public class AuctionState {
         return hours_string + ":" + minutes_string + ":" + seconds_string;
     }
 
-    public List<String> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
@@ -54,8 +67,8 @@ public class AuctionState {
     }
 
     public static AuctionState decodeFromErlangTuple(OtpErlangTuple resultTuple){
-        List<String> userList = new ArrayList<>();
-        List<Bid> offers = new ArrayList<>();
+        ArrayList<User> userList = new ArrayList<>();
+        ArrayList<Bid> offers = new ArrayList<>();
 
         String auctionname = ((OtpErlangString) (resultTuple).elementAt(1)).stringValue();
         long remainingTime = ((OtpErlangLong) (resultTuple).elementAt(2)).longValue();
@@ -63,7 +76,7 @@ public class AuctionState {
         for (OtpErlangObject userOtp: userListOtp){
             String username = ((OtpErlangString) userOtp).stringValue();
             System.out.println("Fetched from state user: " + username);
-            userList.add(username);
+            userList.add(new User(username));
         }
 
         OtpErlangList offersListOtp = (OtpErlangList) ((resultTuple).elementAt(4));

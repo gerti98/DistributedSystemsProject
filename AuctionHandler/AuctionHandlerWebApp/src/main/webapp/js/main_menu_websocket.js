@@ -1,9 +1,9 @@
 let ws;
 
 function connect(ctx, username) {
-    console.log("Connect");
     let host = document.location.host;
     const url = "ws://" +host  + ctx + "/main_menu_endpoint/" + username;
+    console.log("Connecting to main menu endpoint with url: " + url);
     ws = new WebSocket(url);
 
     ws.onmessage = function(event) {

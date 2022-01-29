@@ -50,6 +50,16 @@ public class CommunicationHandler {
         return receiveRequestResult(s);
     }
 
+    public boolean performAuctionExit(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
+        System.out.println("Trying to perform Auction joining");
+        OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");
+        User user = new User((String) s.getAttribute("username"), "pippo");
+        sendToPid(s, pid, new OtpErlangAtom("del_user"), user.encodeInErlangMap());
+        return receiveRequestResult(s);
+    }
+
+
+
     public AuctionState publishBid(HttpSession s, Bid bid) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to perform Auction creation");
         OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");

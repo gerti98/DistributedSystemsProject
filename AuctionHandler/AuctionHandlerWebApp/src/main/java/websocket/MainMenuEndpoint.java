@@ -19,26 +19,26 @@ public class MainMenuEndpoint {
 
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) throws IOException, EncodeException {
+        System.out.println("[MAIN MENU ENDPOINT] OnOpen");
         this.session = session;
         auctionEndpoints.add(this);
         users.put(session.getId(), username);
-
-        System.out.println("[MAIN MENU ENDPOINT] Current users joined");
-        for(String user: users.values())
-            System.out.println(user);
+        printEndpointStatus();
     }
 
     @OnMessage
     public void onMessage(Session session, List<Auction> auctionList) throws IOException, EncodeException {
-        System.out.println("OnMessage");
-        System.out.println("Auction list is going to be broadcast");
+        System.out.println("[MAIN MENU ENDPOINT] OnMessage");
+        System.out.println("[MAIN MENU ENDPOINT] Auction list is going to be broadcast");
         broadcast(auctionList);
     }
 
     @OnClose
     public void onClose(Session session) throws IOException, EncodeException {
+        System.out.println("[MAIN MENU ENDPOINT] OnClose: " + users.get(session.getId()) + " is exiting");
         auctionEndpoints.remove(this);
         users.remove(session.getId());
+        printEndpointStatus();
     }
 
     @OnError
@@ -57,6 +57,13 @@ public class MainMenuEndpoint {
                 }
             }
         });
+    }
+
+    private static void printEndpointStatus(){
+        System.out.println("[MAIN MENU ENDPOINT] User connected:");
+        for(String user: users.values()){
+            System.out.println(" user: " + user);
+        }
     }
 
 }

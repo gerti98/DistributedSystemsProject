@@ -1,7 +1,8 @@
 <%@ page import="dto.Auction" %>
 <%@ page import="dto.AuctionState" %>
 <%@ page import="java.util.List" %>
-<%@ page import="dto.Bid" %><%--
+<%@ page import="dto.Bid" %>
+<%@ page import="dto.User" %><%--
   Created by IntelliJ IDEA.
   User: gxhan
   Date: 19/01/2022
@@ -25,9 +26,8 @@
 %>
 <body onload="connect_to_auction_ws('<%=request.getContextPath()%>', '<%=request.getSession().getAttribute("username")%>', '<%=auction.getGoodName()%>');">
 
-<div class="progress">
-  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-       aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+<div class="d-flex p-3">
+  <a href="<%=request.getContextPath()%>/MainMenuServlet" class="btn btn-danger">Back</a>
 </div>
 
   <div class="container card my-4">
@@ -72,12 +72,12 @@
           <h5 class="d-flex justify-content-center m-2">
             Joined Users
           </h5>
-          <ul class="list-group overflow-auto" style="height: 15rem;">
+          <ul class="list-group overflow-auto" style="height: 15rem;" id="joined_users">
             <li class="list-group-item active"><%=request.getSession().getAttribute("username")%></li>
             <%
-              for(String participant: auctionState.getParticipants()){
+              for(User participant: auctionState.getParticipants()){
             %>
-            <li class="list-group-item"> <%=participant%></li>
+            <li class="list-group-item"> <%=participant.getUsername()%></li>
             <%
               }
             %>
@@ -87,7 +87,7 @@
           <h5 class="d-flex justify-content-center m-2">
             Auction History
           </h5>
-          <ul class="list-group overflow-auto" style="height: 15rem;">
+          <ul class="list-group overflow-auto" style="height: 15rem;" id="bids">
             <%
               for(Bid bid: auctionState.getOffers()){
             %>
@@ -101,36 +101,6 @@
     </div>
 
   </div>
-
-<%--<script>--%>
-<%--  function startTimer(duration, display) {--%>
-<%--    if (duration < 0)--%>
-<%--      duration = 0;--%>
-
-<%--    var timer = duration, hours, minutes, seconds;--%>
-<%--    setInterval(function () {--%>
-<%--      hours = parseInt(timer / 3600, 10);--%>
-<%--      minutes = parseInt((timer / 60) % 60, 10);--%>
-<%--      seconds = parseInt(timer % 60, 10);--%>
-
-<%--      hours = hours < 10 ? "0" + hours : hours;--%>
-<%--      minutes = minutes < 10 ? "0" + minutes : minutes;--%>
-<%--      seconds = seconds < 10 ? "0" + seconds : seconds;--%>
-
-<%--      display.textContent = hours + ":" + minutes + ":" + seconds;--%>
-<%--      if(--timer < 0)--%>
-<%--        timer=0;--%>
-<%--    }, 1000);--%>
-<%--  }--%>
-
-<%--  window.onload = function () {--%>
-<%--    var duration =  document.querySelector('#remainingTime').textContent;--%>
-<%--    console.log(duration, typeof duration);--%>
-<%--    display = document.querySelector('#time_formatted');--%>
-<%--    startTimer(parseInt(duration)-1, display);--%>
-<%--  };--%>
-
-<%--</script>--%>
 
 </body>
 </html>

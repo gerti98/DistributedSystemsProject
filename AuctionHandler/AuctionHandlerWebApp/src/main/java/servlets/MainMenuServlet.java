@@ -25,6 +25,18 @@ public class MainMenuServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("DoGet MainMenuServlet");
 
+        //Clean joined auction
+
+        if(request.getSession().getAttribute("currentAuction") != null){
+            boolean isExitingOkay;
+            System.out.println("current Auction is not null, sending exit message");
+            try {
+                isExitingOkay = new CommunicationHandler().performAuctionExit(request.getSession());
+            } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
             List<Auction> auctionList = new CommunicationHandler().fetchActiveAuctions(request.getSession());
             request.setAttribute("auctionList", auctionList);
