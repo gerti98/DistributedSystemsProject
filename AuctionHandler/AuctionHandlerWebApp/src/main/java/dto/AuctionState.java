@@ -1,26 +1,14 @@
 package dto;
 
 import com.ericsson.otp.erlang.*;
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuctionState {
     private String auctionName;
     private long remainingTime;
-
-//    @JsonSerialize(using = ParticipantSerializer.class)
-//    @JsonDeserialize(using = ParticipantDeserializer.class)
+    private boolean winner_elected;
+    private Bid winning_bid;
     private ArrayList<User> participants;
     private ArrayList<Bid> offers;
 
@@ -30,6 +18,12 @@ public class AuctionState {
         this.remainingTime = remainingTime;
         this.offers = offers;
         this.participants = participants;
+    }
+
+    public AuctionState(String auctionName, long remainingTime, ArrayList<User> participants, ArrayList<Bid> offers, boolean winner_elected, Bid winning_bid) {
+        this(auctionName, remainingTime, participants, offers);
+        this.winner_elected = winner_elected;
+        this.winning_bid = winning_bid;
     }
 
     public long getRemainingTime() {
@@ -60,11 +54,21 @@ public class AuctionState {
         return auctionName;
     }
 
+    public boolean isWinner_elected() {
+        return winner_elected;
+    }
+
+    public Bid getWinning_bid() {
+        return winning_bid;
+    }
+
+
     @Override
     public String toString(){
         return "AuctionState{auction_name: " + auctionName + ", remaining_time: " + remainingTime +
                 ", participants(len): " + participants.size() + ", offers(len): " + offers.size() + "}\n";
     }
+
 
     public static AuctionState decodeFromErlangTuple(OtpErlangTuple resultTuple){
         ArrayList<User> userList = new ArrayList<>();
@@ -88,6 +92,16 @@ public class AuctionState {
             offers.add(new Bid(username, amount));
         }
 
-        return new AuctionState(auctionname, remainingTime, userList, offers);
+        OtpErlangAtom winner_is_chosen = (OtpErlangAtom) ((resultTuple).elementAt(5));
+        Bid winning_bid = null;
+        if(winner_is_chosen.atomValue().equals("true")){
+            OtpErlangList otp_winning_bid = (OtpErlangList) ((resultTuple).elementAt(6));
+            String winning_user = ((OtpErlangString) (otp_winning_bid.elementAt(0))).stringValue();
+            long winning_amount = ((OtpErlangLong) (otp_winning_bid.elementAt(1))).longValue();
+            System.out.println("Fetched winning bid (username: " + winning_user + ", amount: " + winning_amount + ")");
+            winning_bid = new Bid(winning_user, winning_amount);
+        }
+
+        return new AuctionState(auctionname, remainingTime, userList, offers, winner_is_chosen.atomValue().equals("true"), winning_bid);
     }
 }

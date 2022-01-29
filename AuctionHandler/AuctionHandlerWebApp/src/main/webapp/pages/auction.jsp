@@ -32,6 +32,21 @@
     <a href="<%=request.getContextPath()%>/MainMenuServlet" class="btn btn-danger">Back</a>
   </div>
 
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Auction Result</h5>
+        </div>
+        <div class="modal-body" id="modal_body">
+        </div>
+        <div class="modal-footer">
+          <a href="<%=request.getContextPath()%>/MainMenuServlet" class="btn btn-danger">Exit Auction</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="card my-4">
     <h1 class="d-flex justify-content-center m-3">
       Auction by: <%=auction.getUsername()%>

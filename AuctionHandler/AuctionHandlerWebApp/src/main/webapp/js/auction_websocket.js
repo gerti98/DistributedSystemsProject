@@ -57,6 +57,15 @@ function updateAuctionState(ctx, curr_username, auctionState){
         }
     )
     console.log("updateAuctionState")
+
+    if(auctionState.winner_elected){
+        console.log("Winner was elected!");
+        const winner_bid = auctionState.winning_bid;
+        const modal_body = document.querySelector('#modal_body');
+        modal_body.innerHTML = "The winner is " + winner_bid.username + " with a bid of " + winner_bid.bid + "€"
+        $('#exampleModal').modal({backdrop: 'static', keyboard: false});
+        $('#exampleModal').modal('show');
+    }
 }
 
 function startTimer(duration, display) {
