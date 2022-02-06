@@ -85,11 +85,13 @@ public class AuctionState {
 
         OtpErlangList offersListOtp = (OtpErlangList) ((resultTuple).elementAt(4));
         for(OtpErlangObject offerOtp: offersListOtp){
-            OtpErlangList tempListOtp = (OtpErlangList) offerOtp;
-            String username = ((OtpErlangString) tempListOtp.elementAt(0)).stringValue();
-            long amount = ((OtpErlangLong) tempListOtp.elementAt(1)).longValue();
-            System.out.println("Fetched from offers (username: " + username + ", amount: " + amount + ")");
-            offers.add(new Bid(username, amount));
+            OtpErlangTuple tempListOtp = (OtpErlangTuple) offerOtp;
+            if(tempListOtp.elementAt(0)!=null) {
+                String username = ((OtpErlangString) tempListOtp.elementAt(0)).stringValue();
+                long amount = ((OtpErlangLong) tempListOtp.elementAt(1)).longValue();
+                System.out.println("Fetched from offers (username: " + username + ", amount: " + amount + ")");
+                offers.add(new Bid(username, amount));
+            }
         }
 
         OtpErlangAtom winner_is_chosen = (OtpErlangAtom) ((resultTuple).elementAt(5));
