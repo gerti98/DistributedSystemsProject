@@ -1,28 +1,33 @@
 package websocket;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import dto.AuctionState;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.text.CollationElementIterator;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint(value = "/auction_state/{auction}/{username}", decoders = AuctionStateDecoder.class, encoders = AuctionStateEncoder.class)
 public class AuctionStateEndpoint{
     private Session session;
 
-    private static final Multimap<String, UserEndpointPair> clientEndpointByAuction = Multimaps.synchronizedMultimap(ArrayListMultimap.create());
+    private static final ConcurrentMap<String, Set<UserEndpointPair>> clientEndpointByAuction = new ConcurrentHashMap<>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam("auction") String auction, @PathParam("username") String username) throws IOException, EncodeException {
         System.out.println("[AUCTION STATE ENDPOINT] OnOpen of auction: " + auction + ", and user: " + username);
         this.session = session;
-        clientEndpointByAuction.put(auction, new UserEndpointPair(username, this));
+
+        if(clientEndpointByAuction.get(auction) == null){
+            Set<UserEndpointPair> userEndpointPairs = new CopyOnWriteArraySet<>();
+            userEndpointPairs.add(new UserEndpointPair(username, this));
+            clientEndpointByAuction.put(auction, userEndpointPairs);
+        } else {
+            clientEndpointByAuction.get(auction).add(new UserEndpointPair(username, this));
+        }
         printEndpointStatus();
     }
 
@@ -35,11 +40,11 @@ public class AuctionStateEndpoint{
     @OnClose
     public void onClose(Session session, @PathParam("auction") String auction, @PathParam("username") String username) throws IOException, EncodeException {
         System.out.println("[AUCTION STATE ENDPOINT] OnClose, User: " + username + " is exiting the auction: " + auction);
-        Collection<UserEndpointPair> userEndpointPairList = clientEndpointByAuction.get(auction);
-        for(Iterator<UserEndpointPair> iterator = userEndpointPairList.iterator(); iterator.hasNext();){
+        Set<UserEndpointPair> userEndpointPairSet = clientEndpointByAuction.get(auction);
+        for(Iterator<UserEndpointPair> iterator = userEndpointPairSet.iterator(); iterator.hasNext();){
             UserEndpointPair current = iterator.next();
             if(username.equals(current.getUsername())){
-                boolean result2 = clientEndpointByAuction.remove(auction, current);
+                boolean result2 = userEndpointPairSet.remove(current);
                 System.out.println("Delete result in cycle: " + result2);
             }
         }

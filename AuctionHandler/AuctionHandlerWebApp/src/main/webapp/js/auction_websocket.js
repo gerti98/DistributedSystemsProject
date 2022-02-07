@@ -76,6 +76,10 @@ function startTimer(duration, display) {
         duration = 0;
     var timer = duration, hours, minutes, seconds;
     setInterval(function () {
+        console.log("tick")
+        if(--timer < 0)
+            timer=0;
+
         hours = parseInt(timer / 3600, 10);
         minutes = parseInt((timer / 60) % 60, 10);
         seconds = parseInt(timer % 60, 10);
@@ -85,7 +89,5 @@ function startTimer(duration, display) {
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
         display.textContent = hours + ":" + minutes + ":" + seconds;
-        if(--timer < 0)
-            timer=0;
     }, 1000);
 }

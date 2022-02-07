@@ -16,14 +16,6 @@ function connect(ctx, username) {
     };
 }
 
-//
-// function removeNoCardDiv(){
-//     var noauction = document.getElementById("noauction");
-//     if(noauction != null)
-//         noauction.remove();
-// }
-
-
 /*
 <form class="card w-25" action="<%=request.getContextPath()%>/MainMenuServlet" method="post">
     <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
