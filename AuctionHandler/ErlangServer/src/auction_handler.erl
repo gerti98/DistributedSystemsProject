@@ -58,9 +58,8 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
       io:format(" [AUCTION HANDLER] Sending state: ~p~n", [ToSend]),
       Client ! {self(), ToSend},
       auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList});
-%%    {_, debug} ->
-%%      io:format(" [AUCTION HANDLER] dummy auction handler is running ~n"),
-%%      auction_loop({AuctionName, AuctionUsers, RemainingTime});
+    {kill_auction_exists} ->
+      io:format(" [AUCTION HANDLER] Suicide: ~p killed...~n", [self()]);
     {clock} ->
       io:format(" [AUCTION HANDLER] Timer Updated: 1 second passed ~n"),
       NewTime = RemainingTime - 1,

@@ -151,15 +151,19 @@ handle_call(passed_auction_list, _From, ServerState) ->
   io:format("Result: ~p~n", [Ret]),
   {reply, Ret, ServerState};
 handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _From, ServerState) ->
-  MyPid = self(),
   PidHandler = spawn( fun() -> auction_handler:init_auction_handler(ObjName, Duration) end),
   Ret = mnesia_db:add_auction(ObjName, Duration, InitValue, ImageURL, Creator, PidHandler),
   io:format(" Return of add_auction: ~p~n", [Ret]),
-  io:format(" The pid of the handler is ~p: check if it is running .... ~n",[PidHandler]),
-  PidHandler ! {self(), debug},
-  NewState = ServerState ++ [{ObjName, Duration, InitValue, Creator, PidHandler}],
-  io:format(" New state is: ~p~n", [NewState]),
-  {reply, {Ret, PidHandler}, NewState};
+  case Ret == {atomic, false} of
+    true ->
+      io:format(" The process ~p must be killed~n",[PidHandler]),
+      exit(PidHandler, kill),
+      {reply, {Ret, 0}, ServerState};
+    false -> io:format(" The pid of the handler is ~p~n",[PidHandler]),
+      NewState = ServerState ++ [{ObjName, Duration, InitValue, Creator, PidHandler}],
+      io:format(" New state is: ~p~n", [NewState]),
+      {reply, {Ret, PidHandler}, NewState}
+  end;
 handle_call({get_auction_pid, ObjName}, _From, _ServerState) ->
   Ret = mnesia_db:get_auction_pid(ObjName),
   io:format(" Return of get_auction_pid: ~p~n", [Ret]),
