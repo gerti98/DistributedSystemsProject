@@ -10,7 +10,7 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/6, get_active_auctions/0, get_auction/1, get_auction_pid/1, update_auction_winner/2]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/6, get_active_auctions/0, get_auction/1, get_auction_pid/1, update_auction_winner/2, get_passed_auctions/0]).
 
 -record(user, {name, password}).
 -record(auction, {name, duration, startingValue, imageURL, creator, pid, winner}).
@@ -65,7 +65,7 @@ update_auction_winner(AuctionName, Winner) ->
   Res = mnesia:transaction(F),
   Ret1 = get_active_auctions(),
   Ret2 = get_passed_auctions(),
-  io:format(" DEBUG: Result update: ~p~n Active: ~p~n Passed (all for the moment): ~p~n", [Res, Ret1, Ret2]),
+  io:format(" DEBUG: Result update: ~p~n Active: ~p~n Passed: ~p~n", [Res, Ret1, Ret2]),
   Res.
 
 get_active_auctions() ->
@@ -81,8 +81,8 @@ get_passed_auctions() ->
   io:format("Getting Passed Auctions List~n"),
   F = fun() ->
     Auction = #auction{name='$1', duration='$2', startingValue='$3', imageURL = '$4', creator='$5', pid='$6', winner = '$7', _ = '_'},
-    Guard = {'<>', '$7', none},
-    mnesia:select(auction, [{Auction, [], [['$1', '$2', '$3', '$4', '$5', '$6','$7']]}])
+    Guard = {'/=', '$7', none},
+    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5', '$6','$7']]}])
       end,
   mnesia:transaction(F).
 

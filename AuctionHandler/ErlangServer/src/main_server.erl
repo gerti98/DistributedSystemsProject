@@ -19,7 +19,7 @@
 %% - registering and create a new auction
 %% - ecc.... (TODO)
 %% API
--export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2, update_auction/2]).
+-export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2, update_auction/2, get_passed_auction_list/0]).
 -export([init/1, handle_call/3, handle_cast/2]). %% Necessary otherwise nothing work
 
 % API functions
@@ -63,6 +63,10 @@ endpoint_loop() ->
       io:format("Received a get active auctions message~n"),
       Result = get_active_auction_list(),
       ClientPid ! {self(), Result};
+    {ClientPid, get_passed_auctions} ->
+      io:format("Received a get passed auctions message~n"),
+      Result = get_passed_auction_list(),
+      ClientPid ! {self(), Result};
     {update_win, NameAuction, Winner} ->
       io:format("Received from a request for update the winner of an auction ~n"),
       Result = update_auction(NameAuction, Winner);
@@ -103,6 +107,14 @@ get_active_auction_list() ->
     _ -> {false}
   end.
 
+get_passed_auction_list() ->
+  case gen_server:call(main_server, passed_auction_list) of
+    {atomic, AuctionList} ->
+      {ok, AuctionList};
+    _ -> {false}
+  end.
+
+
 create_new_auction(ObjName, Duration, InitValue, ImageURL, Creator) ->
   case gen_server:call(main_server, {new_auction, ObjName, Duration, InitValue, ImageURL, Creator}) of
     {{atomic, ok}, PidAuctionHandler} -> {ok, [PidAuctionHandler]};
@@ -132,6 +144,10 @@ handle_call(user_list, _From, _ServerState) ->
   {reply, {todo, da, user_list_call}, []};
 handle_call(auction_list, _From, ServerState) ->
   Ret = mnesia_db:get_active_auctions(),
+  io:format("Result: ~p~n", [Ret]),
+  {reply, Ret, ServerState};
+handle_call(passed_auction_list, _From, ServerState) ->
+  Ret = mnesia_db:get_passed_auctions(),
   io:format("Result: ~p~n", [Ret]),
   {reply, Ret, ServerState};
 handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _From, ServerState) ->
