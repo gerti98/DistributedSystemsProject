@@ -38,16 +38,22 @@ stop_mnesia_db() ->
   application:stop(mnesia).
 
 add_user(Username, Password) ->
-  {_, UsernameCheck} = get_user(Username),
-  io:format(" get_user returns ~p~n", [UsernameCheck]),
-  case UsernameCheck==[] of
-    true ->   io:format(" Username available ~n"),
-              F = fun() -> mnesia:write(#user{name=Username, password = Password}) end,
-              mnesia:transaction(F);
-    false ->  io:format(" User with same name already exists ~n"),
-              {atomic, false}
-  end.
-
+  F = fun() ->
+    io:format("Searching for ~s~n", [Username]),
+    User = #user{name='$1', password = '$2', _ = '_'},
+    Guard = {'==', '$1', Username},
+    UsernameCheck = mnesia:select(user, [{User, [Guard], [['$1', '$2']]}]),
+    io:format(" Search for the user returns ~p~n", [UsernameCheck]),
+    case UsernameCheck==[] of
+      true ->   io:format(" Username available ~n"),
+                mnesia:write(#user{name=Username, password = Password});
+      false ->  io:format(" User with same name already exists ~n"),
+                false
+    end
+    end,
+  Ret = mnesia:transaction(F),
+  io:format("Final ret of add user is ~p~n",[Ret]),
+  Ret.
 
 get_user(Username_to_find) ->
   R = fun() ->
@@ -60,16 +66,23 @@ get_user(Username_to_find) ->
 
 
 add_auction(ObjectName, Duration, InitialValue, ImageURL, Creator, Pid) ->
-  io:format(" Adding Auction ~p ~p ~p ~p ~p ~p ~n", [ObjectName, Duration, InitialValue, ImageURL, Creator, Pid]),
-  {_, AuctionNameCheck} = get_auction(ObjectName),
-  io:format(" get_auction returns; ~p~n", [AuctionNameCheck]),
-  case AuctionNameCheck==[] of
-    true ->   io:format(" Auction Name available ~n"),
-              F = fun() -> mnesia:write(#auction{name=ObjectName, duration=Duration, startingValue = InitialValue, imageURL = ImageURL, creator = Creator, pid = Pid, winner = none}) end,
-              mnesia:transaction(F);
-    false ->  io:format(" Auction with same name already exists ~n"),
-              {atomic, false}
-  end.
+  F = fun() ->
+    io:format("Searching for auction ~s~n", [ObjectName]),
+    Auction = #auction{name='$1', duration='$2', startingValue='$3', imageURL = '$4', creator='$5', pid='$6', winner = '$7', _ = '_'},
+    Guard = {'==', '$1', ObjectName},
+    AuctionNameCheck = mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5', '$6']]}]),
+    io:format(" Search for the auction returns; ~p~n", [AuctionNameCheck]),
+    case AuctionNameCheck==[] of
+      true ->   io:format(" Auction Name available ~n"),
+        io:format(" Adding Auction ~p ~p ~p ~p ~p ~p ~n", [ObjectName, Duration, InitialValue, ImageURL, Creator, Pid]),
+        mnesia:write(#auction{name=ObjectName, duration=Duration, startingValue = InitialValue, imageURL = ImageURL, creator = Creator, pid = Pid, winner = none});
+      false ->  io:format(" Auction with same name already exists ~n"),
+        false
+    end
+    end,
+  Ret = mnesia:transaction(F),
+  io:format("Final ret of add auction is ~p~n",[Ret]),
+  Ret.
 
 
 update_auction_winner(AuctionName, Winner) ->

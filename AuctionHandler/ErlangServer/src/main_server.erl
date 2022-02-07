@@ -69,7 +69,7 @@ endpoint_loop() ->
       ClientPid ! {self(), Result};
     {update_win, NameAuction, Winner} ->
       io:format("Received from a request for update the winner of an auction ~n"),
-      Result = update_auction(NameAuction, Winner);
+      _Result = update_auction(NameAuction, Winner);
       %%AuctionPid ! {self(), Result};
     _ -> io:format("Received any message~n")
   end,

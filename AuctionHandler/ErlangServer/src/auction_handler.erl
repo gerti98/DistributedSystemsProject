@@ -11,11 +11,8 @@
 
 %% API
 -export([init_auction_handler/2]).
-%%-record(offers, {user, offer_amount}).
 
 init_auction_handler(AuctionName, AuctionDuration) ->
-  %%create_offers_db(),
-  %%start_mnesia_offer_db(),
   erlang:send_after(1000, self(), {clock}),
   auction_loop({AuctionName, [],AuctionDuration, []}).
 
@@ -103,50 +100,16 @@ find_index_of_max(Max, [H|T], Counter) ->
     H == Max -> Counter;
     true -> find_index_of_max(Max, T, Counter+1)
   end;
-find_index_of_max(Max, [], _Counter) ->
+find_index_of_max(_Max, [], _Counter) ->
   Error = -1,
   Error.
 
 get_offers_amount(OfferList) ->
-  OffersAmountList = [Amount || {User, Amount} <- OfferList],
+  OffersAmountList = [Amount || {_User, Amount} <- OfferList],
   io:format(" OffersAmountList: ~p",[OffersAmountList]),
   OffersAmountList.
 
 get_offers_users(OfferList) ->
-  OffersUsersList = [User || {User, Amount} <- OfferList],
+  OffersUsersList = [User || {User, _Amount} <- OfferList],
   io:format(" OffersUserList: ~p",[OffersUsersList]),
   OffersUsersList.
-
-
-%% SUPPORT DB
-%%create_offers_db() ->
-%%  mnesia:create_schema([node()]),
-%%   application:start(mnesia),
-%%   io:format("Test debug: Offer DB started ~n"),
-%%   mnesia:create_table(offers, [
-%%     {attributes, record_info(fields, offers)}, {disc_copies, [node()]}]).
-
-%% @doc This function start an already existing mnesia server
-%% start_mnesia_offer_db() ->
-%%  application:start(mnesia).
-
-%% @doc This function a running instance of the mnesia server (the
-%% information are maintained on the disk).
-%% stop_mnesia_offer_db() ->
-%%  application:stop(mnesia).
-
-%% add_offer(Username, Amount) ->
-%%   F = fun() -> mnesia:write(#offers{user = Username, offer_amount = Amount}) end,
-%%   mnesia:transaction(F).
-
-%% get_offers() ->
-%%   R = fun() ->
-%%     io:format("Retrieving offers ~n"),
-%%     User = #offers{user = '$1', offer_amount = '$2', _ = '_'},
-%%    mnesia:select(offers, [{User, [], [['$1', '$2']]}])
-%%      end,
-%%  mnesia:transaction(R).
-
-
-
-
