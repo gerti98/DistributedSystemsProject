@@ -11,7 +11,7 @@
 
 %% API
 -export([init_auction_handler/2]).
--record(offers, {user, offer_amount}).
+%%-record(offers, {user, offer_amount}).
 
 init_auction_handler(AuctionName, AuctionDuration) ->
   %%create_offers_db(),
@@ -92,7 +92,10 @@ winner(AuctionName, RemainingTime, AuctionUsers, OfferList) ->
   io:format(" [AUCTION HANDLER] Among the offers ~p the winning bid is ~p~n", [FinalOffersAmount, WinningBid]),
   %%{atomic, Offers} = get_offers(),
   ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, OfferList, true, [Winner, WinningBid]},
-  {mbox, listener@localhost} ! {self(), update_auction_state, ToSend}.
+  {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
+  MainServerPid = whereis(main_server_endpoint),
+  io:format(" [AUCTION HANDLER] Sending update request to ~p ~n", [MainServerPid]),
+  MainServerPid ! {update_win, AuctionName, Winner}.
 
 find_index_of_max(Max, FinalOffersAmount) ->
   find_index_of_max(Max, FinalOffersAmount, 0).
