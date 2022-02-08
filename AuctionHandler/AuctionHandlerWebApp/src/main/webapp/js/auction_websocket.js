@@ -1,5 +1,43 @@
 let ws;
 
+
+function check_minimun_bid(){
+    var min_value_to_show;
+    bid = document.querySelector('#bid')
+    minimum_bid = document.querySelector('#minimum_bid')
+    last_bid_elem = document.querySelector('#bids').lastElementChild
+
+    bid_value_int = parseInt(bid.value)
+    minimum_bid_int = parseInt(minimum_bid.value)
+
+    if(last_bid_elem != null){
+        last_bid_value = parseSentenceForNumber(last_bid_elem.innerHTML)
+        last_bid_value_int = parseInt(last_bid_value)
+        // console.log("Last bid value: ", last_bid_value, typeof last_bid_value)
+        // console.log("Last bid value (int): ", last_bid_value_int, typeof  last_bid_value_int)
+        min_value_to_show = Math.max(last_bid_value_int, minimum_bid_int)
+        check = bid_value_int < min_value_to_show
+    } else {
+        min_value_to_show = minimum_bid.value
+
+    }
+
+    // console.log("Bid: ", bid.value, typeof bid.value)
+    // console.log("Bid(int): ", bid_value_int, typeof  bid_value_int)
+    // console.log("Minimum_bid: ", minimum_bid.value, typeof minimum_bid.value)
+    // console.log("Minimum_bid(int): ", minimum_bid_int, typeof  minimum_bid_int)
+    // console.log("Last_bid_elem: ", last_bid_elem)
+
+
+    var check = bid_value_int < min_value_to_show
+    bid.setCustomValidity((check)? "Minimum offer must be " + min_value_to_show + "€" : "")
+}
+
+function parseSentenceForNumber(sentence){
+    var matches = sentence.replace(/,/g, '').match(/(\+|-)?((\d+(\.\d+)?)|(\.\d+))/);
+    return matches && matches[0] || null;
+}
+
 function connect_to_auction_ws(ctx, username, auction) {
     console.log("Connect");
     let host = document.location.host;
@@ -62,7 +100,12 @@ function updateAuctionState(ctx, curr_username, auctionState){
         console.log("Winner was elected!");
         const winner_bid = auctionState.winning_bid;
         const modal_body = document.querySelector('#modal_body');
-        modal_body.innerHTML = "The winner is " + winner_bid.username + " with a bid of " + winner_bid.bid + "€"
+        console.log("Winner is: ", winner_bid.username, typeof winner_bid.username)
+        if (winner_bid.username == "NoWinner"){
+            modal_body.innerHTML = "No Winner in this auction"
+        } else {
+            modal_body.innerHTML = "The winner is " + winner_bid.username + " with a bid of " + winner_bid.bid + "€"
+        }
         $('#exampleModal').modal({backdrop: 'static', keyboard: false});
         $('#exampleModal').modal('show');
     }
