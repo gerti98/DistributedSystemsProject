@@ -86,7 +86,7 @@ add_auction(ObjectName, Duration, InitialValue, ImageURL, Creator, Pid) ->
 
 
 update_auction_winner(AuctionName, Winner) ->
-  io:format(" DUMMY - Updating auction ~p whose winner is ~p ~n", [AuctionName, Winner]),
+  io:format(" Updating auction ~p whose winner is ~p ~n", [AuctionName, Winner]),
   F = fun() ->
     [Row] = mnesia:read(auction, AuctionName), % crash if the car is missing
     mnesia:write(Row#auction{winner = Winner})

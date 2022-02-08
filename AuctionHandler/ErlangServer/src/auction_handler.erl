@@ -72,7 +72,13 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
       auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList})
   end.
 
-
+winner(AuctionName, RemainingTime, AuctionUsers, []) ->
+  io:format(" [AUCTION HANDLER] No offers and no winner for this auction ~n"),
+  ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, [], true, ["NoWinner", "0"]},
+  {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
+  MainServerPid = whereis(main_server_endpoint),
+  io:format(" [AUCTION HANDLER] Sending update request to ~p ~n", [MainServerPid]),
+  MainServerPid ! {update_win, AuctionName, "NoWinner"};
 winner(AuctionName, RemainingTime, AuctionUsers, OfferList) ->
   io:format(" [AUCTION HANDLER] Deciding the winner ~n"),
   FinalOffersAmount = get_offers_amount(OfferList),
@@ -92,6 +98,8 @@ winner(AuctionName, RemainingTime, AuctionUsers, OfferList) ->
   MainServerPid = whereis(main_server_endpoint),
   io:format(" [AUCTION HANDLER] Sending update request to ~p ~n", [MainServerPid]),
   MainServerPid ! {update_win, AuctionName, Winner}.
+
+
 
 find_index_of_max(Max, FinalOffersAmount) ->
   find_index_of_max(Max, FinalOffersAmount, 0).
