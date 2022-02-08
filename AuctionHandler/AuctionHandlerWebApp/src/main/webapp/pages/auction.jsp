@@ -67,15 +67,15 @@
 
         </h5>
         <form action="<%=request.getContextPath()%>/AuctionServlet" method="post"
-              oninput='bid.setCustomValidity(parseInt(bid.value) < parseInt(minimum_bid.value) ? "Minimum offer must be " + minimum_bid.value + "€" : "")'>
+              oninput='check_minimun_bid()'>
           <div class="d-flex justify-content-between mb-3">
 
-            <input type="number" name="minimum_bid" value="<%=auction.getStartingValue()%>" hidden>
+            <input type="number" id="minimum_bid" name="minimum_bid" value="<%=auction.getStartingValue()%>" hidden>
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">€</span>
               </div>
-              <input type="number" class="form-control" name="bid" placeholder="Enter your bid" aria-describedby="bid" required>
+              <input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your bid" aria-describedby="bid" required>
               <div class="input-group-append">
                 <span class="input-group-text">.00</span>
               </div>

@@ -96,10 +96,14 @@ public class AuctionState {
 
         OtpErlangAtom winner_is_chosen = (OtpErlangAtom) ((resultTuple).elementAt(5));
         Bid winning_bid = null;
+        long winning_amount;
         if(winner_is_chosen.atomValue().equals("true")){
             OtpErlangList otp_winning_bid = (OtpErlangList) ((resultTuple).elementAt(6));
             String winning_user = ((OtpErlangString) (otp_winning_bid.elementAt(0))).stringValue();
-            long winning_amount = ((OtpErlangLong) (otp_winning_bid.elementAt(1))).longValue();
+            if(winning_user.equals("NoWinner"))
+                winning_amount = 0;
+            else
+                winning_amount = ((OtpErlangLong) (otp_winning_bid.elementAt(1))).longValue();
             System.out.println("Fetched winning bid (username: " + winning_user + ", amount: " + winning_amount + ")");
             winning_bid = new Bid(winning_user, winning_amount);
         }

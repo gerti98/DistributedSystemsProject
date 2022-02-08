@@ -57,6 +57,16 @@
                     <label for="imageURL" class="form-label">Image URL</label>
                     <input type="text" class="form-control" name="imageURL" placeholder="Enter URL of symbolic image" aria-describedby="imageURL" id="imageURL" required>
                 </div>
+                <%
+                    String registrationStatus = (String) request.getSession().getAttribute("auctionCreationStatus");
+                    if(registrationStatus != null && registrationStatus.equals("error")) {
+                %>
+                <div class="alert alert-danger" role="alert">
+                    There was an unexpected error, please retry later.
+                </div>
+                <%
+                    }
+                %>
                 <button type="submit" class="btn btn-primary m-3">Create Auction</button>
             </form>
         </div>

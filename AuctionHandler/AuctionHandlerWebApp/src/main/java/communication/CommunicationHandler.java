@@ -131,6 +131,8 @@ public class CommunicationHandler {
             OtpErlangPid serverPID = (OtpErlangPid) ((OtpErlangTuple) message).elementAt(0);
             OtpErlangTuple resulTuple = (OtpErlangTuple) ((OtpErlangTuple) message).elementAt(1);
             status = (OtpErlangAtom) (resulTuple).elementAt(0);
+            if (status.toString().equals("false"))
+                return null;
             OtpErlangList list = (OtpErlangList) (resulTuple).elementAt(1);
             OtpErlangPid pid = (OtpErlangPid) (list).elementAt(0);
             return pid;
