@@ -27,7 +27,7 @@
 start_main_server() ->
   mnesia_db:create_mnesia_db(),
   Return = gen_server:start({local, main_server}, ?MODULE, [], []),
-  io:format("start_link: ~p~n", [Return]),
+  io:format(" [MAIN SERVER] start link main server: ~p~n", [Return]),
   Pid = spawn(?MODULE, endpoint_loop, []),
   register(main_server_endpoint, Pid),
   Return.
@@ -41,37 +41,37 @@ start_main_server() ->
 endpoint_loop() ->
   receive
     {ClientPid, register, MessageMap} ->
-      io:format("Received a register message~n"),
+      io:format(" [MAIN SERVER] Received a register message~n"),
       Result = register_user(maps:get("username", MessageMap), maps:get("password", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, login, MessageMap} ->
-      io:format("Received a login message~n"),
+      io:format(" [MAIN SERVER] Received a login message~n"),
       Result = login_user(maps:get("username", MessageMap), maps:get("password", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, create_auction, MessageMap} ->
-      io:format("Received a create auction message~n"),
+      io:format(" [MAIN SERVER] Received a create auction message~n"),
       Result = create_new_auction(maps:get("goodName", MessageMap), maps:get("duration", MessageMap),  maps:get("startingValue", MessageMap), maps:get("imageURL", MessageMap), maps:get("username", MessageMap)),
       ClientPid ! {self(), Result},
       %%Additional part
       AuctionListResult = get_active_auction_list(),
       {mbox, listener@localhost} ! {self(), auction_list, AuctionListResult};
     {ClientPid, get_auction_pid, MessageMap} ->
-      io:format("Received a get auction pid~n"),
+      io:format(" [MAIN SERVER] Received a get auction pid~n"),
       Result = get_auction_pid(maps:get("goodName", MessageMap)),
       ClientPid ! {self(), Result};
     {ClientPid, get_active_auctions} ->
-      io:format("Received a get active auctions message~n"),
+      io:format(" [MAIN SERVER] Received a get active auctions message~n"),
       Result = get_active_auction_list(),
       ClientPid ! {self(), Result};
     {ClientPid, get_passed_auctions} ->
-      io:format("Received a get passed auctions message~n"),
+      io:format(" [MAIN SERVER] Received a get passed auctions message~n"),
       Result = get_passed_auction_list(),
       ClientPid ! {self(), Result};
     {update_win, NameAuction, Winner} ->
-      io:format("Received from a request for update the winner of an auction ~n"),
+      io:format(" [MAIN SERVER] Received from a request for update the winner of an auction ~n"),
       _Result = update_auction(NameAuction, Winner);
       %%AuctionPid ! {self(), Result};
-    _ -> io:format("Received any message~n")
+    _ -> io:format(" [MAIN SERVER] Received any message~n")
   end,
   endpoint_loop().
 
@@ -144,29 +144,32 @@ handle_call(user_list, _From, _ServerState) ->
   {reply, {todo, da, user_list_call}, []};
 handle_call(auction_list, _From, ServerState) ->
   Ret = mnesia_db:get_active_auctions(),
-  io:format("Result: ~p~n", [Ret]),
+  io:format(" [MAIN SERVER] Result: ~p~n", [Ret]),
   {reply, Ret, ServerState};
 handle_call(passed_auction_list, _From, ServerState) ->
   Ret = mnesia_db:get_passed_auctions(),
-  io:format("Result: ~p~n", [Ret]),
+  io:format(" [MAIN SERVER] Result: ~p~n", [Ret]),
   {reply, Ret, ServerState};
 handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _From, ServerState) ->
   PidHandler = spawn( fun() -> auction_handler:init_auction_handler(ObjName, Duration) end),
+  %%PidHandler = spawn( fun() -> my_supervisor:add_auction_to_monitor(ObjName, Duration) end),
+  %%PidHandler = my_supervisor:add_auction_to_monitor(ObjName, Duration),
+
   Ret = mnesia_db:add_auction(ObjName, Duration, InitValue, ImageURL, Creator, PidHandler),
-  io:format(" Return of add_auction: ~p~n", [Ret]),
+  io:format(" [MAIN SERVER] Return of add_auction: ~p~n", [Ret]),
   case Ret == {atomic, false} of
     true ->
-      io:format(" The process ~p must be killed~n",[PidHandler]),
+      io:format(" [MAIN SERVER] The process ~p must be killed~n",[PidHandler]),
       exit(PidHandler, kill),
       {reply, {Ret, 0}, ServerState};
-    false -> io:format(" The pid of the handler is ~p~n",[PidHandler]),
+    false -> io:format(" [MAIN SERVER] The pid of the handler is ~p~n",[PidHandler]),
       NewState = ServerState ++ [{ObjName, Duration, InitValue, Creator, PidHandler}],
-      io:format(" New state is: ~p~n", [NewState]),
+      io:format(" [MAIN SERVER] New state is: ~p~n", [NewState]),
       {reply, {Ret, PidHandler}, NewState}
   end;
 handle_call({get_auction_pid, ObjName}, _From, _ServerState) ->
   Ret = mnesia_db:get_auction_pid(ObjName),
-  io:format(" Return of get_auction_pid: ~p~n", [Ret]),
+  io:format(" [MAIN SERVER] Return of get_auction_pid: ~p~n", [Ret]),
   {reply, Ret, []};
 handle_call({get_user, Username}, _From, _ServerState) ->
   Ret = mnesia_db:get_user(Username),
@@ -176,7 +179,7 @@ handle_call({register, Username, Pw}, _From, _ServerState) ->
   {reply, Ret, []};
 handle_call({update_win, AuctionName, Winner}, _From, _ServerState) ->
   Ret = mnesia_db:update_auction_winner(AuctionName, Winner),
-  io:format("Result from auction update ~p~n",[Ret]),
+  io:format(" [MAIN SERVER] Result from auction update ~p~n",[Ret]),
   {reply, Ret, []}.
 
 handle_cast(reset, ServerState) ->
