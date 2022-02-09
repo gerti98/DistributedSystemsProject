@@ -70,14 +70,19 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
       io:format(" [AUCTION HANDLER] Sending state: ~p~n", [ToSend]),
       Client ! {self(), ToSend},
       auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList});
-    %%{kill_auction_exists} ->
-    %%  io:format(" [AUCTION HANDLER] Suicide: ~p killed...~n", [self()]);
+    {Sender, kill_auction_suicide} ->
+      case Sender==self() of
+        true -> io:format(" [AUCTION HANDLER] Suicide: ~p killed...~n", [self()]);
+        false ->  io:format(" [AUCTION HANDLER] Kill request ignored ~n"),
+                  auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList})
+      end;
     {clock} ->
       io:format(" [AUCTION HANDLER] Timer Updated: 1 second passed ~n"),
       NewTime = RemainingTime - 1,
       io:format(" [AUCTION HANDLER] Remaining ~p ~n",[NewTime]),
       if
-        NewTime == 0 -> winner(AuctionName, RemainingTime, AuctionUsers, OfferList);
+        NewTime == 0 ->   winner(AuctionName, RemainingTime, AuctionUsers, OfferList),
+                          erlang:send_after(5000, self(), {self(), kill_auction_suicide});
         NewTime > 0 -> erlang:send_after(1000, self(), {clock});
         true -> io:format("CRITICAL ERROR")
       end,

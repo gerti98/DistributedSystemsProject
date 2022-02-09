@@ -19,7 +19,7 @@
 %% - registering and create a new auction
 %% - ecc.... (TODO)
 %% API
--export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2, update_auction/2, get_passed_auction_list/0]).
+-export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2, update_auction/2, get_passed_auction_list/0, update_auction_pid/2]).
 -export([init/1, handle_call/3, handle_cast/2]). %% Necessary otherwise nothing work
 
 % API functions
@@ -68,13 +68,16 @@ endpoint_loop() ->
       Result = get_passed_auction_list(),
       ClientPid ! {self(), Result};
     {update_win, NameAuction, Winner} ->
-      io:format(" [MAIN SERVER] Received from a request for update the winner of an auction ~n"),
+      io:format(" [MAIN SERVER] Received a request for update the winner of an auction ~n"),
       _Result = update_auction(NameAuction, Winner),
       %%AuctionPid ! {self(), Result};
       AuctionListResult = get_active_auction_list(),
       {mbox, listener@localhost} ! {self(), active_auction_list, AuctionListResult},
       PassedAuctionListResult = get_passed_auction_list(),
       {mbox, listener@localhost} ! {self(), passed_auction_list, PassedAuctionListResult};
+    {update_pid, NameAuction, Pid} ->
+      io:format(" [MAIN SERVER] Received a request for update the pid of an auction ~n"),
+      _Result = update_auction_pid(NameAuction, Pid);
     _ -> io:format(" [MAIN SERVER] Received any message~n")
   end,
   endpoint_loop().
@@ -128,6 +131,9 @@ create_new_auction(ObjName, Duration, InitValue, ImageURL, Creator) ->
 update_auction(AuctionName, Winner) ->
   gen_server:call(main_server, {update_win, AuctionName, Winner}).
 
+update_auction_pid(AuctionName, Pid) ->
+  gen_server:call(main_server, {update_pid, AuctionName, Pid}).
+
 get_auction_pid(ObjName) ->
   case gen_server:call(main_server, {get_auction_pid, ObjName}) of
     {atomic, PidAuctionInList} -> {ok, PidAuctionInList};
@@ -168,7 +174,7 @@ handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _Fro
       io:format(" [MAIN SERVER] New state is: ~p~n", [NewState]),
       io:format(" [MAIN SERVER] Adding the process ~p to the auctions monitor ~n", [NewState]),
       AuctionsMonitorPid = whereis(auctions_monitor),
-      AuctionsMonitorPid ! {add_auction_to_monitor, PidHandler},
+      AuctionsMonitorPid ! {add_auction_to_monitor, PidHandler, ObjName, Duration},
       {reply, {Ret, PidHandler}, NewState}
   end;
 handle_call({get_auction_pid, ObjName}, _From, _ServerState) ->
@@ -184,6 +190,10 @@ handle_call({register, Username, Pw}, _From, _ServerState) ->
 handle_call({update_win, AuctionName, Winner}, _From, _ServerState) ->
   Ret = mnesia_db:update_auction_winner(AuctionName, Winner),
   io:format(" [MAIN SERVER] Result from auction update ~p~n",[Ret]),
+  {reply, Ret, []};
+handle_call({update_pid, AuctionName, Pid}, _From, _ServerState) ->
+  Ret = mnesia_db:update_auction_pid(AuctionName, Pid),
+  io:format(" [MAIN SERVER] Result from auction update pid ~p~n",[Ret]),
   {reply, Ret, []}.
 
 handle_cast(reset, ServerState) ->

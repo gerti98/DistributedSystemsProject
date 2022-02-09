@@ -10,7 +10,7 @@
 -author("fraie").
 
 %% API
--export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/6, get_active_auctions/0, get_auction/1, get_auction_pid/1, update_auction_winner/2, get_passed_auctions/0]).
+-export([create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1, add_auction/6, get_active_auctions/0, get_auction/1, get_auction_pid/1, update_auction_winner/2, get_passed_auctions/0, update_auction_pid/2]).
 
 -record(user, {name, password}).
 -record(auction, {name, duration, startingValue, imageURL, creator, pid, winner}).
@@ -88,13 +88,22 @@ add_auction(ObjectName, Duration, InitialValue, ImageURL, Creator, Pid) ->
 update_auction_winner(AuctionName, Winner) ->
   io:format(" [MNESIA DB] Updating auction ~p whose winner is ~p ~n", [AuctionName, Winner]),
   F = fun() ->
-    [Row] = mnesia:read(auction, AuctionName), % crash if the car is missing
+    [Row] = mnesia:read(auction, AuctionName),
     mnesia:write(Row#auction{winner = Winner})
       end,
   Res = mnesia:transaction(F),
   Ret1 = get_active_auctions(),
   Ret2 = get_passed_auctions(),
   io:format(" [MNESIA DB] DEBUG: Result update: ~p~n Active: ~p~n Passed: ~p~n", [Res, Ret1, Ret2]),
+  Res.
+
+update_auction_pid(AuctionName, Pid) ->
+  io:format(" [MNESIA DB] Updating auction ~p with new pid ~p ~n", [AuctionName, Pid]),
+  F = fun() ->
+    [Row] = mnesia:read(auction, AuctionName),
+    mnesia:write(Row#auction{pid = Pid})
+      end,
+  Res = mnesia:transaction(F),
   Res.
 
 get_active_auctions() ->
