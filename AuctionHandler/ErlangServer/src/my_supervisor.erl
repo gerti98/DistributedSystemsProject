@@ -11,21 +11,9 @@
 -behaviour(supervisor).
 
 %% API exports
--export([start_link/0, add_auction_to_monitor/2]).
+-export([start_link/0]).
 -export([init/1]).
 
-%% @doc This function add the auction handler to the monitor and starts it
-add_auction_to_monitor(AuctionName, Duration) ->
-  io:format(" [SUPERVISOR] Enter in add_auction_to_monitor ~n"),
-  AuctionChildSpec = #{id => AuctionName,
-    start => {auction_handler, init_auction_handler, [AuctionName, Duration]},
-    restart => transient},
-  %% Transient means that the child is restarted only if it terminates abnormally
-  SupPid = global:whereis_name(my_supervisor),
-  io:format(" [SUPERVISOR] I am ~p ~n", [SupPid]),
-  Result = supervisor:start_child(SupPid, AuctionChildSpec),
-  io:format(" [SUPERVISOR] Result of adding dinamycally a child is ~p ~n", [Result]),
-  Result.
 
 start_link() ->
   Args = [],
@@ -46,15 +34,17 @@ init(_Args) ->
     intensity => 1,
     period => 5},
 
-  %%MainServerPid = whereis(main_server_endpoint),
-  %%io:format(" [SUPERVISOR] First child monitored is the main server whose pid is ~p~n",[MainServerPid]),
 
   ChildMainServer = #{id => main_server,
     start => {main_server, start_main_server, []},
     restart => permanent},
+  AuctionMonitor = #{id => auctions_monitor,
+    start => {auctions_monitor, start_auctions_monitor, []},
+    restart => permanent},
+
   %% permanent means that this process is always restarted
-  %% There is only one child at the beginning
-  Children = [ChildMainServer],
+
+  Children = [ChildMainServer, AuctionMonitor],
 
   %% Return the supervisor flags and the child specifications
   %% to the 'supervisor' module.

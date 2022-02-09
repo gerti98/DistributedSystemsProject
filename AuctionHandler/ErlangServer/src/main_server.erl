@@ -156,9 +156,6 @@ handle_call(passed_auction_list, _From, ServerState) ->
   {reply, Ret, ServerState};
 handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _From, ServerState) ->
   PidHandler = spawn( fun() -> auction_handler:init_auction_handler(ObjName, Duration) end),
-  %%PidHandler = spawn( fun() -> my_supervisor:add_auction_to_monitor(ObjName, Duration) end),
-  %%PidHandler = my_supervisor:add_auction_to_monitor(ObjName, Duration),
-
   Ret = mnesia_db:add_auction(ObjName, Duration, InitValue, ImageURL, Creator, PidHandler),
   io:format(" [MAIN SERVER] Return of add_auction: ~p~n", [Ret]),
   case Ret == {atomic, false} of
@@ -169,6 +166,9 @@ handle_call({new_auction, ObjName, Duration, InitValue, ImageURL, Creator}, _Fro
     false -> io:format(" [MAIN SERVER] The pid of the handler is ~p~n",[PidHandler]),
       NewState = ServerState ++ [{ObjName, Duration, InitValue, Creator, PidHandler}],
       io:format(" [MAIN SERVER] New state is: ~p~n", [NewState]),
+      io:format(" [MAIN SERVER] Adding the process ~p to the auctions monitor ~n", [NewState]),
+      AuctionsMonitorPid = whereis(auctions_monitor),
+      AuctionsMonitorPid ! {add_auction_to_monitor, PidHandler},
       {reply, {Ret, PidHandler}, NewState}
   end;
 handle_call({get_auction_pid, ObjName}, _From, _ServerState) ->
