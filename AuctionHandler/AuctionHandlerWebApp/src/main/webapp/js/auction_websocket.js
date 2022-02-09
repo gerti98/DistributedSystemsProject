@@ -3,9 +3,9 @@ let ws;
 
 function check_minimun_bid(){
     var min_value_to_show;
-    bid = document.querySelector('#bid')
-    minimum_bid = document.querySelector('#minimum_bid')
-    last_bid_elem = document.querySelector('#bids').lastElementChild
+    bid = document.querySelector('#bid');
+    minimum_bid = document.querySelector('#minimum_bid');
+    last_bid_elem = document.querySelector('#bids').firstElementChild;
 
     bid_value_int = parseInt(bid.value)
     minimum_bid_int = parseInt(minimum_bid.value)
