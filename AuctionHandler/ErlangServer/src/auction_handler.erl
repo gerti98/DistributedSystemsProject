@@ -14,7 +14,7 @@
 
 init_auction_handler(AuctionName, AuctionDuration) ->
   erlang:send_after(1000, self(), {clock}),
-  auction_loop({AuctionName, [],AuctionDuration, []}).
+  auction_loop({AuctionName, [], AuctionDuration, []}).
 
 
 auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
@@ -22,7 +22,22 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
     {Client, new_offer, MessageMap} ->
       io:format(" [AUCTION HANDLER] New Bid: ~p~n", [MessageMap]),
       %%Res = add_offer(maps:get("username", MessageMap), maps:get("bid", MessageMap)),
-      NewOfferList = OfferList ++ [{maps:get("username", MessageMap), maps:get("bid", MessageMap)}],
+      CurrentBid = maps:get("bid", MessageMap),
+
+      case OfferList of
+        [First | _] -> BestOffer = First;
+        [] -> BestOffer = {"", 0} %% TODO insert the minimum of the auction
+      end,
+
+      BestBid = element(2, BestOffer),
+
+      if
+        BestBid < CurrentBid -> NewOfferList = [{maps:get("username", MessageMap), maps:get("bid", MessageMap)}] ++ OfferList;
+        true ->
+          NewOfferList = OfferList,
+          io:format(" [AUCTION HANDLER] this offer is too low ~n")
+      end,
+
       %%io:format(" [AUCTION HANDLER] Offer Added - result: ~p~n", [Res]),
       %%{atomic, Offers} = get_offers(),
       ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, NewOfferList, false},
@@ -85,11 +100,10 @@ winner(AuctionName, RemainingTime, AuctionUsers, OfferList) ->
   FinalOffersUsers = get_offers_users(OfferList),
   io:format(" [AUCTION HANDLER] Final Offers Amount ~p~n", [FinalOffersAmount]),
   io:format(" [AUCTION HANDLER] Final Offers Users ~p~n", [FinalOffersUsers]),
-  Max = lists:max(FinalOffersAmount),
-  MaxIndex = find_index_of_max(Max, FinalOffersAmount),
+  MaxIndex = 0,
   io:format(" [AUCTION HANDLER] The Winner is in position ~p~n",[MaxIndex]),
-  Winner = lists:nth(MaxIndex+1, FinalOffersUsers),
-  WinningBid = lists:nth(MaxIndex+1, FinalOffersAmount),
+  [Winner | _] = FinalOffersUsers,
+  [WinningBid | _] = FinalOffersAmount,
   io:format(" [AUCTION HANDLER] Among the users ~p the winner is ~p~n", [FinalOffersUsers, Winner]),
   io:format(" [AUCTION HANDLER] Among the offers ~p the winning bid is ~p~n", [FinalOffersAmount, WinningBid]),
   %%{atomic, Offers} = get_offers(),
@@ -98,19 +112,6 @@ winner(AuctionName, RemainingTime, AuctionUsers, OfferList) ->
   MainServerPid = whereis(main_server_endpoint),
   io:format(" [AUCTION HANDLER] Sending update request to ~p ~n", [MainServerPid]),
   MainServerPid ! {update_win, AuctionName, Winner}.
-
-
-
-find_index_of_max(Max, FinalOffersAmount) ->
-  find_index_of_max(Max, FinalOffersAmount, 0).
-find_index_of_max(Max, [H|T], Counter) ->
-  if
-    H == Max -> Counter;
-    true -> find_index_of_max(Max, T, Counter+1)
-  end;
-find_index_of_max(_Max, [], _Counter) ->
-  Error = -1,
-  Error.
 
 get_offers_amount(OfferList) ->
   OffersAmountList = [Amount || {_User, Amount} <- OfferList],
