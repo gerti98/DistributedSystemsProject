@@ -41,6 +41,9 @@ public class MainMenuServlet extends HttpServlet {
             List<Auction> auctionList = new CommunicationHandler().fetchActiveAuctions(request.getSession());
             request.setAttribute("auctionList", auctionList);
             request.getSession().setAttribute("auctionList", auctionList);
+            List<Auction> pastAuctionList = new CommunicationHandler().fetchPastAuctions(request.getSession());
+            request.setAttribute("pastAuctionList", pastAuctionList);
+            request.getSession().setAttribute("pastAuctionList", pastAuctionList);
         } catch (OtpErlangExit | OtpErlangRangeException | OtpErlangDecodeException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,7 @@ public class Auction{
     long startingValue;
     String username;
     String imageURL;
-//    OtpErlangPid pid;
+    String winner;
 
     public Auction(String goodName, long duration, long startingValue, String imageURL, String username) {
         this.goodName = goodName;
@@ -18,13 +18,14 @@ public class Auction{
         this.username = username;
     }
 
-//    public Auction(String goodName, long duration, long startingValue, String imageURL, String username, OtpErlangPid pid) {
-//        this(goodName, duration, startingValue, imageURL, username);
-//        this.pid = pid;
-//    }
-//    public OtpErlangPid getPid() {
-//        return pid;
-//    }
+    public Auction(String goodName, long duration, long startingValue, String imageURL, String username, String winner) {
+        this(goodName, duration, startingValue, imageURL, username);
+        this.winner = winner;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
 
     public String getGoodName() {
         return goodName;
@@ -67,6 +68,12 @@ public class Auction{
         long value = ((OtpErlangLong) list.elementAt(2)).longValue();
         String imageURL =  ((OtpErlangString) list.elementAt(3)).stringValue();
         String username = ((OtpErlangString) list.elementAt(4)).stringValue();
-        return new Auction(goodname, duration, value, imageURL, username);
+        String winner;
+        if(list.elementAt(6) instanceof OtpErlangAtom){
+            winner = "Ongoing Auction";
+        } else {
+            winner = ((OtpErlangString) list.elementAt(6)).stringValue();
+        }
+        return new Auction(goodname, duration, value, imageURL, username, winner);
     }
 }

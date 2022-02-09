@@ -9,11 +9,25 @@ function connect(ctx, username) {
     ws.onmessage = function(event) {
         //Logic to remove message
         console.log("Arrived new auction list")
-        console.log(event.data);
-        var auctionList = JSON.parse(event.data);
-        console.log(auctionList);
-        updateAuctionList(ctx, auctionList);
+        var auctionListObject = JSON.parse(event.data);
+        console.log(auctionListObject);
+        console.log(auctionListObject.auctionList);
+        console.log(auctionListObject.active)
+        updateAuctionList(ctx, auctionListObject.auctionList, auctionListObject.active);
     };
+}
+
+function show_auctions(active){
+    var active_card = document.querySelector("#active_auction_card")
+    var past_card = document.querySelector("#past_auction_card")
+
+    if(active == true){
+        active_card.classList.remove("d-none")
+        past_card.classList.add("d-none")
+    } else {
+        active_card.classList.add("d-none")
+        past_card.classList.remove("d-none")
+    }
 }
 
 /*
@@ -35,8 +49,12 @@ function connect(ctx, username) {
     </div>
 </form>
  */
-function updateAuctionList(ctx, auctionList){
-    const parentNode = document.querySelector('#parent_auction_list');
+function updateAuctionList(ctx, auctionList, active){
+    var parentNode;
+    if(active)
+        parentNode = document.querySelector('#parent_auction_list');
+    else
+        parentNode = document.querySelector('#parent_auction_list_finished')
 
     while (parentNode.firstChild) { parentNode.removeChild(parentNode.firstChild); }
 
@@ -44,13 +62,13 @@ function updateAuctionList(ctx, auctionList){
         auction => {
             console.log("Single auction: ");
             console.log(auction)
-            form = createCard(ctx, auction);
+            form = createCard(ctx, auction, active);
             parentNode.append(form)
         }
     )
 }
 
-function createCard(ctx, message){
+function createCard(ctx, message, active){
     const form = document.createElement("form");
     form.classList.add("card",  "w-25")
     form.setAttribute("action", ctx + "/MainMenuServlet");
@@ -106,12 +124,20 @@ function createCard(ctx, message){
     const created_by_div = document.createElement("div");
     created_by_div.innerHTML = "Created by: " + message.username
 
-    const button = document.createElement("button");
-    button.classList.add("btn", "btn-primary", "m-3")
-    button.innerHTML = "Enter"
+    var last_elem;
+    if(active){
+        last_elem = document.createElement("button");
+        last_elem.classList.add("btn", "btn-primary", "m-3")
+        last_elem.innerHTML = "Enter"
+    } else {
+        last_elem = document.createElement("div");
+        last_elem.classList.add("d-flex", "justify-content-center", "p-3")
+        last_elem.innerHTML = "Winner: " + message.winner
+    }
+
 
     mid_div.append(goodname, duration, startingValue, username, imageURL, title, from_div, created_by_div)
-    main_div.append(mid_div, button)
+    main_div.append(mid_div, last_elem)
     form.append(image, main_div)
     return form
 }

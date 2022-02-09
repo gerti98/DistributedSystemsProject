@@ -1,6 +1,7 @@
 package websocket;
 
 import dto.Auction;
+import dto.AuctionList;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -27,7 +28,7 @@ public class MainMenuEndpoint {
     }
 
     @OnMessage
-    public void onMessage(Session session, List<Auction> auctionList) throws IOException, EncodeException {
+    public void onMessage(Session session, AuctionList auctionList) throws IOException, EncodeException {
         System.out.println("[MAIN MENU ENDPOINT] OnMessage");
         System.out.println("[MAIN MENU ENDPOINT] Auction list is going to be broadcast");
         broadcast(auctionList);
@@ -46,7 +47,7 @@ public class MainMenuEndpoint {
         // Do error handling here
     }
 
-    private static void broadcast(List<Auction> auctionList) throws IOException, EncodeException {
+    private static void broadcast(AuctionList auctionList) throws IOException, EncodeException {
         auctionEndpoints.forEach(endpoint -> {
             synchronized (endpoint) {
                 try {

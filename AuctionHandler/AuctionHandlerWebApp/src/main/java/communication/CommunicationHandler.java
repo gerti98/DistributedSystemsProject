@@ -58,8 +58,6 @@ public class CommunicationHandler {
         return receiveRequestResult(s);
     }
 
-
-
     public AuctionState publishBid(HttpSession s, Bid bid) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to perform Auction creation");
         OtpErlangPid pid = (OtpErlangPid) s.getAttribute("currentAuctionPid");
@@ -70,6 +68,12 @@ public class CommunicationHandler {
     public List<Auction> fetchActiveAuctions(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
         System.out.println("Trying to fetch Active Auctions");
         send(s, serverRegisteredPID, new OtpErlangAtom("get_active_auctions"));
+        return receiveFetchAuctionResult(s);
+    }
+
+    public List<Auction> fetchPastAuctions(HttpSession s) throws OtpErlangDecodeException, OtpErlangExit, OtpErlangRangeException {
+        System.out.println("Trying to fetch Past Auctions");
+        send(s, serverRegisteredPID, new OtpErlangAtom("get_passed_auctions"));
         return receiveFetchAuctionResult(s);
     }
 
@@ -175,6 +179,7 @@ public class CommunicationHandler {
 
         return auctionState;
     }
+
 
 
 }

@@ -28,15 +28,15 @@
         </div>
         <div class="d-flex d-flex justify-content-center p-3">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                <input type="radio" class="btn-check" onclick="show_auctions(true)" name="btnradio" id="btnradio1" autocomplete="off" checked>
                 <label class="btn btn-outline-primary" for="btnradio1">ONGOING AUCTIONS</label>
 
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                <input type="radio" class="btn-check" onclick="show_auctions(false)" name="btnradio" id="btnradio2" autocomplete="off">
                 <label class="btn btn-outline-primary" for="btnradio2">PAST AUCTIONS</label>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" id="active_auction_card">
             <h3 class="d-flex justify-content-center p-3">
                 Available Auctions
             </h3>
@@ -67,6 +67,43 @@
                                     <button type="submit" class="btn btn-primary m-3">Enter</button>
                                 </div>
                             </form>
+                        <%
+                            }
+                        }
+                    %>
+            </div>
+        </div>
+        <div class="card d-none" id="past_auction_card">
+            <h3 class="d-flex justify-content-center p-3">
+                Past Auctions
+            </h3>
+            <div class="p-4 d-flex flex-wrap" id="parent_auction_list_finished">
+                <%
+                    List<Auction> pastAuctionList = (List<Auction>) request.getAttribute("pastAuctionList");
+                    if(pastAuctionList == null || pastAuctionList.size() == 0){
+                %>
+                <h5 class="d-flex justify-content-center p-3" id="noauction">Nothing to Show<h5>
+                        <%
+                        } else {
+                            for(int i=0; i<pastAuctionList.size(); i++){
+                                Auction auction = pastAuctionList.get(i);
+                        %>
+                    <form class="card w-25" action="<%=request.getContextPath()%>/MainMenuServlet" method="post">
+                        <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
+                        <div class="card-body d-flex flex-column justify-content-between p-3">
+                            <div>
+                                <input type="hidden" name="goodname" value="<%=auction.getGoodName()%>">
+                                <input type="hidden" name="duration" value="<%=auction.getDuration()%>">
+                                <input type="hidden" name="startingValue" value="<%=auction.getStartingValue()%>">
+                                <input type="hidden" name="imageURL" value="<%=auction.getImageURL()%>">
+                                <input type="hidden" name="username" value="<%=auction.getUsername()%>">
+                                <h5 class="card-title"><%=auction.getGoodName()%></h5>
+                                <div>From: <%=auction.getStartingValue()%>€</div>
+                                <div>Created By: <%=auction.getUsername()%></div>
+                            </div>
+                            <div class="d-flex justify-content-center p-3">Winner: <%=auction.getWinner()%></div>
+                        </div>
+                    </form>
                         <%
                             }
                         }

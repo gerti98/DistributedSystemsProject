@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import dto.Auction;
+import dto.AuctionList;
 import dto.AuctionState;
 
 import java.io.IOException;
@@ -31,11 +32,11 @@ public class MessageTask implements Runnable{
             OtpErlangAtom destination_atom = (OtpErlangAtom) ((OtpErlangTuple) message).elementAt(1);
 
             //TODO: add branching for auction state
-            if(destination_atom.atomValue().equals("auction_list")){
+            if(destination_atom.atomValue().equals("active_auction_list") || destination_atom.atomValue().equals("passed_auction_list")){
                 System.out.println("Refresh of list");
                 OtpErlangList resultList = (OtpErlangList) (resultTuple).elementAt(1);
                 try {
-                    refreshMainMenu(resultList);
+                    refreshMainMenu(resultList, destination_atom.atomValue().equals("active_auction_list"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -51,10 +52,10 @@ public class MessageTask implements Runnable{
         }
     }
 
-    private void refreshMainMenu(OtpErlangList resultList) throws IOException {
+    private void refreshMainMenu(OtpErlangList resultList, boolean active) throws IOException {
         //TODO: maybe we can cache websocket connections
         WebsocketClientEndpoint websocketClientEndpoint = null;
-        List<Auction> auctionList = new ArrayList<>();
+        ArrayList<Auction> auctionList = new ArrayList<>();
         try {
             websocketClientEndpoint = new WebsocketClientEndpoint(new URI("ws://" + base_uri + "/main_menu_endpoint/listener"));
         } catch (URISyntaxException e) {
@@ -65,7 +66,8 @@ public class MessageTask implements Runnable{
             System.out.println("Fetched: " + auction);
             auctionList.add(auction);
         }
-        websocketClientEndpoint.sendMessage(new Gson().toJson(auctionList));
+        AuctionList auctionList1 = new AuctionList(auctionList, active);
+        websocketClientEndpoint.sendMessage(new Gson().toJson(auctionList1));
         websocketClientEndpoint.userSession.close();
     }
 

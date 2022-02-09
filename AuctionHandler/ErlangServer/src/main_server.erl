@@ -54,7 +54,7 @@ endpoint_loop() ->
       ClientPid ! {self(), Result},
       %%Additional part
       AuctionListResult = get_active_auction_list(),
-      {mbox, listener@localhost} ! {self(), auction_list, AuctionListResult};
+      {mbox, listener@localhost} ! {self(), active_auction_list, AuctionListResult};
     {ClientPid, get_auction_pid, MessageMap} ->
       io:format(" [MAIN SERVER] Received a get auction pid~n"),
       Result = get_auction_pid(maps:get("goodName", MessageMap)),
@@ -69,8 +69,12 @@ endpoint_loop() ->
       ClientPid ! {self(), Result};
     {update_win, NameAuction, Winner} ->
       io:format(" [MAIN SERVER] Received from a request for update the winner of an auction ~n"),
-      _Result = update_auction(NameAuction, Winner);
+      _Result = update_auction(NameAuction, Winner),
       %%AuctionPid ! {self(), Result};
+      AuctionListResult = get_active_auction_list(),
+      {mbox, listener@localhost} ! {self(), active_auction_list, AuctionListResult},
+      PassedAuctionListResult = get_passed_auction_list(),
+      {mbox, listener@localhost} ! {self(), passed_auction_list, PassedAuctionListResult};
     _ -> io:format(" [MAIN SERVER] Received any message~n")
   end,
   endpoint_loop().

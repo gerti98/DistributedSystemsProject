@@ -3,24 +3,20 @@ package websocket;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dto.Auction;
+import dto.AuctionList;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
-public class AuctionListDecoder implements Decoder.Text<List<Auction>> {
-    Type listType = new TypeToken<ArrayList<Auction>>(){}.getType();
-
+public class AuctionListDecoder implements Decoder.Text<AuctionList> {
     private static Gson gson = new Gson();
 
     @Override
-    public List<Auction> decode(String s) throws DecodeException {
-        System.out.println("Received: " + s);
-        List<Auction> auctionList = gson.fromJson(s, listType);
-        for(Auction auction: auctionList)
+    public AuctionList decode(String s) throws DecodeException {
+        System.out.println("[AuctionListDecoder] Received: " + s);
+        AuctionList auctionList = gson.fromJson(s, AuctionList.class);
+        for(Auction auction: auctionList.getAuctionList())
             System.out.println(auction.toString());
         return auctionList;
     }

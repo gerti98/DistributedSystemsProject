@@ -102,7 +102,7 @@ get_active_auctions() ->
   F = fun() ->
     Auction = #auction{name='$1', duration='$2', startingValue='$3', imageURL = '$4', creator='$5', pid='$6', winner = '$7', _ = '_'},
     Guard = {'==', '$7', none},
-    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5', '$6']]}])
+    mnesia:select(auction, [{Auction, [Guard], [['$1', '$2', '$3', '$4', '$5', '$6', '$7']]}])
       end,
   mnesia:transaction(F).
 
