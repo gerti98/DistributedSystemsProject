@@ -19,11 +19,11 @@ start_auctions_monitor() ->
 
 auctions_monitor_loop(ProcessToMonitor) ->
   receive
-    {add_auction_to_monitor, AuctionPid, AuctionName, Duration} ->
+    {add_auction_to_monitor, AuctionPid, AuctionName, Duration, MinimumOffer} ->
       io:format(" [AUCTIONS MONITOR] Received a request for monitoring ~p ~p~n", [AuctionPid, AuctionName]),
       Res = monitor(process, AuctionPid),
       io:format(" [AUCTIONS MONITOR] Ritorno monitor req ~p~n", [Res]),
-      NewProcessToMonitor = ProcessToMonitor ++ [{AuctionPid, AuctionName, Duration}],
+      NewProcessToMonitor = ProcessToMonitor ++ [{AuctionPid, AuctionName, Duration, MinimumOffer}],
       io:format(" [AUCTIONS MONITOR] Process to monitor list ~p~n", [NewProcessToMonitor]),
       auctions_monitor_loop(NewProcessToMonitor);
     {'DOWN', MonitorRef, process, Pid, normal} ->
@@ -40,7 +40,8 @@ auctions_monitor_loop(ProcessToMonitor) ->
       io:format(" [AUCTIONS MONITOR] The process to respawn is ~p~n", [Tuple]),
       AuctionName = element(2,Tuple),
       AuctionDuration = element(3,Tuple),
-      PidHandler = spawn( fun() -> auction_handler:init_auction_handler(AuctionName, AuctionDuration) end),
+      MinimumOfferAuction = element(4, Tuple),
+      PidHandler = spawn( fun() -> auction_handler:init_auction_handler(AuctionName, AuctionDuration, MinimumOfferAuction) end),
       io:format(" [AUCTIONS MONITOR] I have respawn the process ~p now its pid is ~p~n", [Tuple, PidHandler]),
       %% Ask the main_server to update the pid
       Endpoint = whereis(main_server_endpoint),
@@ -48,7 +49,7 @@ auctions_monitor_loop(ProcessToMonitor) ->
       %% Delete the old crashed process from the list
       lists:delete(Tuple, ProcessToMonitor),
       %% I self-add the spawn process to myself (i.e. monitor)
-      self() ! {add_auction_to_monitor, PidHandler, AuctionName, AuctionDuration},
+      self() ! {add_auction_to_monitor, PidHandler, AuctionName, AuctionDuration, MinimumOfferAuction},
       auctions_monitor_loop(ProcessToMonitor);
     _ ->  io:format(" [AUCTIONS MONITOR] Unexpected message ~n")
   end.

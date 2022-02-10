@@ -10,14 +10,14 @@
 -author("fraie").
 
 %% API
--export([init_auction_handler/2]).
+-export([init_auction_handler/3]).
 
-init_auction_handler(AuctionName, AuctionDuration) ->
+init_auction_handler(AuctionName, AuctionDuration, MinimumOffer) ->
   erlang:send_after(1000, self(), {clock}),
-  auction_loop({AuctionName, [], AuctionDuration, []}).
+  auction_loop({AuctionName, [], AuctionDuration, [], MinimumOffer}).
 
 
-auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
+auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}) ->
   receive
     {Client, new_offer, MessageMap} ->
       io:format(" [AUCTION HANDLER] New Bid: ~p~n", [MessageMap]),
@@ -26,7 +26,7 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
 
       case OfferList of
         [First | _] -> BestOffer = First;
-        [] -> BestOffer = {"", 0} %% TODO insert the minimum of the auction
+        [] -> BestOffer = {"", MinimumOffer}
       end,
 
       BestBid = element(2, BestOffer),
@@ -44,7 +44,7 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
       io:format(" [AUCTION HANDLER] Sending state: ~p~n", [ToSend]),
       Client ! {self(), ToSend},
       {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
-      auction_loop({AuctionName, AuctionUsers, RemainingTime, NewOfferList});
+      auction_loop({AuctionName, AuctionUsers, RemainingTime, NewOfferList, MinimumOffer});
     {Client, new_user, MessageMap} ->
       io:format(" [AUCTION HANDLER] Received new_user message~n"),
       NewAuctionListUsers = AuctionUsers ++ [maps:get("username", MessageMap)],
@@ -53,7 +53,7 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
       Client ! {self(), ToSend},
       {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
       io:format(" [AUCTION HANDLER] User added to auction user list - New list: ~p~n",[NewAuctionListUsers]),
-      auction_loop({AuctionName, NewAuctionListUsers, RemainingTime, OfferList});
+      auction_loop({AuctionName, NewAuctionListUsers, RemainingTime, OfferList, MinimumOffer});
     {Client, del_user, MessageMap} ->
       DisconnectedUser = maps:get("username", MessageMap),
       NewList = lists:delete(DisconnectedUser, AuctionUsers),
@@ -62,19 +62,19 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
       ToSend = {ok, AuctionName, RemainingTime, NewList, OfferList, false},
       {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
       io:format(" [AUCTION HANDLER] User deleted from auction user list - New list: ~p~n",[NewList]),
-      auction_loop({AuctionName, NewList, RemainingTime, OfferList});
+      auction_loop({AuctionName, NewList, RemainingTime, OfferList, MinimumOffer});
     {Client, get_auction_state} ->
       io:format(" [AUCTION HANDLER] Requested auction state ~n"),
       %%{atomic, Offers} = get_offers(),
       ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, OfferList, false},
       io:format(" [AUCTION HANDLER] Sending state: ~p~n", [ToSend]),
       Client ! {self(), ToSend},
-      auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList});
+      auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer});
     {Sender, kill_auction_suicide} ->
       case Sender==self() of
         true -> io:format(" [AUCTION HANDLER] Suicide: ~p killed...~n", [self()]);
         false ->  io:format(" [AUCTION HANDLER] Kill request ignored ~n"),
-                  auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList})
+                  auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList,  MinimumOffer})
       end;
     {clock} ->
       io:format(" [AUCTION HANDLER] Timer Updated: 1 second passed ~n"),
@@ -86,10 +86,10 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList}) ->
         NewTime > 0 -> erlang:send_after(1000, self(), {clock});
         true -> io:format("CRITICAL ERROR")
       end,
-      auction_loop({AuctionName, AuctionUsers, NewTime, OfferList});
+      auction_loop({AuctionName, AuctionUsers, NewTime, OfferList, MinimumOffer});
     _ ->
       io:format(" [AUCTION HANDLER] Unrecognized message arrived, skipping... ~n"),
-      auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList})
+      auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer})
   end.
 
 winner(AuctionName, RemainingTime, AuctionUsers, []) ->
