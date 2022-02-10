@@ -1,5 +1,13 @@
 \babel@toc {english}{}
-\contentsline {section}{\numberline {1}Project Specifications}{2}{}%
-\contentsline {subsection}{\numberline {1.1}Use Cases}{2}{}%
-\contentsline {subsection}{\numberline {1.2}Synchronization and Communication Issues}{3}{}%
-\contentsline {subsection}{\numberline {1.3}Design Ideas}{3}{}%
+\contentsline {section}{\numberline {1}Project Specifications}{2}%
+\contentsline {subsection}{\numberline {1.1}Use Cases}{2}%
+\contentsline {subsection}{\numberline {1.2}Synchronization and Communication Issues}{3}%
+\contentsline {subsection}{\numberline {1.3}Design Ideas}{3}%
+\contentsline {section}{\numberline {2}System Architecture}{4}%
+\contentsline {subsection}{\numberline {2.1}Server Side}{4}%
+\contentsline {subsubsection}{\numberline {2.1.1}Main Server}{4}%
+\contentsline {subsubsection}{\numberline {2.1.2}Auction Handler}{4}%
+\contentsline {subsubsection}{\numberline {2.1.3}Monitor And Supervisor}{4}%
+\contentsline {subsection}{\numberline {2.2}MnesiaDB}{4}%
+\contentsline {subsection}{\numberline {2.3}Client Side}{4}%
+\contentsline {subsection}{\numberline {2.4}Synchronizations Issues}{4}%
