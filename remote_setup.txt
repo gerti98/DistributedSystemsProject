@@ -1,0 +1,21 @@
+ip 172.18.0.7 -> Erlang server + java listener
+ip 172.18.0.6 -> Apache Tomcat webapp + websocket
+
+
+Instructions to perform the latter setup
+
+0) Use OpenVPN and import file studenti.opvn
+1) Connect
+
+DEPLOY APACHE TOMCAT WEBAPP & WEBSOCKET
+1) From locally: check in the AuctionHandlerWebApp code for some todo comments in this format "TODO FOR REMOTE CONF" and change the related variable as commented
+2) Compile everything and deploy the generated .war file (check target directory) in the Tomcat manager at http://172.18.0.6:8080/manager/html
+
+DEPLOY ERLANG SERVER
+1) ssh into 172.18.0.7 and clone the git repository with git clone https://github.com/gerti98/DistributedSystemsProject
+2) go into erlang server and for compiling the erlang server run > make.sh
+3) run the erlang server with > run_remote.sh
+4) (note on file run_remote.sh: server@172.18.0.7 is good for container at ip 172.18.0.7)
+
+DEPLOY JAVA LISTENER
+-- TODO --

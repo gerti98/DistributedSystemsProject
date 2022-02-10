@@ -1,6 +1,10 @@
+# In local
+
 1) If needed recompile erlang sources by running the make.sh script (in Windows >sh make.sh should work)
 2) Run run.sh script
 3) On the opened erlang cli run:
             > my_supervisor:start_link().
    Or if you want to run the main server without the supervisor (not tested after the addition of the supervisor) run:
             > main_server:start_main_server().
+
+

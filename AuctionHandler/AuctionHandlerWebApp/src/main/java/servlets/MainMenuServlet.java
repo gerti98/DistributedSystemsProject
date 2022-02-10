@@ -31,10 +31,11 @@ public class MainMenuServlet extends HttpServlet {
             boolean isExitingOkay;
             System.out.println("current Auction is not null, sending exit message");
             try {
-                isExitingOkay = new CommunicationHandler().performAuctionExit(request.getSession());
+                new CommunicationHandler().performAuctionExit(request.getSession());
             } catch (OtpErlangDecodeException | OtpErlangExit | OtpErlangRangeException e) {
                 e.printStackTrace();
             }
+            request.getSession().removeAttribute("currentAuction");
         }
 
         try {

@@ -57,7 +57,7 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}
     {Client, del_user, MessageMap} ->
       DisconnectedUser = maps:get("username", MessageMap),
       NewList = lists:delete(DisconnectedUser, AuctionUsers),
-      Client ! {self(), {ok}},
+      %%  Client ! {self(), {ok}},
       %% {atomic, Offers} = get_offers(),
       ToSend = {ok, AuctionName, RemainingTime, NewList, OfferList, false},
       {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
