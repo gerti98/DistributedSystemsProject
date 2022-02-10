@@ -13,17 +13,13 @@
 -import(mnesia_db, [create_mnesia_db/0, start_mnesia/0, stop_mnesia_db/0, add_user/2, get_user/1]).
 -import(auction_handler, [auction_loop/0]).
 
-%% This server must be able to responds to client requests for:
-%% - the list of online users
-%% - the list of active auctions
-%% - registering and create a new auction
-%% - ecc.... (TODO)
+%% This is the main server who must be able to responds to client requests
+
 %% API
 -export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2, update_auction/2, get_passed_auction_list/0, update_auction_pid/2]).
 -export([init/1, handle_call/3, handle_cast/2]). %% Necessary otherwise nothing work
 
 % API functions
-
 start_main_server() ->
   mnesia_db:create_mnesia_db(),
   Return = gen_server:start({local, main_server}, ?MODULE, [], []),
@@ -143,8 +139,8 @@ get_auction_pid(ObjName) ->
 reset() ->
   gen_server:cast(main_server, reset).
 
-
-% gen_server CALLBACK FUNCTIONS
+%% ----------------------------
+%% GEN_SERVER CALLBACK FUNCTIONS
 %% The server state maintain the list of active auctions
 init([]) ->
   mnesia_db:start_mnesia(),

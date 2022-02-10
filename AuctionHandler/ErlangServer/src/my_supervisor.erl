@@ -33,19 +33,14 @@ init(_Args) ->
   SupFlags = #{strategy => one_for_one,
     intensity => 1,
     period => 5},
-
-
   ChildMainServer = #{id => main_server,
     start => {main_server, start_main_server, []},
     restart => permanent},
   AuctionMonitor = #{id => auctions_monitor,
     start => {auctions_monitor, start_auctions_monitor, []},
     restart => permanent},
-
   %% permanent means that this process is always restarted
-
   Children = [ChildMainServer, AuctionMonitor],
-
   %% Return the supervisor flags and the child specifications
   %% to the 'supervisor' module.
   {ok, {SupFlags, Children}}.

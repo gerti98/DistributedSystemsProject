@@ -21,14 +21,12 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}
   receive
     {Client, new_offer, MessageMap} ->
       io:format(" [AUCTION HANDLER] New Bid: ~p~n", [MessageMap]),
-      %%Res = add_offer(maps:get("username", MessageMap), maps:get("bid", MessageMap)),
       CurrentBid = maps:get("bid", MessageMap),
 
       case OfferList of
         [First | _] -> BestOffer = First;
         [] -> BestOffer = {"", MinimumOffer}
       end,
-
       BestBid = element(2, BestOffer),
 
       if
@@ -38,8 +36,6 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}
           io:format(" [AUCTION HANDLER] this offer is too low ~n")
       end,
 
-      %%io:format(" [AUCTION HANDLER] Offer Added - result: ~p~n", [Res]),
-      %%{atomic, Offers} = get_offers(),
       ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, NewOfferList, false},
       io:format(" [AUCTION HANDLER] Sending state: ~p~n", [ToSend]),
       Client ! {self(), ToSend},
@@ -48,7 +44,6 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}
     {Client, new_user, MessageMap} ->
       io:format(" [AUCTION HANDLER] Received new_user message~n"),
       NewAuctionListUsers = AuctionUsers ++ [maps:get("username", MessageMap)],
-      %%{atomic, Offers} = get_offers(),
       ToSend = {ok, AuctionName, RemainingTime, NewAuctionListUsers, OfferList, false},
       Client ! {self(), ToSend},
       {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
@@ -57,15 +52,12 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}
     {Client, del_user, MessageMap} ->
       DisconnectedUser = maps:get("username", MessageMap),
       NewList = lists:delete(DisconnectedUser, AuctionUsers),
-      %%  Client ! {self(), {ok}},
-      %% {atomic, Offers} = get_offers(),
       ToSend = {ok, AuctionName, RemainingTime, NewList, OfferList, false},
       {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
       io:format(" [AUCTION HANDLER] User deleted from auction user list - New list: ~p~n",[NewList]),
       auction_loop({AuctionName, NewList, RemainingTime, OfferList, MinimumOffer});
     {Client, get_auction_state} ->
       io:format(" [AUCTION HANDLER] Requested auction state ~n"),
-      %%{atomic, Offers} = get_offers(),
       ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, OfferList, false},
       io:format(" [AUCTION HANDLER] Sending state: ~p~n", [ToSend]),
       Client ! {self(), ToSend},
@@ -111,7 +103,6 @@ winner(AuctionName, RemainingTime, AuctionUsers, OfferList) ->
   [WinningBid | _] = FinalOffersAmount,
   io:format(" [AUCTION HANDLER] Among the users ~p the winner is ~p~n", [FinalOffersUsers, Winner]),
   io:format(" [AUCTION HANDLER] Among the offers ~p the winning bid is ~p~n", [FinalOffersAmount, WinningBid]),
-  %%{atomic, Offers} = get_offers(),
   ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, OfferList, true, [Winner, WinningBid]},
   {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
   MainServerPid = whereis(main_server_endpoint),

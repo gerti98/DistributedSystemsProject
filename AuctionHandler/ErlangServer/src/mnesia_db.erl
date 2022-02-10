@@ -15,7 +15,7 @@
 -record(user, {name, password}).
 -record(auction, {name, duration, startingValue, imageURL, creator, pid, winner}).
 
-%% @doc This function creates a mnesia server. It must be called once at
+%% @doc Create a mnesia server. It must be called once at
 %% the beginning of the application life cycle.
 create_mnesia_db() ->
   mnesia:create_schema([node()]),
@@ -28,11 +28,11 @@ create_mnesia_db() ->
 %% disc copies means that the db is in RAM memory and also on the disk
 
 
-%% @doc This function start an already existing mnesia server
+%% @doc Start an already existing mnesia server
 start_mnesia() ->
   application:start(mnesia).
 
-%% @doc This function a running instance of the mnesia server (the
+%% @doc Stop a running instance of the mnesia server (the
 %% information are maintained on the disk).
 stop_mnesia_db() ->
   application:stop(mnesia).
