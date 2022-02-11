@@ -1,7 +1,6 @@
 package java_listener;
 
 import com.ericsson.otp.erlang.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import dto.Auction;
@@ -12,10 +11,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MessageTask implements Runnable{
     private OtpErlangObject message;
+    //TODO FOR REMOTE CONF: change with "172.18.0.7:8080/AuctionHandlerWebApp_war_exploded"
     private static final String base_uri = "localhost:8080/AuctionHandlerWebApp_war_exploded";
 
     public MessageTask(OtpErlangObject message)

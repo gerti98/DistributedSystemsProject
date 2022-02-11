@@ -11,6 +11,7 @@
 
 %% API
 -export([init_auction_handler/3]).
+-include("macros.hrl").
 
 init_auction_handler(AuctionName, AuctionDuration, MinimumOffer) ->
   erlang:send_after(1000, self(), {clock}),
@@ -39,21 +40,21 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}
       ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, NewOfferList, false},
       io:format(" [AUCTION HANDLER] Sending state: ~p~n", [ToSend]),
       Client ! {self(), ToSend},
-      {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
+      ?JAVA_LISTENER ! {self(), update_auction_state, ToSend},
       auction_loop({AuctionName, AuctionUsers, RemainingTime, NewOfferList, MinimumOffer});
     {Client, new_user, MessageMap} ->
       io:format(" [AUCTION HANDLER] Received new_user message~n"),
       NewAuctionListUsers = AuctionUsers ++ [maps:get("username", MessageMap)],
       ToSend = {ok, AuctionName, RemainingTime, NewAuctionListUsers, OfferList, false},
       Client ! {self(), ToSend},
-      {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
+      ?JAVA_LISTENER ! {self(), update_auction_state, ToSend},
       io:format(" [AUCTION HANDLER] User added to auction user list - New list: ~p~n",[NewAuctionListUsers]),
       auction_loop({AuctionName, NewAuctionListUsers, RemainingTime, OfferList, MinimumOffer});
     {Client, del_user, MessageMap} ->
       DisconnectedUser = maps:get("username", MessageMap),
       NewList = lists:delete(DisconnectedUser, AuctionUsers),
       ToSend = {ok, AuctionName, RemainingTime, NewList, OfferList, false},
-      {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
+      ?JAVA_LISTENER ! {self(), update_auction_state, ToSend},
       io:format(" [AUCTION HANDLER] User deleted from auction user list - New list: ~p~n",[NewList]),
       auction_loop({AuctionName, NewList, RemainingTime, OfferList, MinimumOffer});
     {Client, get_auction_state} ->
@@ -87,7 +88,7 @@ auction_loop({AuctionName, AuctionUsers, RemainingTime, OfferList, MinimumOffer}
 winner(AuctionName, RemainingTime, AuctionUsers, []) ->
   io:format(" [AUCTION HANDLER] No offers and no winner for this auction ~n"),
   ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, [], true, ["NoWinner", 0]},
-  {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
+  ?JAVA_LISTENER ! {self(), update_auction_state, ToSend},
   MainServerPid = whereis(main_server_endpoint),
   io:format(" [AUCTION HANDLER] Sending update request to ~p ~n", [MainServerPid]),
   MainServerPid ! {update_win, AuctionName, "NoWinner"};
@@ -104,7 +105,7 @@ winner(AuctionName, RemainingTime, AuctionUsers, OfferList) ->
   io:format(" [AUCTION HANDLER] Among the users ~p the winner is ~p~n", [FinalOffersUsers, Winner]),
   io:format(" [AUCTION HANDLER] Among the offers ~p the winning bid is ~p~n", [FinalOffersAmount, WinningBid]),
   ToSend = {ok, AuctionName, RemainingTime, AuctionUsers, OfferList, true, [Winner, WinningBid]},
-  {mbox, listener@localhost} ! {self(), update_auction_state, ToSend},
+  ?JAVA_LISTENER ! {self(), update_auction_state, ToSend},
   MainServerPid = whereis(main_server_endpoint),
   io:format(" [AUCTION HANDLER] Sending update request to ~p ~n", [MainServerPid]),
   MainServerPid ! {update_win, AuctionName, Winner}.

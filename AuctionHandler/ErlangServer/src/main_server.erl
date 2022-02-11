@@ -14,7 +14,7 @@
 -import(auction_handler, [auction_loop/0]).
 
 %% This is the main server who must be able to responds to client requests
-
+-include("macros.hrl").
 %% API
 -export([start_main_server/0, get_user_list/0, get_active_auction_list/0, create_new_auction/5, reset/0, get_user_by_username/1, register_user/2, endpoint_loop/0, login_user/2, update_auction/2, get_passed_auction_list/0, update_auction_pid/2]).
 -export([init/1, handle_call/3, handle_cast/2]). %% Necessary otherwise nothing work
@@ -50,7 +50,7 @@ endpoint_loop() ->
       ClientPid ! {self(), Result},
       %%Additional part
       AuctionListResult = get_active_auction_list(),
-      {mbox, listener@localhost} ! {self(), active_auction_list, AuctionListResult};
+      ?JAVA_LISTENER ! {self(), active_auction_list, AuctionListResult};
     {ClientPid, get_auction_pid, MessageMap} ->
       io:format(" [MAIN SERVER] Received a get auction pid~n"),
       Result = get_auction_pid(maps:get("goodName", MessageMap)),
@@ -68,9 +68,9 @@ endpoint_loop() ->
       _Result = update_auction(NameAuction, Winner),
       %%AuctionPid ! {self(), Result};
       AuctionListResult = get_active_auction_list(),
-      {mbox, listener@localhost} ! {self(), active_auction_list, AuctionListResult},
+      ?JAVA_LISTENER ! {self(), active_auction_list, AuctionListResult},
       PassedAuctionListResult = get_passed_auction_list(),
-      {mbox, listener@localhost} ! {self(), passed_auction_list, PassedAuctionListResult};
+      ?JAVA_LISTENER ! {self(), passed_auction_list, PassedAuctionListResult};
     {update_pid, NameAuction, Pid} ->
       io:format(" [MAIN SERVER] Received a request for update the pid of an auction ~n"),
       _Result = update_auction_pid(NameAuction, Pid);
