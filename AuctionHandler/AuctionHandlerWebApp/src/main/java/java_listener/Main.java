@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 
 public class Main {
     private static final int POOL_SIZE = 3;
+    //TODO FOR REMOTE CONF "listener@172.18.0.7"
     private static final String node_name = "listener@localhost";
     private static final String cookie = "abcde";
     private static final String mailbox = "mbox";

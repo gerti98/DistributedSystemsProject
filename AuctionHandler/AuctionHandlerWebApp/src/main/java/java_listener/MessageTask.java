@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class MessageTask implements Runnable{
     private OtpErlangObject message;
-    //TODO FOR REMOTE CONF: change with "172.18.0.7:8080/AuctionHandlerWebApp_war_exploded"
+    //TODO FOR REMOTE CONF: change with "172.18.0.6:8080/AuctionHandlerWebApp"
     private static final String base_uri = "localhost:8080/AuctionHandlerWebApp_war_exploded";
 
     public MessageTask(OtpErlangObject message)
