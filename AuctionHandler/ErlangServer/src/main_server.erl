@@ -181,8 +181,12 @@ handle_call({get_user, Username}, _From, _ServerState) ->
   Ret = mnesia_db:get_user(Username),
   {reply, Ret, []};
 handle_call({register, Username, Pw}, _From, _ServerState) ->
-  Ret = mnesia_db:add_user(Username, Pw),
-  {reply, Ret, []};
+  if
+    Username == "NoWinner" -> io:format(" [MAIN SERVER] ~p is a forbidden name ~n",[Username]),
+      {reply, false, []};
+    true -> Ret = mnesia_db:add_user(Username, Pw),
+      {reply, Ret, []}
+  end;
 handle_call({update_win, AuctionName, Winner}, _From, _ServerState) ->
   Ret = mnesia_db:update_auction_winner(AuctionName, Winner),
   io:format(" [MAIN SERVER] Result from auction update ~p~n",[Ret]),
