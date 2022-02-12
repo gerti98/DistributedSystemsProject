@@ -16,7 +16,7 @@ DEPLOY ERLANG SERVER
 1) ssh into 172.18.0.7 and clone the git repository with git clone https://github.com/gerti98/DistributedSystemsProject
 2) modify the macros.hrl file as commented (*)
 3) go into erlang server and for compiling the erlang server run > make.sh
-4) run the erlang server with > run_remote.sh
+4) run the erlang server with > echo "my_supervisor:start_link()." | nohup sh run_remote.sh &
 5) (note on file run_remote.sh: server@172.18.0.7 is good for container at ip 172.18.0.7)
 
 DEPLOY JAVA LISTENER
