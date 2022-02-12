@@ -39,9 +39,9 @@ function parseSentenceForNumber(sentence){
 }
 
 function connect_to_auction_ws(ctx, username, auction) {
-    console.log("Connect");
+    console.log("Connect" + encodeURI(auction));
     let host = document.location.host;
-    const url = "ws://" +host  + ctx + "/auction_state/" + auction + "/"  + username;
+    const url = "ws://" + host  + ctx + "/auction_state/" + encodeURI(auction) + "/listener";
     console.log("Connecting to auction state endpoint with url: " + url);
     ws = new WebSocket(url);
 

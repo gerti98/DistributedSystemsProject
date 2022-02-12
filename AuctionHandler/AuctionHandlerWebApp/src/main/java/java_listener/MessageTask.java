@@ -10,6 +10,7 @@ import dto.AuctionState;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MessageTask implements Runnable{
@@ -75,7 +76,7 @@ public class MessageTask implements Runnable{
         AuctionState auctionState = AuctionState.decodeFromErlangTuple(resultTuple);
         System.out.println("AuctionState to be sent: " + auctionState);
         try {
-            websocketClientEndpoint = new WebsocketClientEndpoint(new URI("ws://" + base_uri + "/auction_state/"+auctionState.getAuctionName()+"/listener"));
+            websocketClientEndpoint = new WebsocketClientEndpoint(new URI("ws://" + base_uri + "/auction_state/" + URLEncoder.encode(auctionState.getAuctionName(), "UTF-8") +"/listener"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
