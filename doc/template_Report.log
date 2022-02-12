@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  10 FEB 2022 22:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  12 FEB 2022 13:51
 entering extended mode
 **./template_Report.tex
 (template_Report.tex
@@ -445,32 +445,90 @@ File: img/systemStructure.png Graphic file (type png)
 <use img/systemStructure.png>
 Package pdftex.def Info: img/systemStructure.png  used on input line 7.
 (pdftex.def)             Requested size: 452.9679pt x 252.75633pt.
-) [4
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
+
+ []
+
+[4
 
 
 
  <./img/systemStructure.png>]
-(template_Report.aux (chapters/introduction.aux)
-(chapters/systemArchitecture.aux)) ) 
+<img/servlets.png, id=35, 140.525pt x 92.345pt>
+File: img/servlets.png Graphic file (type png)
+<use img/servlets.png>
+Package pdftex.def Info: img/servlets.png  used on input line 38.
+(pdftex.def)             Requested size: 181.18439pt x 119.07057pt.
+<img/webapp.png, id=36, 170.6375pt x 167.62625pt>
+File: img/webapp.png Graphic file (type png)
+<use img/webapp.png>
+Package pdftex.def Info: img/webapp.png  used on input line 49.
+(pdftex.def)             Requested size: 181.18439pt x 177.99756pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--55
+
+ []
+
+<img/filters.png, id=37, 136.00812pt x 48.68187pt>
+File: img/filters.png Graphic file (type png)
+<use img/filters.png>
+Package pdftex.def Info: img/filters.png  used on input line 60.
+(pdftex.def)             Requested size: 181.18439pt x 64.85524pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--63
+
+ []
+
+[5 <./img/servlets.png> <./img/webapp.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
+
+ []
+
+<img/communication.png, id=44, 152.57pt x 51.19125pt>
+File: img/communication.png Graphic file (type png)
+<use img/communication.png>
+Package pdftex.def Info: img/communication.png  used on input line 75.
+(pdftex.def)             Requested size: 181.18439pt x 60.7949pt.
+<img/websockets.png, id=45, 142.03062pt x 120.95187pt>
+File: img/websockets.png Graphic file (type png)
+<use img/websockets.png>
+Package pdftex.def Info: img/websockets.png  used on input line 86.
+(pdftex.def)             Requested size: 181.18439pt x 154.31032pt.
+[6 <./img/filters.png> <./img/communication.png>] [7 <./img/websockets.png>]
+<img/java_listener.png, id=56, 167.12437pt x 64.74188pt>
+File: img/java_listener.png Graphic file (type png)
+<use img/java_listener.png>
+Package pdftex.def Info: img/java_listener.png  used on input line 115.
+(pdftex.def)             Requested size: 181.18439pt x 70.19382pt.
+<img/js.png, id=57, 175.15437pt x 62.2325pt>
+File: img/js.png Graphic file (type png)
+<use img/js.png>
+Package pdftex.def Info: img/js.png  used on input line 130.
+(pdftex.def)             Requested size: 181.18439pt x 64.37936pt.
+)
+[8 <./img/java_listener.png> <./img/js.png>] [9] (template_Report.aux
+(chapters/introduction.aux) (chapters/systemArchitecture.aux)) ) 
 Here is how much of TeX's memory you used:
- 7857 strings out of 480236
- 121491 string characters out of 2880557
- 437385 words of memory out of 3000000
- 24301 multiletter control sequences out of 15000+200000
+ 7921 strings out of 480236
+ 122606 string characters out of 2880557
+ 437435 words of memory out of 3000000
+ 24358 multiletter control sequences out of 15000+200000
  541464 words of font info for 51 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,6n,77p,388b,321s stack positions out of 5000i,500n,10000p,200000b,50000s
- <C:\Users\gxhan\AppData\Local\MiKTeX\fonts
-/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><C:/Users/gxhan/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/gxhan/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/gxhan/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users
-/gxhan/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><
-C:/Users/gxhan/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmt
-i12.pfb>
-Output written on template_Report.pdf (5 pages, 333989 bytes).
+ 72i,7n,77p,611b,321s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\gxha
+n\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><C:/Users
+/gxhan/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+<C:/Users/gxhan/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+bxti10.pfb><C:/Users/gxhan/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
+fonts/cm/cmmi12.pfb><C:/Users/gxhan/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmr12.pfb><C:/Users/gxhan/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/gxhan/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on template_Report.pdf (10 pages, 387235 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
+ 90 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
 
