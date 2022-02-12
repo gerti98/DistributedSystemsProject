@@ -15,8 +15,7 @@
 -record(user, {name, password}).
 -record(auction, {name, duration, startingValue, imageURL, creator, pid, winner}).
 
-%% @doc Create a mnesia server. It must be called once at
-%% the beginning of the application life cycle.
+%% @doc Create a mnesia db.
 create_mnesia_db() ->
   mnesia:create_schema([node()]),
   application:start(mnesia),
