@@ -80,7 +80,7 @@
                 <span class="input-group-text">.00</span>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary mx-2 px-4"> BID </button>
+            <button type="submit" class="btn btn-primary mx-2 px-4" <%=(auction.getUsername().equals(request.getSession().getAttribute("username"))) ? "disabled" : ""%>> BID </button>
           </div>
         </form>
       </div>

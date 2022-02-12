@@ -63,10 +63,10 @@ public class MainMenuServlet extends HttpServlet {
         String goodname = request.getParameter("goodname");
         long duration = Long.parseLong(request.getParameter("duration"));
         long startValue = Long.parseLong(request.getParameter("startingValue"));
-        String username = (String) request.getSession().getAttribute("username");
+        String username = (String) request.getParameter("username");
         String imageURL = request.getParameter("imageURL");
         Auction selectedAuction = new Auction(goodname, duration, startValue, imageURL, username);
-
+        System.out.println("Selected auction: " + selectedAuction);
         try {
             pid = communicationHandler.getAuctionPid(request.getSession(), selectedAuction);
         } catch (OtpErlangDecodeException | OtpErlangExit e) {
