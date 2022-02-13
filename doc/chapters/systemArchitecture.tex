@@ -13,7 +13,7 @@
 \begin{itemize}
 	\item The server side part: developed in Erlang, it is in charge of handling the request coming from the users and it has to handle the auctions and to maintain the global view of an auctions consistent among the users.
 	
-	\item The client side part: depeloved in Java, using EJB e JSP, and in Javascript for what regards the websocket. It is in charge of retrieving information from the server, create the GUI, update the GUI in order to let the user have a consistent view of the state of the auction and of the overall system.
+	\item The client side part: depeloved in Java, using EJB and JSP, and in Javascript for what regards the websocket. It is in charge of retrieving information from the server, create the GUI, update the GUI in order to let the user have a consistent view of the state of the auction and of the overall system.
 \end{itemize}
 
 \subsection{Server Side}
@@ -22,7 +22,7 @@
 \begin{itemize}
 	\item The Main Server
 	\item Auction Handler
-	\item Auction Monitor
+	\item Auctions Monitor
 	\item Supervisor
 	\item MnesiaDB
 \end{itemize}
@@ -30,11 +30,11 @@
 \subsubsection{Main Server}
 \noindent The main server is in charge of receiving requests from the client side and saving all the necessary information in the database.
 
-\noindent Since robustness is required the main server is an OTP gen\_server. The main server is actually composed by an endpoint and the by the actual server. The endpoint is a sort of API used to make a call to the OTP gen\_server:
+\noindent Since robustness is required the main server is an OTP gen\_server. The main server is actually composed by an endpoint and by the actual server. The endpoint is a sort of API used to make a call to the OTP gen\_server:
 \begin{enumerate}
-	\item The client send a message to the endpoint
-	\item The endpoint receive the message, analyze it and call the function that uses the function call in order to make a request to the OTP gen\_server
-	\item The OTP gen\_server receive the request and call the function handle\_call that matches with the incoming message pattern.
+	\item The client sends a message to the endpoint
+	\item The endpoint receives the message, analyzes it and calls the function that uses the function call in order to make a request to the OTP gen\_server
+	\item The OTP gen\_server receives the request and calls the function handle\_call that matches with the incoming message pattern.
 	\item The handle\_call function will manage the request arrived from the client and sent back the required information (saving info in the database or spawning process if necessary)
 \end{enumerate}
 \noindent The functionalities that the server exposes are:
@@ -49,7 +49,7 @@
 	
 	\item Create Auction
 	
-	\noindent A new auction is created (added to the database) if and only if another auction with the same name is not already present in the database. When the auction is created a new process (i.e. The Auction Handler) is spawned and this process is added to the processes that the Auction Monitor has to monitor (for more detail about the monitoring see \ref{Monitoring}).
+	\noindent A new auction is created (added to the database) if and only if another auction with the same name is not already present in the database. When the auction is created a new process (i.e. The Auction Handler) is spawned and this process is added to the processes that the Auctions Monitor has to monitor (for more detail about the monitoring see \ref{Monitoring}).
 	From now on for all the information regarding that auction the client has to contact the auction handler at the pid present in the reply message.
 	
 	\item Retrieve Auction PID
@@ -85,7 +85,7 @@ Its functionalities are:
 	
 	\item Remember which users are online at any moment
 	
-	\noindent Each time a new user enters the auction or leave it we update the handler state and we notify the client through the Java Listener. 
+	\noindent Each time a new user enters the auction or leave it, we update the handler state and we notify the client through the Java Listener. 
 	
 	\item Register the offers
 	
@@ -110,7 +110,7 @@ Its functionalities are:
 
 %\vspace{0.5cm}
 
-My supervisor is the main supervisor and due to its importance and the robustness required is developed using an OTP supervisor behaviour. The process that it monitors are main\_server and the auctions monitor, both of them are \textit{permanent}. A monitored process is said to be permanent if it is always restarted when necessary.
+\textbf{My supervisor} is the main supervisor and due to its importance and the robustness required is developed using an OTP supervisor behaviour. The process that it monitors are main\_server and the auctions monitor, both of them are \textit{permanent}. A monitored process is said to be permanent if it is always restarted when necessary.
 	
 \noindent The restart strategy is \textit{one\_for\_one} since with this stratey we are able to provide the service even if one between main server and auctions monitor crashes. One for one means that if one of the monitored process crashes then only the crashed one is restarted. In our scenario we can have two possibilities:
 
@@ -128,7 +128,7 @@ My supervisor is the main supervisor and due to its importance and the robustnes
 
 \vspace{0.5cm}
 
-The auctions monitor is a custom monitor which is in charge of restart an auction handler when it crashes. To do so it saves in its internal state all the necessary info, in this way when a process crashes abnormally, the auctions monitor restart it and it notifies the main server in order to update the pid with the pid of the new re-spawned auction handler.
+\textbf{The auctions monitor} is a custom monitor which is in charge of restart an auction handler when it crashes. To do so it saves in its internal state all the necessary info, in this way when a process crashes abnormally, the auctions monitor restart it and it notifies the main server in order to update the pid with the pid of the new re-spawned auction handler.
 
 \noindent Notice that when the auction handler is re-spawned the state of the auction is the initial one (the state we would have just after the creation of the auction).
 
@@ -136,7 +136,7 @@ The auctions monitor is a custom monitor which is in charge of restart an auctio
 
 
 \subsubsection{MnesiaDB}
-\noindent The module MnesiaDB is the one in charge of managing the persistent storage. Mnesia has three option for regarding the storage persistence (the following three definition are taken from the documentation\footnote{https://www.erlang.org/doc/man/mnesia.html}):
+\noindent The module MnesiaDB is the one in charge of managing the persistent storage. Mnesia has three options regarding the storage persistence (the following three definition are taken from the documentation\footnote{https://www.erlang.org/doc/man/mnesia.html}):
 \begin{itemize}
 	\item \textit{ram\_copies}. A table can be replicated on a number of Erlang nodes. Property ram\_copies specifies a list of Erlang nodes where RAM copies are kept. These copies can be dumped to disc at regular intervals. However, updates to these copies are not written to disc on a transaction basis.
 	
@@ -158,10 +158,10 @@ The auctions monitor is a custom monitor which is in charge of restart an auctio
 	\item Auction
 	
 	\noindent The attribute of this table are \textit{name, duration, startingValue, imageURL, creator, pid, winner}.
-	It is in charge of remember all the info regarding an auction. An important attribute is \textit{winner}, this attribute is used to distinguish between passed auction and active auction: if the auction is active winner is equal to none, instead if the auction is finished winner contains a string with the name of the winner or a particular string indicated that there is no winner (if the auctions has received no offers).
+	It is in charge of remember all the info regarding an auction. An important attribute is \textit{winner}, this attribute is used to distinguish between passed auction and active auction: if the auction is active winner is equal to none, instead if the auction is finished, winner contains a string with the name of the winner or a particular string indicated that there is no winner (if the auctions has received no offers).
 \end{itemize}
 
-\noindent A particular feature of Mnesia db is the possibility to use \textit{Atomic transactions}. An atomic transaction ensures that all the operations inside the transaction are performed in an atomic way. This feature is used for the user registration and for auction creation. In both cases we need to register the user or create the auction only if there is not an auction/user with the given username/auction\_name. To ensure this we need a read on the database and then a possible write. If the two operations are not done in an atomic way and so inside the same transaction we may have the following situation:
+\noindent A particular feature of Mnesia db is the possibility to use \textit{Atomic transactions}. An atomic transaction ensures that all the operations inside the transaction are performed in an atomic way. This feature is used for the user registration and for auction creation. In both cases we need to register the user or create the auction only if there is not an auction/user with the given username/auction\_name. To ensure this we need a read on the database and then a possible write. If the two operations are not done in an atomic way (i.e. inside the same transaction) we may have the following situation:
 
 \begin{itemize}
 	\item Alice tries to register itself with the username "john-doe"
@@ -172,7 +172,7 @@ The auctions monitor is a custom monitor which is in charge of restart an auctio
 	\item WRITE (triggered by Bob): I write "john-doe" in the table \textit{user}. This write will cause an inconsistency because we will have two users registered with the same name.	
 \end{itemize} 
 
-\noindent In practice we have a problem known as TOCTOU (Time Of Control Time Of Use) which consists in the fact that I can change the table after the check done during the read, thus when I perform the write the state of the table is change because another operation has been performed between the read and the write.
+\noindent In practice we have a problem known as TOCTOU (Time Of Control Time Of Use) which consists in the fact that I can change the table after the check done during the read, thus when I perform the write the state of the table is changed because another operation has been performed between the read and the write.
 
 \noindent The solution to this problem is the use of atomic transactions provided by Mnesia DB.
 
@@ -255,7 +255,7 @@ The web-socket state update happens withe the following sequence of steps:
 The advantages of using this approach are the following:
 \begin{itemize}
 	\item Since messages are sent by the erlang server-side (which actually is the source of truth of the web-application state), the state returned is consistent.
-	\item Thanks to web-sockets, there's no need to periodically sending request to Apache Tomcat. \textbf{Page updates happens only when there is a state change}, avoiding a considerable amount computation. 
+	\item Thanks to web-sockets, there's no need to periodically sending request to Apache Tomcat. \textbf{Page updates happens only when there is a state change}, avoiding a considerable amount of computations. 
 	\item Some events are triggered by erlang side itself and not by the client (i.e. auction ending and winner election), so this approach update the web-application state correctly by simply avoiding to send one message to Apache Tomcat
 \end{itemize}
 The \textbf{cost} of this approach is the implementation of the Java Listener.
@@ -287,5 +287,4 @@ A couple of javascript scripts are then defined:
 	\item \textbf{auction\_websocket}: Responsible for connecting the client to the auction websocket endpoint, to update the DOM of the HTML page when a message arrives and to update locally the timer.
 \end{itemize}
 
-For what concern form validation, \textbf{browser-default validation} was adopted (i.e. some fields are required to be added, some fields, like the auction duration,  must contain a number). 
-\subsection{Synchronizations Issues}
+For what concern form validation, \textbf{browser-default validation} was adopted (i.e. some fields are required to be added, some fields, like the auction duration,  must contain a number).

@@ -14,4 +14,3 @@
 \contentsline {subsection}{\numberline {2.4}Web-sockets}{11}%
 \contentsline {subsection}{\numberline {2.5}Java Listener}{11}%
 \contentsline {subsection}{\numberline {2.6}User Interface}{12}%
-\contentsline {subsection}{\numberline {2.7}Synchronizations Issues}{13}%
