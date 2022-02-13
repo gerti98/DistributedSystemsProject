@@ -241,7 +241,7 @@ In order to update the application state without requesting periodically a web-p
 As we can see in the image above two different web-socket endpoint are used:
 \begin{itemize}
 	\item \textbf{MainMenuEndpoint}: responsible for updating the state of the main menu w.r.t. the list of active and inactive auctions. Clients connected to this endpoint are registered through the usage of a Java static \textit{CopyOnWriteArraySet} for dealing with concurrent changes of the connected client list.
-	\item \textbf{AuctionEndpoint}: responsible for updating the state of the auction w.r.t. the list of joined users, the list of valid bids, the auction time, and the winner election. Clients connected to this endpoint are registered through the usage of a Java static ConcurrentMap<String, Set<UserEndpointPair>> data structure. With the latter, for each auction name is associated a list of client endpoints, in order to correctly send messages only to clients of a particular auction, with a publish/subscribe fashion.
+	\item \textbf{AuctionEndpoint}: responsible for updating the state of the auction w.r.t. the list of joined users, the list of valid bids, the auction time, and the winner election. Clients connected to this endpoint are registered through the usage of a Java static ConcurrentMap$<$String, Set$<$UserEndpointPair$>>$ data structure. With the latter, for each auction name is associated a list of client endpoints, in order to correctly send messages only to clients of a particular auction, with a publish/subscribe fashion.
 \end{itemize}
 \subsection{Java Listener}
 There's one actor missing in the whole picture, the Java Listener.

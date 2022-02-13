@@ -1,0 +1,17 @@
+% !TeX spellcheck = en_US
+\section{Synchronization And Communication Issues Resolution}
+\noindent As we have seen in section \ref{synchComIssues} the main issues regarding the synchronization and communication are:
+\begin{itemize}
+	\item Maintain a consistent auction state (remaining time, users online, offers made) among the clients
+	\item Maintain the list of auctions updated among all the users of the application
+	\item Notify a client if something changes (new auction is created, a new offer is made, a new user joins the auction and so on)
+\end{itemize}
+
+\noindent These problems are solved using Erlang and Websocket. The server is made entirely in Erlang, thus all the problems regarding the concurrency are handled by the language.
+
+\noindent Apart from this all the remaining communication and synchronization issues are solved because:
+
+\begin{itemize}
+	\item Erlang maintains the remaining time (this is done by the auction handler) and all the important information, either regarding a single auction (auction handler) and the overall system state (main server and mnesia db).
+	\item Websockets update all the registered clients with the newest information provided by the Erlang part of the application.  
+\end{itemize}
