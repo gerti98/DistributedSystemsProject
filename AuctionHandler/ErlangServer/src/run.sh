@@ -1,1 +1,1 @@
-erl -sname server@localhost -setcookie "abcde"
+echo "my_supervisor:start_link()." | erl -sname server@localhost -setcookie "abcde"
