@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  14 FEB 2022 11:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  14 FEB 2022 12:18
 entering extended mode
 **./template_Report.tex
 (template_Report.tex
@@ -441,16 +441,16 @@ Package pdftex.def Info: img/wireframeDSMT.drawio.png  used on input line 48.
 
 
 (chapters/systemArchitecture.tex
-<img/systemStructure.png, id=30, 1998.46625pt x 1115.16624pt>
-File: img/systemStructure.png Graphic file (type png)
-<use img/systemStructure.png>
-Package pdftex.def Info: img/systemStructure.png  used on input line 7.
-(pdftex.def)             Requested size: 452.9679pt x 252.75633pt.
+<img/systemStructure2.png, id=30, 2411.0075pt x 1286.8075pt>
+File: img/systemStructure2.png Graphic file (type png)
+<use img/systemStructure2.png>
+Package pdftex.def Info: img/systemStructure2.png  used on input line 7.
+(pdftex.def)             Requested size: 452.9679pt x 241.74706pt.
  [4
 
 
 
- <./img/systemStructure.png>] [5]
+ <./img/systemStructure2.png>] [5]
 LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 9
 2.
 
@@ -590,8 +590,8 @@ Package pdftex.def Info: img/auction_finish.png  used on input line 72.
 (chapters/issuesResolution.aux) (chapters/userManual.aux)) ) 
 Here is how much of TeX's memory you used:
  8034 strings out of 480236
- 125307 string characters out of 2880557
- 439426 words of memory out of 3000000
+ 125313 string characters out of 2880557
+ 439419 words of memory out of 3000000
  24446 multiletter control sequences out of 15000+200000
  541918 words of font info for 53 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -609,7 +609,7 @@ MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/gxhan/AppData/Local/Pr
 ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/gxhan/AppData/L
 ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/gxhan/
 AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on template_Report.pdf (19 pages, 1367321 bytes).
+Output written on template_Report.pdf (19 pages, 1370607 bytes).
 PDF statistics:
  151 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
