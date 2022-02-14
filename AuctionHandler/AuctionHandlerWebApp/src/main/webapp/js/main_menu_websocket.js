@@ -32,7 +32,7 @@ function show_auctions(active){
 
 /*
 <form class="card w-25" action="<%=request.getContextPath()%>/MainMenuServlet" method="post">
-    <img class="card-img-top" src="<%=auction.getImageURL()%>"  onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
+    <img class="card-img-top" src="<%=auction.getImageURL()%" onError="this.onerror=null;this.src='<%=request.getContextPath()%>/resources/default-placeholder.png';" alt="<%=auction.getGoodName()%> image">
     <div class="card-body d-flex flex-column justify-content-between p-3">
         <div>
             <input type="hidden" name="goodname" value="<%=auction.getGoodName()%>">
@@ -76,7 +76,7 @@ function createCard(ctx, message, active){
 
     const image = document.createElement("img");
     image.classList.add("card-img-top")
-    image.setAttribute("src", message.goodName);
+    image.setAttribute("src", message.imageURL);
     image.setAttribute("onError", "this.onerror=null;this.src='" + ctx + "/resources/default-placeholder.png';" );
     image.setAttribute("alt",message.goodName + " image")
 

@@ -46,6 +46,7 @@ public class AuctionStateEndpoint{
             if(username.equals(current.getUsername())){
                 boolean result2 = userEndpointPairSet.remove(current);
                 System.out.println("Delete result in cycle: " + result2);
+                break;
             }
         }
 
