@@ -13,15 +13,15 @@
 \begin{itemize}
 	\item The server side part: developed in Erlang, it is in charge of handling the request coming from the users and it has to handle the auctions and to maintain the global view of an auctions consistent among the users.
 	
-	\item The client side part: depeloved in Java, using Servlets and JSP for handling HTTP requests, content generation and websocket endpoint, and in Javascript for what the handling of websocket messages. It is in charge of retrieving information from the server, create the GUI, update the GUI in order to let the user have a consistent view of the state of the auction and of the overall system.
+	\item The client side part: developed in Java, using Servlets and JSP for handling HTTP requests, content generation and websocket endpoint, and in Javascript for what concern the handling of websocket messages. It is in charge of retrieving information from the server, creating the GUI, updating the GUI in order to let the user have a consistent view of the state of the auction and of the overall system.
 \end{itemize}
 
-The server-side part written in Erlang and the Java Listener are deployed in the container \textbf{172.18.0.7}, Apache Tomcat webserver which hosts the Web Application is deployed in the container \textbf{172.18.0.6}.
+\noindent The server-side part written in Erlang and the Java Listener are deployed in the container \textbf{172.18.0.7}, Apache Tomcat webserver which hosts the Web Application is deployed in the container \textbf{172.18.0.6}.
 Is possible to access those containers by using OpenVPN with the file \textit{studenti.ovpn} that can be found
 in the main project repository: \\
 \url{https://github.com/gerti98/DistributedSystemsProject}
 	
-The Web-App can be accessed through the following link: \\ \url{http://172.18.0.6:8080/AuctionHandlerWebApp/LoginServlet}
+\noindent The Web-App can be accessed through the following link: \\ \url{http://172.18.0.6:8080/AuctionHandlerWebApp/LoginServlet}
 
 \subsection{Server Side}
 \noindent The Server side part is written in Erlang and contains the following components:
@@ -198,7 +198,7 @@ In Apache Tomcat web-server HTTP requests arriving from the user are processed b
  \end{figure}
  
 
-As shown in the above figure, there is one Java Servlet for each page of the web-application. From the generated page is possible to follow some hyperlinks to find other pages of the web-app.\\
+\noindent As shown in the above figure, there is one Java Servlet for each page of the web-application. From the generated page is possible to follow some hyperlinks to find other pages of the web-app.\\
 The Webapp folder is organized in the following way:
 % TODO: \usepackage{graphicx} required
 \begin{figure}[H]
@@ -208,7 +208,7 @@ The Webapp folder is organized in the following way:
 	\label{fig:webapp}
 \end{figure}
 
-The actual HTML is generated via JSP technology, with some script-lets, for each page, in order to have a logic separation between the "View" part and the rest of the application. In example the $main\_menu.jsp$ scriptlet contains some logic to generate different cards by iterating the list of auction returned by the Erlang server.\\
+The actual HTML is generated via JSP technology, with some scriptlets, for each page, in order to have a logic separation between the "View" part and the rest of the application. In example the $main\_menu.jsp$ scriptlet contains some logic to generate different cards by iterating the list of auction returned by the Erlang server.\\
 
 \noindent In order to add some layers of security to the application a couple of Filters were added:\\
 % TODO: \usepackage{graphicx} required
@@ -221,7 +221,7 @@ The actual HTML is generated via JSP technology, with some script-lets, for each
 \begin{itemize}
 	\item \textbf{LoginFilter} is responsible for checking that requests to "protected" pages arrives from users that are already logged in (this can be assured by analyzing the session of the particular user, indexed by a cookie).
 		
-	\item \textbf{AuctionSelectedFilter} prevents a logged user to access an auction without having pressed the related button. This is done because at the same time multiple auctions can be running at the same time.\\
+	\item \textbf{AuctionSelectedFilter} prevents a logged user to access an auction without having pressed the related button. This is done because at the same time multiple auctions can be active at the same time.\\
 	
 \end{itemize}
 In order to update the "Model" part of our application some requests to the Server-Side part in Erlang needs to be done. This is dealt in the communication package:
@@ -234,7 +234,7 @@ In order to update the "Model" part of our application some requests to the Serv
 	\label{fig:communication}
 \end{figure}
 
-Jinterface library is used: for each client there is a different mailbox contained in one single "Erlang" node, which is unique since obtained from the session token of the client. Then a request/reply communication happens with the Erlang Main Server and if needed with the related Auction Handler, in case an auction page is requested. The communication will return back a result in order to communicate to the user if the request made has succeeded or not (i.e. a client registration may fail in case of a duplicate username).
+\noindent The Jinterface library is used: for each client there is a different mailbox contained in one single "Erlang" node, which is unique since obtained from the session token of the client. Then a request/reply communication happens with the Erlang Main Server or with the related Auction Handler, in case an auction page is requested. The communication will return back a result in order to communicate to the user if the request made has succeeded or not (i.e. a client registration may fail in case of a duplicate username).
 \subsection{Web-sockets}
 In order to update the application state without requesting periodically a web-page, Web-socket technology is used.
 
