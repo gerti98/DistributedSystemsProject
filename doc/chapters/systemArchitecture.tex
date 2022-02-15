@@ -16,6 +16,13 @@
 	\item The client side part: depeloved in Java, using Servlets and JSP for handling HTTP requests, content generation and websocket endpoint, and in Javascript for what the handling of websocket messages. It is in charge of retrieving information from the server, create the GUI, update the GUI in order to let the user have a consistent view of the state of the auction and of the overall system.
 \end{itemize}
 
+The server-side part written in Erlang and the Java Listener are deployed in the container \textbf{172.18.0.7}, Apache Tomcat webserver which hosts the Web Application is deployed in the container \textbf{172.18.0.6}.
+Is possible to access those containers by using OpenVPN with the file \textit{studenti.ovpn} that can be found
+in the main project repository: \\
+\url{https://github.com/gerti98/DistributedSystemsProject}
+	
+The Web-App can be accessed through the following link: \\ \url{http://172.18.0.6:8080/AuctionHandlerWebApp/LoginServlet}
+
 \subsection{Server Side}
 \noindent The Server side part is written in Erlang and contains the following components:
 

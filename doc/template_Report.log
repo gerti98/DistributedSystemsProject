@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  14 FEB 2022 12:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.24)  15 FEB 2022 18:39
 entering extended mode
 **./template_Report.tex
 (template_Report.tex
@@ -172,6 +172,10 @@ File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
 File: listings.cfg 2020/03/24 1.8d listings configuration
 ))
 Package: listings 2020/03/24 1.8d (Carsten Heinz)
+(C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
 Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
 
@@ -323,20 +327,20 @@ File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
 (chapters/userManual.aux))
 \openout1 = `template_Report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -415,7 +419,7 @@ d
 File: img/marchio_unipi_pant541-eps-converted-to.pdf Graphic file (type pdf)
 <use img/marchio_unipi_pant541-eps-converted-to.pdf>
 Package pdftex.def Info: img/marchio_unipi_pant541-eps-converted-to.pdf  used o
-n input line 66.
+n input line 67.
 (pdftex.def)             Requested size: 362.37569pt x 193.1007pt.
 [1
 
@@ -452,75 +456,75 @@ Package pdftex.def Info: img/systemStructure2.png  used on input line 7.
 
  <./img/systemStructure2.png>] [5]
 LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 9
-2.
+9.
 
 (C:\Users\gxhan\AppData\Local\Programs\MiKTeX\tex/latex/base\omscmr.fd
 File: omscmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 92.
-<img/monitorAndSupervisor.png, id=38, 653.44125pt x 402.50375pt>
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 99.
+<img/monitorAndSupervisor.png, id=39, 653.44125pt x 402.50375pt>
 File: img/monitorAndSupervisor.png Graphic file (type png)
 <use img/monitorAndSupervisor.png>
-Package pdftex.def Info: img/monitorAndSupervisor.png  used on input line 106.
+Package pdftex.def Info: img/monitorAndSupervisor.png  used on input line 113.
 (pdftex.def)             Requested size: 317.07614pt x 195.3062pt.
 
 [6] [7 <./img/monitorAndSupervisor.png>] [8]
-Underfull \hbox (badness 10000) in paragraph at lines 183--184
+Underfull \hbox (badness 10000) in paragraph at lines 190--191
 
  []
 
-<img/servlets.png, id=54, 140.525pt x 92.345pt>
+<img/servlets.png, id=55, 140.525pt x 92.345pt>
 File: img/servlets.png Graphic file (type png)
 <use img/servlets.png>
-Package pdftex.def Info: img/servlets.png  used on input line 188.
+Package pdftex.def Info: img/servlets.png  used on input line 195.
 (pdftex.def)             Requested size: 181.18439pt x 119.07057pt.
-<img/webapp.png, id=55, 170.6375pt x 167.62625pt>
+<img/webapp.png, id=56, 170.6375pt x 167.62625pt>
 File: img/webapp.png Graphic file (type png)
 <use img/webapp.png>
-Package pdftex.def Info: img/webapp.png  used on input line 199.
+Package pdftex.def Info: img/webapp.png  used on input line 206.
 (pdftex.def)             Requested size: 181.18439pt x 177.99756pt.
 [9 <./img/servlets.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 204--205
+Underfull \hbox (badness 10000) in paragraph at lines 211--212
 
  []
 
-<img/filters.png, id=60, 136.00812pt x 48.68187pt>
+<img/filters.png, id=61, 136.00812pt x 48.68187pt>
 File: img/filters.png Graphic file (type png)
 <use img/filters.png>
-Package pdftex.def Info: img/filters.png  used on input line 210.
+Package pdftex.def Info: img/filters.png  used on input line 217.
 (pdftex.def)             Requested size: 181.18439pt x 64.85524pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 206--213
+Underfull \hbox (badness 10000) in paragraph at lines 213--220
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 217--218
+Underfull \hbox (badness 10000) in paragraph at lines 224--225
 
  []
 
-<img/communication.png, id=61, 152.57pt x 51.19125pt>
+<img/communication.png, id=62, 152.57pt x 51.19125pt>
 File: img/communication.png Graphic file (type png)
 <use img/communication.png>
-Package pdftex.def Info: img/communication.png  used on input line 225.
+Package pdftex.def Info: img/communication.png  used on input line 232.
 (pdftex.def)             Requested size: 181.18439pt x 60.7949pt.
 [10 <./img/webapp.png> <./img/filters.png> <./img/communication.png>]
-<img/websockets.png, id=69, 142.03062pt x 120.95187pt>
+<img/websockets.png, id=70, 142.03062pt x 120.95187pt>
 File: img/websockets.png Graphic file (type png)
 <use img/websockets.png>
-Package pdftex.def Info: img/websockets.png  used on input line 236.
+Package pdftex.def Info: img/websockets.png  used on input line 243.
 (pdftex.def)             Requested size: 181.18439pt x 154.31032pt.
  [11 <./img/websockets.png>]
-<img/java_listener.png, id=74, 167.12437pt x 64.74188pt>
+<img/java_listener.png, id=75, 167.12437pt x 64.74188pt>
 File: img/java_listener.png Graphic file (type png)
 <use img/java_listener.png>
-Package pdftex.def Info: img/java_listener.png  used on input line 265.
+Package pdftex.def Info: img/java_listener.png  used on input line 272.
 (pdftex.def)             Requested size: 181.18439pt x 70.19382pt.
-<img/js.png, id=75, 175.15437pt x 62.2325pt>
+<img/js.png, id=76, 175.15437pt x 62.2325pt>
 File: img/js.png Graphic file (type png)
 <use img/js.png>
-Package pdftex.def Info: img/js.png  used on input line 280.
+Package pdftex.def Info: img/js.png  used on input line 287.
 (pdftex.def)             Requested size: 181.18439pt x 64.37936pt.
  [12 <./img/java_listener.png> <./img/js.png>]) [13]
 \openout2 = `chapters/issuesResolution.aux'.
@@ -538,7 +542,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--4
 
  []
 
-<img/registration.png, id=88, 988.19188pt x 385.94188pt>
+<img/registration.png, id=89, 988.19188pt x 385.94188pt>
 File: img/registration.png Graphic file (type png)
 <use img/registration.png>
 Package pdftex.def Info: img/registration.png  used on input line 7.
@@ -548,12 +552,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 12--13
 
  []
 
-<img/login.png, id=89, 995.21812pt x 313.67188pt>
+<img/login.png, id=90, 995.21812pt x 313.67188pt>
 File: img/login.png Graphic file (type png)
 <use img/login.png>
 Package pdftex.def Info: img/login.png  used on input line 18.
 (pdftex.def)             Requested size: 452.9679pt x 142.76878pt.
-<img/past_auctions.png, id=90, 1010.77625pt x 489.32813pt>
+<img/past_auctions.png, id=91, 1010.77625pt x 489.32813pt>
 File: img/past_auctions.png Graphic file (type png)
 <use img/past_auctions.png>
 Package pdftex.def Info: img/past_auctions.png  used on input line 27.
@@ -563,24 +567,24 @@ Package pdftex.def Info: img/past_auctions.png  used on input line 27.
 
 
  <./img/registration.png> <./img/login.png>]
-<img/active_auctions.png, id=96, 998.22937pt x 582.67688pt>
+<img/active_auctions.png, id=97, 998.22937pt x 582.67688pt>
 File: img/active_auctions.png Graphic file (type png)
 <use img/active_auctions.png>
 Package pdftex.def Info: img/active_auctions.png  used on input line 36.
 (pdftex.def)             Requested size: 452.9679pt x 264.39822pt.
-<img/create_auction.png, id=97, 998.22937pt x 468.24937pt>
+<img/create_auction.png, id=98, 998.22937pt x 468.24937pt>
 File: img/create_auction.png Graphic file (type png)
 <use img/create_auction.png>
 Package pdftex.def Info: img/create_auction.png  used on input line 46.
 (pdftex.def)             Requested size: 452.9679pt x 212.47505pt.
  [16 <./img/past_auctions.png> <./img/active_auctions.png>]
-<img/auction.png, id=103, 912.91063pt x 566.61688pt>
+<img/auction.png, id=104, 912.91063pt x 566.61688pt>
 File: img/auction.png Graphic file (type png)
 <use img/auction.png>
 Package pdftex.def Info: img/auction.png  used on input line 61.
 (pdftex.def)             Requested size: 452.9679pt x 281.13763pt.
  [17 <./img/create_auction.png> <./img/auction.png>]
-<img/auction_finish.png, id=109, 896.34875pt x 565.11125pt>
+<img/auction_finish.png, id=110, 896.34875pt x 565.11125pt>
 File: img/auction_finish.png Graphic file (type png)
 <use img/auction_finish.png>
 Package pdftex.def Info: img/auction_finish.png  used on input line 72.
@@ -589,11 +593,11 @@ Package pdftex.def Info: img/auction_finish.png  used on input line 72.
 (chapters/introduction.aux) (chapters/systemArchitecture.aux)
 (chapters/issuesResolution.aux) (chapters/userManual.aux)) ) 
 Here is how much of TeX's memory you used:
- 8034 strings out of 480236
- 125313 string characters out of 2880557
- 439419 words of memory out of 3000000
- 24446 multiletter control sequences out of 15000+200000
- 541918 words of font info for 53 fonts, out of 3000000 for 9000
+ 8112 strings out of 480236
+ 126303 string characters out of 2880557
+ 440597 words of memory out of 3000000
+ 24519 multiletter control sequences out of 15000+200000
+ 542087 words of font info for 54 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  72i,8n,77p,701b,321s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\gxhan\Ap
@@ -608,10 +612,12 @@ onts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/gxhan/AppData/Local/Programs/
 MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/gxhan/AppData/Local/Pr
 ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/gxhan/AppData/L
 ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/gxhan/
-AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on template_Report.pdf (19 pages, 1370607 bytes).
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Use
+rs/gxhan/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pf
+b>
+Output written on template_Report.pdf (19 pages, 1379992 bytes).
 PDF statistics:
- 151 PDF objects out of 1000 (max. 8388607)
+ 155 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  91 words of extra memory for PDF output out of 10000 (max. 10000000)
 
